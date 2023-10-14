@@ -1,0 +1,12 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<!--just copy all if netstandard `/LIB`-->
+	<ItemGroup>
+		<RequiredFiles Include="$(MSBuildThisFileDirectory)lib\**\*" />
+		<Content Include="@(RequiredFiles)">
+			<Pack>true</Pack>
+			<Link>lib\%(RecursiveDir)%(FileName)%(Extension)</Link>
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<PackageCopyToOutput>true</PackageCopyToOutput>
+		</Content>
+	</ItemGroup>
+</Project>
