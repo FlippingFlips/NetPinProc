@@ -2,7 +2,7 @@
 	
 	<PropertyGroup>
 		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
-		<VersionSuffix>1.0.2</VersionSuffix>
+		<VersionSuffix>1.0.3</VersionSuffix>
 		<PackageVersion>$(VersionSuffix)</PackageVersion>
 		<AssemblyVersion>$(VersionSuffix)</AssemblyVersion>
 		<FileVersion>$(VersionSuffix)</FileVersion>
@@ -31,7 +31,7 @@
 
 	<!--GITHUB NUGET REFERENCE - NetPinProc.Domain-->
 	<ItemGroup>
-		<PackageReference Include="NetPinProc.Domain" Version="1.0.1" />
+		<PackageReference Include="NetPinProc.Domain" Version="1.0.3" />
 		<PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
 	</ItemGroup>
 

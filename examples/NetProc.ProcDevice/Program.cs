@@ -1,9 +1,6 @@
 ﻿using NetPinProc.Domain;
 using NetPinProc.Domain.PinProc;
 using System;
-
-using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -52,9 +49,7 @@ namespace NetPinProc.ProcDevices
                     source.Cancel();
                     eventArgs.Cancel = true;
                 };
-
                 
-
                 //run game loop
                 await RunLoop(PROC);
 
