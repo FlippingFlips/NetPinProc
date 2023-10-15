@@ -2,7 +2,7 @@
 	
 	<PropertyGroup>
 		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
-		<VersionSuffix>1.0.3.6</VersionSuffix>
+		<VersionSuffix>1.0.3.7</VersionSuffix>
 		<PackageVersion>$(VersionSuffix)</PackageVersion>
 		<AssemblyVersion>$(VersionSuffix)</AssemblyVersion>
 		<FileVersion>$(VersionSuffix)</FileVersion>
@@ -38,24 +38,26 @@
 
 	<!--INCLUDE THE LIB FOLDER INTO THE PACKAGE. ALSO SEE NetPinProc.targets-->
 	<ItemGroup>
+		
 		<Content Include="NetPinProc.targets" PackagePath="build/NetPinProc.targets" />
-		<Requiredx64Files Include="x64\**\*" />
-		<Content Include="@(Requiredx64Files)">
+		
+		<RequiredxFiles Include="lib\*.*" />
+		<Content Include="@(RequiredxFiles)">
 			<Pack>true</Pack>
-			<Link>lib\x64\%(RecursiveDir)%(FileName)%(Extension)</Link>
+			<Link>lib\%(RecursiveDir)%(FileName)%(Extension)</Link>
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 			<PackageCopyToOutput>true</PackageCopyToOutput>
-			<PackagePath>content\lib\x64</PackagePath>
+			<PackagePath>lib</PackagePath>
 		</Content>
 
-		<Requiredx86Files Include="x86\**\*" />
+		<!--<Requiredx86Files Include="x86\**\*" />
 		<Content Include="@(Requiredx86Files)">
 			<Pack>true</Pack>
 			<Link>lib\x86\%(RecursiveDir)%(FileName)%(Extension)</Link>
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 			<PackageCopyToOutput>true</PackageCopyToOutput>
 			<PackagePath>content\lib\x86</PackagePath>
-		</Content>
+		</Content>-->
 	</ItemGroup>
 
 </Project>
