@@ -2,7 +2,7 @@
 	
 	<PropertyGroup>
 		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
-		<VersionSuffix>1.0.3.4</VersionSuffix>
+		<VersionSuffix>1.0.3.5</VersionSuffix>
 		<PackageVersion>$(VersionSuffix)</PackageVersion>
 		<AssemblyVersion>$(VersionSuffix)</AssemblyVersion>
 		<FileVersion>$(VersionSuffix)</FileVersion>
@@ -17,6 +17,7 @@
 		<Authors>Adam Preble, Jimmy Lipham, David Horsefield</Authors>
 		<PackageOutputPath>.nuget</PackageOutputPath>
 		<PackageReleaseNotes>Now targets net6.0;net7.0 to load the libpinproc native lib dynamic per platform and OS.</PackageReleaseNotes>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -38,19 +39,19 @@
 	<!--INCLUDE THE LIB FOLDER INTO THE PACKAGE. ALSO SEE NetPinProc.targets-->
 	<ItemGroup>
 		<Content Include="NetPinProc.targets" PackagePath="build/NetPinProc.targets" />
-		<Requiredx64Files Include="$(MSBuildThisFileDirectory)x64\**\*" />
+		<Requiredx64Files Include="x64\**\*" />
 		<Content Include="@(Requiredx64Files)">
 			<Pack>true</Pack>
-			<!--<Link>lib\x64\%(RecursiveDir)%(FileName)%(Extension)</Link>-->
+			<Link>lib\x64\%(RecursiveDir)%(FileName)%(Extension)</Link>
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 			<PackageCopyToOutput>true</PackageCopyToOutput>
 			<PackagePath>content\lib\x64</PackagePath>
 		</Content>
 
-		<Requiredx86Files Include="$(MSBuildThisFileDirectory)x86\**\*" />
+		<Requiredx86Files Include="x86\**\*" />
 		<Content Include="@(Requiredx86Files)">
 			<Pack>true</Pack>
-			<!--<Link>lib\x86\%(RecursiveDir)%(FileName)%(Extension)</Link>-->
+			<Link>lib\x86\%(RecursiveDir)%(FileName)%(Extension)</Link>
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 			<PackageCopyToOutput>true</PackageCopyToOutput>
 			<PackagePath>content\lib\x86</PackagePath>
