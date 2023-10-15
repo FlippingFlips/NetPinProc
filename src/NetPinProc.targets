@@ -1,20 +1,20 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<!--just copy all if netstandard `/LIB`-->
 	<ItemGroup>
-		<!--<RequiredFiles Include="$(MSBuildThisFileDirectory)lib\x64\**\*" />
-		<Content Include="@(RequiredFiles)">
+		<Requiredx64Files Include="$(MSBuildThisFileDirectory)\x64\**\*" />
+		<Content Include="@(Requiredx64Files)">
 			<Pack>true</Pack>
 			<Link>lib\x64\%(RecursiveDir)%(FileName)%(Extension)</Link>
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 			<PackageCopyToOutput>true</PackageCopyToOutput>
 		</Content>
 
-		<RequiredFiles Include="$(MSBuildThisFileDirectory)lib\x86\**\*" />
-		<Content Include="@(RequiredFiles)">
+		<Requiredx86Files Include="$(MSBuildThisFileDirectory)x86\**\*" />
+		<Content Include="@(Requiredx86Files)">
 			<Pack>true</Pack>
 			<Link>lib\x86\%(RecursiveDir)%(FileName)%(Extension)</Link>
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 			<PackageCopyToOutput>true</PackageCopyToOutput>
-		</Content>-->
+		</Content>
 	</ItemGroup>
 </Project>
