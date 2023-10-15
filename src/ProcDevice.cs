@@ -1033,11 +1033,11 @@ namespace NetPinProc
 
             //set path from diff OS and 64bit process
             if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                fullPath = Environment.Is64BitProcess ? Path.Combine(path, @"lib\x64\libpinproc.dll") : Path.Combine(path, @"lib\x86\libpinproc.dll");
+                fullPath = Environment.Is64BitProcess ? Path.Combine(path, @"lib\libpinproc.x64.dll") : Path.Combine(path, @"lib\libpinproc.x86.dll");
             else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                fullPath = Environment.Is64BitProcess ? Path.Combine(path, @"lib\x64\libpinproc.so") : Path.Combine(path, @"lib\x86\libpinproc.so");
+                fullPath = Environment.Is64BitProcess ? Path.Combine(path, @"lib\libpinproc.x64.so") : Path.Combine(path, @"lib\libpinproc.x86.so");
             else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                fullPath = Environment.Is64BitProcess ? Path.Combine(path, @"lib\x64\libpinproc.dylib") : string.Empty;
+                fullPath = Environment.Is64BitProcess ? Path.Combine(path, @"lib\libpinproc.x64.dylib") : string.Empty;
             
             //load the native lib
             pinprocNativeLib = NativeLibrary.Load(fullPath);
