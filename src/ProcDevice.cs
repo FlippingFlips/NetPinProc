@@ -4,7 +4,9 @@ using NetPinProc.Domain.Pdb;
 using NetPinProc.Domain.PinProc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace NetPinProc
@@ -12,7 +14,7 @@ namespace NetPinProc
     /// <summary>
     /// Wrapper for NetPinProcGame (libpinproc native interface).
     /// </summary>
-    public class ProcDevice : IProcDevice
+    public class ProcDevice : IProcDevice, IDisposable
     {
         /// <summary>
         /// Type of machine the PROC is working with
@@ -51,6 +53,8 @@ namespace NetPinProc
         public ProcDevice(MachineType machineType, ILogger logger = null)
         {
             this.Logger = logger;
+
+            NativeLoadLibPinProcDll();
 
             Logger?.Log("Initializing P-ROC device...", LogLevel.Info);
 
@@ -96,6 +100,8 @@ namespace NetPinProc
                 PinProc.PRDelete(ProcHandle);
 
             ProcHandle = IntPtr.Zero;
+
+            Dispose();
         }
 
         /// <summary>
@@ -1015,6 +1021,37 @@ namespace NetPinProc
             dmdConfig.DeHighCycles[1] = 190;
             dmdConfig.DeHighCycles[2] = 50;
             dmdConfig.DeHighCycles[3] = 377;
+        }
+
+        private IntPtr pinprocNativeLib;
+
+        /// <summary> Load the correct DLL depending on bitness of machine Any/32/64 </summary>
+        private void NativeLoadLibPinProcDll()
+        {
+            var path = Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName);
+            var fullPath = string.Empty;
+
+            //set path from diff OS and 64bit process
+            if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                fullPath = Environment.Is64BitProcess ? Path.Combine(path, @"lib\x64\libpinproc.dll") : Path.Combine(path, @"lib\x86\libpinproc.dll");
+            else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                fullPath = Environment.Is64BitProcess ? Path.Combine(path, @"lib\x64\libpinproc.so") : Path.Combine(path, @"lib\x86\libpinproc.so");
+            else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                fullPath = Environment.Is64BitProcess ? Path.Combine(path, @"lib\x64\libpinproc.dylib") : string.Empty;
+            
+            //load the native lib
+            pinprocNativeLib = NativeLibrary.Load(fullPath);
+        }
+
+        bool disposed = false;
+        /// <summary> Free native DLL </summary>
+        public void Dispose()
+        {
+            if (!disposed && pinprocNativeLib != IntPtr.Zero)
+            {
+                NativeLibrary.Free(pinprocNativeLib);
+                disposed = true;
+            }                
         }
     }
 }

@@ -32,6 +32,9 @@
 
 using NetPinProc.Domain.PinProc;
 using System;
+using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace NetPinProc
@@ -45,11 +48,7 @@ namespace NetPinProc
         /// When running on Linux or macOS, the runtime will try prepending lib and appending the canonical shared library extension <para/>
         /// Pre process
         /// </summary>
-#if X86
-        public const string DLLName = @"lib/x86/libpinproc";
-#else
-        public const string DLLName = @"lib/x64/libpinproc";
-#endif
+        public const string DLLName = @"libpinproc";
 
         /// <summary>
         /// 
@@ -70,14 +69,14 @@ namespace NetPinProc
         /// <summary>
         /// 
         /// </summary>
-        public const int kPRSwitchVirtualLast = 255;
+        public const int kPRSwitchVirtualLast = 255;        
 
         /// <summary>
         ///  Create a new P-ROC device handle.  Only one handle per device may be created. This handle must be destroyed with PRDelete() when it is no longer needed.  Returns #kPRHandleInvalid if an error occurred.
         /// </summary>
         /// <param name="machineType"></param>
         /// <returns></returns>
-		[DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr PRCreate(MachineType machineType);
 
         /// <summary>
@@ -454,7 +453,6 @@ namespace NetPinProc
 		[DllImport(DLLName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern Result PRWriteData (IntPtr handle, UInt32 moduleSelect, UInt32 startingAddr, 
 			Int32 numWriteWords, ref UInt32 writeBuffer);
-        
     }
 }
 
