@@ -2,7 +2,7 @@
 	
 	<PropertyGroup>
 		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
-		<VersionSuffix>1.0.3.12</VersionSuffix>
+		<VersionSuffix>1.0.3.13</VersionSuffix>
 		<PackageVersion>$(VersionSuffix)</PackageVersion>
 		<AssemblyVersion>$(VersionSuffix)</AssemblyVersion>
 		<FileVersion>$(VersionSuffix)</FileVersion>
@@ -47,7 +47,7 @@
 			<Link>lib\x64\%(FileName)%(Extension)</Link>
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 			<PackageCopyToOutput>true</PackageCopyToOutput>
-			<PackagePath>lib\x64</PackagePath>
+			<PackagePath>contentFiles\lib\x64</PackagePath>
 		</Content>
 
 		<Requiredx86Files Include="lib\x86\*.*" />
@@ -56,7 +56,7 @@
 			<Link>lib\x86\%(FileName)%(Extension)</Link>
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 			<PackageCopyToOutput>true</PackageCopyToOutput>
-			<PackagePath>lib\x86</PackagePath>
+			<PackagePath>contentFiles\lib\x86</PackagePath>
 		</Content>
 	</ItemGroup>
 
