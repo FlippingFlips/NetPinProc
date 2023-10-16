@@ -10,11 +10,11 @@
 	</Target>-->
 
 	<ItemGroup>
-		<None Include="$(MSBuildThisFileDirectory)/../contentFiles/lib/x64/*.*">
+		<None Include="$(MSBuildThisFileDirectory)/../content/lib/x64/*.*">
 			<Link>lib\x64\%(FileName)%(Extension)</Link>
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
-		<None Include="$(MSBuildThisFileDirectory)/../contentFiles/lib/x86/*.*">
+		<None Include="$(MSBuildThisFileDirectory)/../content/lib/x86/*.*">
 			<Link>lib\x86\%(FileName)%(Extension)</Link>
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
