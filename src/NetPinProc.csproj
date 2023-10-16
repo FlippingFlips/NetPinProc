@@ -2,7 +2,7 @@
 	
 	<PropertyGroup>
 		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
-		<VersionSuffix>1.0.3.10</VersionSuffix>
+		<VersionSuffix>1.0.3.11</VersionSuffix>
 		<PackageVersion>$(VersionSuffix)</PackageVersion>
 		<AssemblyVersion>$(VersionSuffix)</AssemblyVersion>
 		<FileVersion>$(VersionSuffix)</FileVersion>
@@ -42,6 +42,7 @@
 		<Content Include="NetPinProc.targets" PackagePath="build/NetPinProc.targets" />
 		
 		<RequiredxFiles Include="lib\*.*" />
+		
 		<Content Include="@(RequiredxFiles)">
 			<Pack>true</Pack>
 			<Link>lib\%(RecursiveDir)%(FileName)%(Extension)</Link>

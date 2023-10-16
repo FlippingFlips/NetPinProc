@@ -69,7 +69,8 @@ namespace NetPinProc
         /// <summary>
         /// 
         /// </summary>
-        public const int kPRSwitchVirtualLast = 255;        
+        public const int kPRSwitchVirtualLast = 255;
+
 
         /// <summary>
         ///  Create a new P-ROC device handle.  Only one handle per device may be created. This handle must be destroyed with PRDelete() when it is no longer needed.  Returns #kPRHandleInvalid if an error occurred.
