@@ -1035,7 +1035,7 @@ namespace NetPinProc
             if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 fullPath = Environment.Is64BitProcess ? Path.Combine(path, @"lib\x64\libpinproc.dll") : Path.Combine(path, @"lib\x86\libpinproc.dll");
             else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                fullPath = Environment.Is64BitProcess ? Path.Combine(path, @"lib\x64\libpinproc.so") : Path.Combine(path, @"lib\x86\libpinproc.so");
+                fullPath = Environment.Is64BitProcess ? Path.Combine(path, @"lib\x64\libpinproc.x64.so") : Path.Combine(path, @"lib\x86\libpinproc.so");
             else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 fullPath = Environment.Is64BitProcess ? Path.Combine(path, @"lib\x64\libpinproc.dylib") : string.Empty;
             
