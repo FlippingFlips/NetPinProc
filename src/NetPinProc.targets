@@ -10,9 +10,13 @@
 	</Target>-->
 
 	<ItemGroup>
-		<None Include="$(MSBuildThisFileDirectory)/../lib/**/*.*">
-			<Link>lib\%(RecursiveDir)%(FileName)%(Extension)</Link>
+		<None Include="$(MSBuildThisFileDirectory)/../lib/x64/*.*">
+			<Link>lib\x64\%(FileName)%(Extension)</Link>
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>		
+		</None>
+		<None Include="$(MSBuildThisFileDirectory)/../lib/x86/*.*">
+			<Link>lib\x86\%(FileName)%(Extension)</Link>
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 </Project>
