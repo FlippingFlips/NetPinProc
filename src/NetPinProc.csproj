@@ -2,7 +2,7 @@
 	
 	<PropertyGroup>
 		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
-		<VersionSuffix>1.0.4</VersionSuffix>
+		<VersionSuffix>1.0.5</VersionSuffix>
 		<PackageVersion>$(VersionSuffix)</PackageVersion>
 		<AssemblyVersion>$(VersionSuffix)</AssemblyVersion>
 		<FileVersion>$(VersionSuffix)</FileVersion>
@@ -26,7 +26,7 @@
 		<None Include="../LICENSE.md" Pack="true" PackagePath="\" />
 		<None Include="../licenses/LICENSE-libpinproc.md" Pack="true" PackagePath="\" />
 		<None Include="../licenses/LICENSE-netpinproc.md" Pack="true" PackagePath="\" />
-		<None Include="../.github/workflows/netpinproc.release-nuget.yml" Pack="true" PackagePath="\" />
+		<None Include="../.github/workflows/netpinproc.release-nuget.yml"/>
 		
 	</ItemGroup>
 
