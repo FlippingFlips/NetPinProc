@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net6.0;net7.0;</TargetFrameworks>
+		<Description>NetPinProc Game controller with Sqlite database for machine items, adjustments, players and scores etc</Description>
+		<Authors>Adam Preble, Jimmy Lipham, David Horsefield</Authors>		
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<IncludeSource>True</IncludeSource>
+		<PackageIcon>pinball.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+		<PackageOutputPath>..\.nuget</PackageOutputPath>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="../pinball.png" Pack="true" PackagePath="\" />
+		<None Include="README.md" Pack="true" PackagePath="\" />
+		<None Include="LICENSE.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
+	
+	<!--NUGET REFS-->
+	<ItemGroup>
+		<ProjectReference Include="..\NetPinProc.Game\NetPinProc.Game.csproj" />
+		
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.12">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.12" />
+	</ItemGroup>
+
+	<!--SQL INIT FILES-->
+	<Import Project="NetPinProc.Game.Sqlite.targets" />
+	<ItemGroup>
+		<Content Include="NetPinProc.Game.Sqlite.targets">
+			<Pack>true</Pack>
+		</Content>
+	</ItemGroup>
+</Project>

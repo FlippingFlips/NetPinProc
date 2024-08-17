@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<Platforms>x86</Platforms>
+		<Description>WSLEDDriver for P-ROC by Compy / MPF</Description>
+		<Authors>Jimmy Lipham, David Horsefield</Authors>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseFile>LICENSE.md</PackageLicenseFile>		
+		<PackageIcon>pinball.png</PackageIcon>
+		<PackageOutputPath>../.nuget</PackageOutputPath>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="System.IO.Ports" Version="5.0.1" />
+	</ItemGroup>
+
+	<!--LINKED PROJECT FILES-->
+	<ItemGroup>
+		<None Include="../pinball.png" Pack="true" PackagePath="\" />
+		<None Include="README.md" Pack="true" PackagePath="\" />
+		<None Include="LICENSE.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
+	
+</Project>

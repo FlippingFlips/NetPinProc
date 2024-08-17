@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+		<Description>GameController and Default Modes</Description>
+		<Authors>Adam Preble, Jimmy Lipham, David Horsefield</Authors>						
+		<PackageIcon>pinball.png</PackageIcon>
+		<PackageOutputPath>.nuget</PackageOutputPath>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+		<PackageOutputPath>..\.nuget</PackageOutputPath>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="../pinball.png" Pack="true" PackagePath="\" />
+		<None Include="README.md" Pack="true" PackagePath="\" />
+		<None Include="LICENSE.md" Pack="true" PackagePath="\" />
+		<Content Include="NetPinProc.Game.targets" PackagePath="build/NetPinProc.Game.targets" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\NetPinProc\NetPinProc.csproj" />
+	</ItemGroup>
+	
+</Project>

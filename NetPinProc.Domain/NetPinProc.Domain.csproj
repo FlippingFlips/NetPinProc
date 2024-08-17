@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;net6.0;net7.0</TargetFrameworks>
+		<Description>Pinball base class library with no dependencies for NetPinProc</Description>
+		<Authors>Adam Preble, Jimmy Lipham, David Horsefield</Authors>				
+		<DebugType>Embedded</DebugType>
+		<EmbedAllSources>true</EmbedAllSources>
+		<PackageIcon>pinball.png</PackageIcon>		
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseFile>LICENSE.md</PackageLicenseFile>		
+		<PackageOutputPath>../.nuget</PackageOutputPath>		
+	</PropertyGroup>
+
+	<!--SINGLE DEPENDENCY System.Text.Json"-->
+	<ItemGroup>
+		<PackageReference Include="System.Text.Json" Version="5.0.2" />
+	</ItemGroup>
+
+	<!--LINK PACKAGE ASSETS-->
+	<ItemGroup>
+		<None Include="../pinball.png" Pack="true" PackagePath="\" />
+		<None Include="README.md" Pack="true" PackagePath="\" />
+		<None Include="LICENSE.md" Pack="true" PackagePath="\" />		
+	</ItemGroup>
+
+</Project>

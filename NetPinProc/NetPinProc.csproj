@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	
+	<PropertyGroup>
+		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+		<Description>For a P-ROC controller board or Fake P-ROC controller. LibPinproc included and may need to reference this library to copy the needed linpinproc. `lib/libpinproc.`</Description>
+		<Authors>Adam Preble, Jimmy Lipham, David Horsefield</Authors>
+		<PackageIcon>pinball.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseFile>LICENSE.md</PackageLicenseFile>		
+		<PackageOutputPath>../.nuget</PackageOutputPath>
+		<PackageReleaseNotes>native libs now copy from any project and/or child projects referencing them</PackageReleaseNotes>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="../pinball.png" Pack="true" PackagePath="\" />
+		<None Include="../README.md" Pack="true" PackagePath="\" />
+		<None Include="../LICENSE.md" Pack="true" PackagePath="\" />
+		<None Include="../.licenses/LICENSE-libpinproc.md" Pack="true" PackagePath="\" />
+		<None Include="../.licenses/LICENSE-netpinproc.md" Pack="true" PackagePath="\" />		
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
+		<ProjectReference Include="..\NetPinProc.Domain\NetPinProc.Domain.csproj" />
+	</ItemGroup>
+	
+	<ItemGroup>
+
+		<!--INCLUDE THE LIB FOLDER INTO THE PACKAGE. ALSO SEE NetPinProc.targets-->
+		<Content Include="NetPinProc.targets" PackagePath="build/NetPinProc.targets" />
+
+		<!--COPY FILES FROM `CONTENT\LIB` AND LINK THEM TO THE PROJECT-->
+		<!--USING JUST LIB WILL REMOVE THESE.--> 
+		<Requiredx64Files Include="content\lib\x64\*.*" />		
+		<Content Include="@(Requiredx64Files)">
+			<Pack>true</Pack>
+			<Link>lib\x64\%(FileName)%(Extension)</Link>
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<PackageCopyToOutput>true</PackageCopyToOutput>
+			<PackagePath>content\lib\x64</PackagePath>
+		</Content>
+
+		<Requiredx86Files Include="content\lib\x86\*.*" />
+		<Content Include="@(Requiredx86Files)">
+			<Pack>true</Pack>
+			<Link>lib\x86\%(FileName)%(Extension)</Link>
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<PackageCopyToOutput>true</PackageCopyToOutput>
+			<PackagePath>content\lib\x86</PackagePath>
+		</Content>
+	</ItemGroup>
+</Project>
