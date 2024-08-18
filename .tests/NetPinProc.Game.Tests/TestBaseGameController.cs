@@ -1,6 +1,5 @@
 ﻿using NetPinProc.Domain;
 using NetPinProc.Domain.PinProc;
-using NetPinProc.Game;
 
 namespace NetPinProc.Game.Tests
 {

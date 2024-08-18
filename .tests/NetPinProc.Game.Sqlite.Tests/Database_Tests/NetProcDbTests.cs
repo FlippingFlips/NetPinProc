@@ -1,6 +1,6 @@
 using NetPinProc.Game.Sqlite.Model;
 
-namespace NetPinProc.Game.Sqlite.Tests
+namespace NetPinProc.Game.Sqlite.Tests.Database_Tests
 {
     public class NetProcDbTests
     {

@@ -1,7 +1,7 @@
 ﻿using NetPinProc.Domain.Pdb;
 using Xunit;
 
-namespace NetPinProc.Tests
+namespace NetPinProc.Tests.Misc
 {
     public class PdbAddressConfigTests
     {

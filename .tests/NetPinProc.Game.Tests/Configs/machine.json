@@ -91,8 +91,24 @@
   ],
   "PRLeds": [
     {
-      "Name": "TestLED",
-      "Number": "A0-R12-G13-B14"
+      "Name": "TestLED_1",
+      "Number": "A0-R1-G2-B3", //board 0 - 1st RGB Led
+    },
+    {
+      "Name": "TestLED_2",
+      "Number": "A0-R4-G5-B6", //board 0 - 2nd RGB Led
+    },
+    {
+      "Name": "TestLED_3",
+      "Number": "A0-R7-G8-B9", //board 0 - 3rd RGB Led
+    },
+    {
+      "Name": "TestLED_4",
+      "Number": "A0-R10-G11-B12", //board 0 - 4th RGB Led
+    },
+    {
+      "Name": "TestLED_5",
+      "Number": "A0-R13-G14-B15", //board 0 - 5th RGB Led
     }
   ],
   "PRGI": [

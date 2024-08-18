@@ -1,10 +1,9 @@
 using NetPinProc.Domain;
 using NetPinProc.Domain.PinProc;
-using NetPinProc.Game;
 using NetPinProc.Game.Modes;
 using NuGet.Frameworks;
 
-namespace NetPinProc.Game.Tests
+namespace NetPinProc.Game.Tests.GameTests.Fake
 {
     public class GameControllerTests
     {
@@ -22,7 +21,7 @@ namespace NetPinProc.Game.Tests
             //new method:
             //load config first and pass that to the game, the game can then setup the machine
             var config = MachineConfiguration.FromFile(MACHINE_JSON);
-            var game = new TestBaseGameController(MachineType.PDB, null, true, config);
+            var game = new TestBaseGameController(config.PRGame.MachineType, null, true, config);
 
             //assert
             Assert.True(game.Switches?.Count > 0);
@@ -45,7 +44,7 @@ namespace NetPinProc.Game.Tests
             //load config first and pass that to the game, the game can then setup the machine
             var config = MachineConfiguration.FromFile(MACHINE_JSON);
             var game = new TestBaseGameController(MachineType.PDB, null, true, config);
-            var fakeProc = (game.PROC as IFakeProcDevice);
+            var fakeProc = game.PROC as IFakeProcDevice;
 
             //assert
             Assert.True(game.Switches?.Count > 0);
@@ -117,7 +116,7 @@ namespace NetPinProc.Game.Tests
                 // 3 balls in trough
                 game.Switches["trough0"].SetState(true);
                 game.Switches["trough1"].SetState(true);
-                fakeProc?.AddSwitchEvent(game.Switches["trough2"].Number, EventType.SwitchClosedDebounced);                
+                fakeProc?.AddSwitchEvent(game.Switches["trough2"].Number, EventType.SwitchClosedDebounced);
                 events = game.GetEvents(false);
                 ProcessEvents(game, events);
 
@@ -133,7 +132,7 @@ namespace NetPinProc.Game.Tests
                 ProcessEvents(game, events);
                 Assert.Equal(4, game.Trough.NumBalls());
 
-                
+
                 //next ball in play, ball 2 -- this FAILS
                 Assert.Equal(2, game.Ball);
                 game.Trough.LaunchBalls(1, null, false);

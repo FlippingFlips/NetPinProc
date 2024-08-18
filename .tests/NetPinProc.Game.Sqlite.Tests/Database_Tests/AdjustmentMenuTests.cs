@@ -1,6 +1,6 @@
 ﻿using NetPinProc.Game.Sqlite.Model;
 
-namespace NetPinProc.Game.Sqlite.Tests
+namespace NetPinProc.Game.Sqlite.Tests.Database_Tests
 {
     public class AdjustmentMenuTests
     {
@@ -12,7 +12,7 @@ namespace NetPinProc.Game.Sqlite.Tests
 
             var adjustments = ctx.Adjustments.ToList();
             var adj = adjustments.GroupBy(x => x.SubMenuName);
-            foreach ( var adjItem in adj )
+            foreach (var adjItem in adj)
             {
                 foreach (var item in adjItem)
                 {
@@ -21,8 +21,8 @@ namespace NetPinProc.Game.Sqlite.Tests
                     switch (item.OptionType)
                     {
                         case OptionType.Range:
-                            
-                            if(rangeOptions.Length == 2)
+
+                            if (rangeOptions.Length == 2)
                             {
                                 int.TryParse(rangeOptions[0], out int low);
                                 int.TryParse(rangeOptions[1], out int hi);
@@ -30,7 +30,7 @@ namespace NetPinProc.Game.Sqlite.Tests
                             break;
                         case OptionType.Array:
                             List<int> _vals = new();
-                            foreach ( var val in rangeOptions)
+                            foreach (var val in rangeOptions)
                             {
                                 int.TryParse(val, out int opt);
                                 _vals.Add(opt);
