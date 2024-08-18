@@ -14,7 +14,7 @@
 
 	<ItemGroup>
 		<None Include="../pinball.png" Pack="true" PackagePath="\" />
-		<None Include="../README.md" Pack="true" PackagePath="\" />
+		<None Include="README.md" Pack="true" PackagePath="\" />
 		<None Include="../LICENSE.md" Pack="true" PackagePath="\" />
 		<None Include="../.licenses/LICENSE-libpinproc.md" Pack="true" PackagePath="\" />
 		<None Include="../.licenses/LICENSE-netpinproc.md" Pack="true" PackagePath="\" />		
@@ -28,7 +28,9 @@
 	<ItemGroup>
 
 		<!--INCLUDE THE LIB FOLDER INTO THE PACKAGE. ALSO SEE NetPinProc.targets-->
-		<Content Include="NetPinProc.targets" PackagePath="build/NetPinProc.targets" />
+		<Content Include="NetPinProc.targets" PackagePath="build/NetPinProc.targets">
+			<Pack>true</Pack>
+		</Content>
 
 		<!--COPY FILES FROM `CONTENT\LIB` AND LINK THEM TO THE PROJECT-->
 		<!--USING JUST LIB WILL REMOVE THESE.--> 

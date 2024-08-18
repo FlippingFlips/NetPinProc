@@ -12,11 +12,11 @@
 	<ItemGroup>
 		<None Include="$(MSBuildThisFileDirectory)/../content/lib/x64/*.*">
 			<Link>lib\x64\%(FileName)%(Extension)</Link>
-			<CopyToOutputDirectory>Newer</CopyToOutputDirectory>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 		<None Include="$(MSBuildThisFileDirectory)/../content/lib/x86/*.*">
 			<Link>lib\x86\%(FileName)%(Extension)</Link>
-			<CopyToOutputDirectory>Newer</CopyToOutputDirectory>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
 </Project>

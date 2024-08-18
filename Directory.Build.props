@@ -1,6 +1,6 @@
 <Project>
 	<PropertyGroup>
-		<VersionSuffix>1.0.0.2</VersionSuffix>
+		<VersionSuffix>1.0.0.3</VersionSuffix>
 		<LangVersion>Latest</LangVersion>
 		<AssemblyVersion>$(VersionSuffix)</AssemblyVersion>
 		<PackageVersion>$(VersionSuffix)</PackageVersion>
