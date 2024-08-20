@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
-
-namespace NetPinProc.Domain.Pdb
+﻿namespace NetPinProc.Domain.Pdb
 {
     /// <summary>
     /// PDLEd board stepper
@@ -24,8 +21,7 @@ namespace NetPinProc.Domain.Pdb
         {
             Name = name;
             BoardAddress = boardId;
-            StepperIndex = stepperIndex;
-            Speed = speed;
+            StepperIndex = stepperIndex;           
 
             //get the board this led address uses
             var pdLedBoard = PdLeds.GetPdLedBoard(BoardAddress);
@@ -38,8 +34,7 @@ namespace NetPinProc.Domain.Pdb
                 PdLeds.PDLEDS.Add(this.board);
             }
 
-            //register the stepper speed = Stepper Ticks Per Half Period
-            board.WriteConfigRegister(22, Speed);
+            SetSpeed(speed);
         }
 
         /// <inheritdoc/>
@@ -50,7 +45,7 @@ namespace NetPinProc.Domain.Pdb
                 board.WriteConfigRegister((uint)sIndex, (uint)pos);
             else
             {
-                board.WriteConfigRegister((uint)sIndex, (uint)(pos + 1 << 15));
+                board.WriteConfigRegister((uint)sIndex, (uint)(System.Math.Abs(pos) + (1 << 15)));
             }
         }
 
@@ -58,9 +53,23 @@ namespace NetPinProc.Domain.Pdb
 
         /// <inheritdoc/>
         public byte StepperIndex { get; }
+
         /// <inheritdoc/>
-        public uint Speed { get; }
+        public uint Speed { get; private set; }
+
         /// <inheritdoc/>
         public string Name { get; set; }
+
+        /// <summary>
+        /// register the stepper speed = Stepper Ticks Per Half Period <para/>
+        /// Try speeds of 2500 for fast and higher values for slow
+        /// </summary>
+        /// <param name="speed"></param>
+        public void SetSpeed(uint speed)
+        {
+            Speed = speed;
+
+            board.WriteConfigRegister(22, Speed);
+        }
     }
 }
