@@ -32,6 +32,7 @@
 
   <ItemGroup>
     <Folder Include="GameTests\P3-ROC\Fake\" />
+    <Folder Include="GameTests\P3-ROC\Integration\" />
     <Folder Include="GameTests\ProcDevice\" />
   </ItemGroup>
 

@@ -1,10 +1,10 @@
 ﻿using NetPinProc.Domain;
 using NetPinProc.Domain.PinProc;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace NetPinProc.Tests
 {
+    /// <summary>With helper methods for initial connection and loading configuration</summary>
     public abstract class ProcDeviceTestBase
     {
         public IProcDevice? PROC;
@@ -13,10 +13,9 @@ namespace NetPinProc.Tests
         public const int PROC_PDB_BUS_ADDRESS = 0xC00;
         protected CancellationTokenSource CancelSource = new();
 
-        protected async Task InitPRCODeviceAndReset()
+        protected void InitPRCODeviceAndReset()
         {
             PROC = new ProcDevice(MACHINE_TYPE);
-            await Task.Delay(200);
             PROC.Reset(1);
         }
 

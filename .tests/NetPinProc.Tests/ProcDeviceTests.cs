@@ -16,7 +16,7 @@ namespace NetPinProc.Tests
         /// Creates a PROCDevice from the type set in the `machine.json`, close is called on the device when test ends
         /// </summary>
         [Fact]
-        public async Task InitPROC_PDB_Device_Tests()
+        public void InitPROC_PDB_Device_Tests()
         {            
             try
             {
@@ -24,7 +24,7 @@ namespace NetPinProc.Tests
                 MachineConfiguration config = LoadMachineConfigFile();
 
                 //create a device then reset the board
-                await InitPRCODeviceAndReset();
+                InitPRCODeviceAndReset();
 
                 //proc.SetupProcMachine(config);
 

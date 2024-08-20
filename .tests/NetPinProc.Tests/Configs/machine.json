@@ -20,11 +20,11 @@
   },
   "PRFlippers": [
     "flipperLwR",
-    "flipperLwL",
+    "flipperLwL"
   ],
   "PRFlipperLeft": [
     "flipperLwL",
-    "flipperUpL",
+    "flipperUpL"
   ],
   "PRFlipperRight": [
     "flipperLwR"
@@ -34,7 +34,7 @@
     "rightSlingshot",
     "leftJet",
     "rightJet",
-    "bottomJet",
+    "bottomJet"
   ],
   "PRSwitches": [
     /***** Format ****
@@ -59,7 +59,7 @@
     },
     {
       "Name": "trough4",
-      "Number": "4/0/0",
+      "Number": "4/0/0"
     },
     {
       "Name": "trough5",
@@ -78,11 +78,47 @@
   ],
   "PRLeds": [
     {
-      "Name": "TestLED",
-      "Number": "A0-R12-G13-B14"
+      "Name": "LED1",
+      "Number": "A0-R0-G1-B2",
+      "Polarity": true
+    },
+    {
+      "Name": "LED2",
+      "Number": "A0-R3-G4-B5",
+      "Polarity": true
+    },
+    {
+      "Name": "LED3",
+      "Number": "A0-R6-G7-B8",
+      "Polarity": true
+    },
+    {
+      "Name": "LED4",
+      "Number": "A0-R9-G10-B11",
+      "Polarity": true
+
+    },
+    {
+      "Name": "LED5",
+      "Number": "A0-R12-G13-B14",
+      "Polarity": true
+    },
+    {
+      "Name": "LED6",
+      "Number": "A0-R81-G82-B83",
+      "Polarity": true
     }
   ],
   "PRGI": [
+  ],
+  "PRSteppers": [
+    {
+      "Name": "Stepper",
+      "IsStepper1": true,
+      "BoardId": 0,
+      "Speed": 5000,
+      "IsEnabled": true
+    }
   ],
   "PRBallSave": {
     "PulseCoils": [
