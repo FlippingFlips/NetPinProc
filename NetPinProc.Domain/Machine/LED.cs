@@ -197,7 +197,7 @@ namespace NetPinProc.Domain
         }
         private uint NormalizeColor(uint color)
         {
-            if (this.Polarity) return 255 - color;
+            if (this.Polarity) return 0xFF - color;
             else return color;
         }
     }

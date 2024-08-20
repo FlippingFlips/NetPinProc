@@ -739,13 +739,16 @@ namespace NetPinProc
             //register indirect addresses for the PDLed boards added from LEDS, Steppers
             PdLeds.PDLEDS.ForEach(x =>
             {
-                //Setup any Steppers assigned to this board, then update the ControlRegister if any available
-                var steppers = _steppers.Values.Where(st => st.BoardAddress == x.BoardAddress);
-                foreach (var stepper in steppers)
+                if(_steppers != null)
                 {
-                    if (stepper.StepperIndex == 0)
-                        x.ControlRegister.UseStepper0 = 1;
-                    else x.ControlRegister.UseStepper1 = 1;
+                    //Setup any Steppers assigned to this board, then update the ControlRegister if any available
+                    var steppers = _steppers?.Values?.Where(st => st.BoardAddress == x.BoardAddress);
+                    foreach (var stepper in steppers)
+                    {
+                        if (stepper.StepperIndex == 0)
+                            x.ControlRegister.UseStepper0 = 1;
+                        else x.ControlRegister.UseStepper1 = 1;
+                    }
                 }
 
                 //Setup any Servos assigned to this board, then update the ServoRegister if any available
