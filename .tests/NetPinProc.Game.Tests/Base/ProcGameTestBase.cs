@@ -1,7 +1,7 @@
 ﻿using NetPinProc.Domain;
 using NetPinProc.Game.Tests.GameTests.Fake;
 
-namespace NetPinProc.Game.Tests
+namespace NetPinProc.Game.Tests.Base
 {
     public abstract class ProcGameTestBase
     {

@@ -7,7 +7,7 @@
     {
         /// <inheritdoc/>
         public readonly uint BoardAddress;
-        private IPDLED board;
+        private readonly IPDLED board;
 
         /// <summary>
         /// Sets up a stepper and registering the speed

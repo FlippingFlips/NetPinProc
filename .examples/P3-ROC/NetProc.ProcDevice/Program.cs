@@ -10,7 +10,7 @@ namespace NetProc.ProcDevice
 {
     class Program
     {
-        static CancellationTokenSource source = new CancellationTokenSource();
+        static readonly CancellationTokenSource source = new();
         private static AttrCollection<ushort, string, Switch> _switches;
         private static AttrCollection<ushort, string, LED> _leds;
         private static AttrCollection<ushort, string, IDriver> _coils;

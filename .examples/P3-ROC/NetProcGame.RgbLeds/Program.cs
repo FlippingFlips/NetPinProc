@@ -8,12 +8,11 @@ namespace NetProcGame.RgbLeds
 {
     internal class Program
     {
-        static CancellationTokenSource source = new CancellationTokenSource();
+        static readonly CancellationTokenSource source = new();
         static async Task Main(string[] args)
         {
             try
             {                                
-
                 //create rgb PDB P3-ROC game. Set true for simulated
                 var game = new Game(MachineType.PDB, null, false);
 

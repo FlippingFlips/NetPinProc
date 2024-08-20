@@ -34,15 +34,15 @@ namespace NetPinProc
         protected internal AttrCollection<ushort, string, IDriver> Coils;
 
         private static bool firstTime = true;
-        static ushort kDMDColumns = 128;
-        static byte kDMDFrameBuffers = 3;
-        static byte kDMDRows = 32;
-        static byte kDMDSubFrames = 4;
+        static readonly ushort kDMDColumns = 128;
+        static readonly byte kDMDFrameBuffers = 3;
+        static readonly byte kDMDRows = 32;
+        readonly static byte kDMDSubFrames = 4;
         private bool dmdConfigured = false;
-        byte[] dmdMapping;
-        private int dmdMappingSize = 16;
-        private object procSyncObject = new object();
-        byte[] testFrame = new byte[128 * 32];
+        readonly byte[] dmdMapping;
+        private readonly int dmdMappingSize = 16;
+        private readonly object procSyncObject = new object();
+        readonly byte[] testFrame = new byte[128 * 32];
 
         /// <summary>
         /// Gets the <see cref="ProcHandle"/> when creating, see <see cref="PinProc.PRCreate(MachineType)"/>
@@ -112,7 +112,7 @@ namespace NetPinProc
         {
             if (!dmdConfigured)
             {
-                DMDConfig dmdConfig = new DMDConfig(kDMDColumns, kDMDRows);
+                DMDConfig dmdConfig = new (kDMDColumns, kDMDRows);
                 DMDConfigPopulateDefaults(ref dmdConfig);
                 PinProc.PRDMDUpdateConfig(ProcHandle, ref dmdConfig);
                 dmdConfigured = true;
@@ -128,7 +128,7 @@ namespace NetPinProc
         {
             if (!dmdConfigured)
             {
-                DMDConfig dmdConfig = new DMDConfig(kDMDColumns, kDMDRows);
+                DMDConfig dmdConfig = new (kDMDColumns, kDMDRows);
                 DMDConfigPopulateDefaults(ref dmdConfig);
                 PinProc.PRDMDUpdateConfig(ProcHandle, ref dmdConfig);
                 dmdConfigured = true;
@@ -145,7 +145,7 @@ namespace NetPinProc
         /// <param name="high_cycles"></param>
         public void DmdUpdateConfig(ushort[] high_cycles)
         {
-            DMDConfig dmdConfig = new DMDConfig();
+            DMDConfig dmdConfig = new ();
             DMDConfigPopulateDefaults(ref dmdConfig);
             if (high_cycles == null || high_cycles.Length != 4)
                 return;
@@ -179,16 +179,18 @@ namespace NetPinProc
         {
             lock (procSyncObject)
             {
-                DriverGroupConfig group = new DriverGroupConfig();
-                group.GroupNum = group_num;
-                group.SlowTime = slow_time;
-                group.EnableIndex = enable_index;
-                group.RowActivateIndex = row_activate_index;
-                group.RowEnableSelect = row_enable_select;
-                group.Matrixed = matrixed;
-                group.Polarity = polarity;
-                group.Active = active;
-                group.DisableStrobeAfter = disable_strobe_after;
+                DriverGroupConfig group = new()
+                {
+                    GroupNum = group_num,
+                    SlowTime = slow_time,
+                    EnableIndex = enable_index,
+                    RowActivateIndex = row_activate_index,
+                    RowEnableSelect = row_enable_select,
+                    Matrixed = matrixed,
+                    Polarity = polarity,
+                    Active = active,
+                    DisableStrobeAfter = disable_strobe_after
+                };
 
                 PinProc.PRDriverUpdateGroupConfig(ProcHandle, ref group);
             }
@@ -245,7 +247,7 @@ namespace NetPinProc
         /// <returns></returns>
         public DriverState DriverGetState(ushort number)
         {
-            DriverState ds = new DriverState();
+            DriverState ds = new ();
             lock (procSyncObject)
             {
                 PinProc.PRDriverGetState(ProcHandle, (byte)number, ref ds);
@@ -465,20 +467,22 @@ namespace NetPinProc
         {
             lock (procSyncObject)
             {
-                DriverGlobalConfig globals = new DriverGlobalConfig();
-                globals.EnableOutputs = enable;
-                globals.GlobalPolarity = polarity;
-                globals.UseClear = use_clear;
-                globals.StrobeStartSelect = strobe_start_select;
-                globals.StartStrobeTime = start_strobe_time;
-                globals.MatrixRowEnableIndex0 = matrix_row_enable_index0;
-                globals.MatrixRowEnableIndex1 = matrix_row_enable_index1;
-                globals.ActiveLowMatrixRows = active_low_matrix_rows;
-                globals.TickleSternWatchdog = tickle_stern_watchdog;
-                globals.EncodeEnables = encode_enables;
-                globals.WatchdogExpired = watchdog_expired;
-                globals.WatchdogEnable = watchdog_enable;
-                globals.WatchdogResetTime = watchdog_reset_time;
+                DriverGlobalConfig globals = new()
+                {
+                    EnableOutputs = enable,
+                    GlobalPolarity = polarity,
+                    UseClear = use_clear,
+                    StrobeStartSelect = strobe_start_select,
+                    StartStrobeTime = start_strobe_time,
+                    MatrixRowEnableIndex0 = matrix_row_enable_index0,
+                    MatrixRowEnableIndex1 = matrix_row_enable_index1,
+                    ActiveLowMatrixRows = active_low_matrix_rows,
+                    TickleSternWatchdog = tickle_stern_watchdog,
+                    EncodeEnables = encode_enables,
+                    WatchdogExpired = watchdog_expired,
+                    WatchdogEnable = watchdog_enable,
+                    WatchdogResetTime = watchdog_reset_time
+                };
 
                 PinProc.PRDriverUpdateGlobalConfig(ProcHandle, ref globals);
             }
@@ -616,7 +620,7 @@ namespace NetPinProc
             AttrCollection<ushort, string, PdServo> _servos = null,
             AttrCollection<ushort, string, PdSerialLed> _serialLeds = null)
         {
-            List<VirtualDriver> new_virtual_drivers = new List<VirtualDriver>();
+            List<VirtualDriver> new_virtual_drivers = new();
             bool polarity = (g_machineType == MachineType.SternWhitestar || g_machineType == MachineType.SternSAM || g_machineType == MachineType.PDB);
 
             PDBConfig pdb_config = null;
@@ -876,7 +880,7 @@ namespace NetPinProc
             {
                 foreach (GIConfigFileEntry ge in config.PRGI)
                 {
-                    Driver d = new Driver(this, ge.Name, PinProc.PRDecode(g_machineType, ge.Number));
+                    Driver d = new (this, ge.Name, PinProc.PRDecode(g_machineType, ge.Number));
                     Logger?.Log("Adding GI " + d.ToString(), LogLevel.Verbose);
                     _gi.Add(d.Number, d.Name, d);
                 }
@@ -885,8 +889,8 @@ namespace NetPinProc
             foreach (VirtualDriver virtual_driver in new_virtual_drivers)
             {
                 int base_group_number = virtual_driver.Number / 8;
-                List<Driver> items_to_remove = new List<Driver>();
-                foreach (Driver d in _coils?.Values)
+                List<Driver> items_to_remove = new();
+                foreach (Driver d in (_coils?.Values).Cast<Driver>())
                 {
                     if (d.Number / 8 == base_group_number)
                         items_to_remove.Add(d);
@@ -894,11 +898,11 @@ namespace NetPinProc
                 foreach (Driver d in items_to_remove)
                 {
                     _coils.Remove(d.Name);
-                    VirtualDriver vd = new VirtualDriver(this, d.Name, d.Number, polarity);
+                    VirtualDriver vd = new(this, d.Name, d.Number, polarity);
                     _coils.Add(d.Number, d.Name, d);
                 }
                 items_to_remove.Clear();
-                foreach (Driver d in _lamps?.Values)
+                foreach (Driver d in (_lamps?.Values).Cast<Driver>())
                 {
                     if (d.Number / 8 == base_group_number)
                         items_to_remove.Add(d);
@@ -906,7 +910,7 @@ namespace NetPinProc
                 foreach (Driver d in items_to_remove)
                 {
                     _lamps.Remove(d.Name);
-                    VirtualDriver vd = new VirtualDriver(this, d.Name, d.Number, polarity);
+                    VirtualDriver vd = new(this, d.Name, d.Number, polarity);
                     _lamps.Add(d.Number, d.Name, d);
                 }
             }
@@ -946,16 +950,18 @@ namespace NetPinProc
             if (firstTime)
             {
                 firstTime = false;
-                SwitchConfig switchConfig = new SwitchConfig();
-                switchConfig.Clear = false;
-                switchConfig.UseColumn8 = use_column_8;
-                switchConfig.UseColumn9 = false; // No WPC machines actually use this
-                switchConfig.HostEventsEnable = true;
-                switchConfig.DirectMatrixScanLoopTime = 2; // Milliseconds
-                switchConfig.PulsesBeforeCheckingRX = 10;
-                switchConfig.InactivePulsesAfterBurst = 12;
-                switchConfig.PulsesPerBurst = 6;
-                switchConfig.PulseHalfPeriodTime = 13; // Milliseconds
+                SwitchConfig switchConfig = new()
+                {
+                    Clear = false,
+                    UseColumn8 = use_column_8,
+                    UseColumn9 = false, // No WPC machines actually use this
+                    HostEventsEnable = true,
+                    DirectMatrixScanLoopTime = 2, // Milliseconds
+                    PulsesBeforeCheckingRX = 10,
+                    InactivePulsesAfterBurst = 12,
+                    PulsesPerBurst = 6,
+                    PulseHalfPeriodTime = 13 // Milliseconds
+                };
                 lock (procSyncObject)
                 {
                     PinProc.PRSwitchUpdateConfig(ProcHandle, ref switchConfig);

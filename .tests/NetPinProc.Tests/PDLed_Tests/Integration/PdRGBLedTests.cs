@@ -12,7 +12,7 @@ namespace NetPinProc.Tests.PDLed_Tests.Integration
     /// <summary>Test RGBs on PD LED boards for P3ROC-PDB</summary>
     public class PdRGBLedTests : ProcDeviceTestBase
     {
-        AttrCollection<ushort, string, LED> _leds = new();
+        readonly AttrCollection<ushort, string, LED> _leds = new();
 
         [Theory]
         [InlineData(10000)]

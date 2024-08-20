@@ -8,7 +8,7 @@ namespace NetProc.FakeProcDevice
 {
     class Program
     {
-        static CancellationTokenSource source = new CancellationTokenSource();
+        static readonly CancellationTokenSource source = new();
         private static AttrCollection<ushort, string, Switch> _switches;
         private static AttrCollection<ushort, string, LED> _leds;
         private static AttrCollection<ushort, string, IDriver> _coils;
@@ -49,7 +49,7 @@ namespace NetProc.FakeProcDevice
                     string line = "";
                     while ((line = Console.ReadLine()) != null)
                     {
-                        ushort.TryParse(line, out var number);
+                        _ = ushort.TryParse(line, out var number);
                         if (number > 0)
                         {
                             PROC.AddSwitchEvent(number, EventType.SwitchClosedDebounced);

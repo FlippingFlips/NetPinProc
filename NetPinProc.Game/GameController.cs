@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using NetPinProc.Domain;
 using NetPinProc.Domain.Pdb;
@@ -18,7 +19,7 @@ namespace NetPinProc.Game
         /// <summary>
         /// Thread synchronization object for coils
         /// </summary>
-        protected object _coil_lock_object = new object();
+        protected readonly object _coil_lock_object = new();
 
         /// <summary>
         /// Coils, used by the machine when setting up
@@ -38,7 +39,7 @@ namespace NetPinProc.Game
         /// <summary>
         /// Contains information specific to the particular location installation (high scores, audits, etc).
         /// </summary>
-        protected object _game_data;
+        protected readonly object _game_data;
 
         /// <summary>
         /// Game loops waits for this cancel request token source
@@ -62,7 +63,7 @@ namespace NetPinProc.Game
         /// <summary>
         /// Machine type used to configure the proc device
         /// </summary>
-        protected MachineType _machineType;        
+        protected readonly MachineType _machineType;        
 
         /// <summary>
         /// 
@@ -93,7 +94,7 @@ namespace NetPinProc.Game
         /// List of coils to drive that is manipulated from outside/UI threads
         /// TODO: This is set to be removed in favor of the UI process communication model
         /// </summary>
-        protected List<SafeCoilDrive> _safe_coil_drive_queue = new List<SafeCoilDrive>();
+        protected readonly List<SafeCoilDrive> _safe_coil_drive_queue = new ();
 
         /// <summary>
         /// TODO: implement switch object lists
@@ -115,7 +116,7 @@ namespace NetPinProc.Game
         /// <summary>
         /// Contains local game information such as volume
         /// </summary>
-        protected object _user_settings;
+        protected readonly object _user_settings;
 
         /// <inheritdoc/>
         public int Ball { get; private set; }
@@ -128,7 +129,7 @@ namespace NetPinProc.Game
         /// <summary>
         /// The number of balls per game
         /// </summary>
-        protected byte BallsPerGame = 3;
+        protected readonly byte BallsPerGame = 3;
 
         /// <summary>
         /// The starting time of the current ball
@@ -140,7 +141,7 @@ namespace NetPinProc.Game
         /// </summary>
         protected double BootTime = 0;
 
-        private bool _simulated;
+        private readonly bool _simulated;
 
         /// <summary>
         /// Creates a new GameController object with the given machine type and logging infrastructure. <para/>
@@ -151,7 +152,7 @@ namespace NetPinProc.Game
         /// <param name="simulated">If true then a <see cref="FakePinProc"/> will be created instead of a <see cref="ProcDevice"/></param>
         public GameController(MachineType machineType, ILogger logger = null, bool simulated = false)
         {
-            if (logger == null) logger = new ConsoleLogger(LogLevel.Verbose);
+            logger ??= new ConsoleLogger(LogLevel.Verbose);
             Logger = logger;
             _machineType = machineType;
             _simulated = simulated;
@@ -588,7 +589,7 @@ namespace NetPinProc.Game
             _num_balls_total = config.PRGame.NumBalls;
             
             Logger?.Log(nameof(GameController) + " setting up P-ROC machine from config.", LogLevel.Info);
-            if (PROC != null) PROC.SetupProcMachine(config, _coils, _switches, _lamps, _leds, _gi, _steppers, _servos, _serialLeds);
+            PROC?.SetupProcMachine(config, _coils, _switches, _lamps, _leds, _gi, _steppers, _servos, _serialLeds);
         }
 
         /// <inheritdoc/>
@@ -680,8 +681,7 @@ namespace NetPinProc.Game
                         _safe_coil_drive_queue.Clear();
                     }
 
-                    if (_proc != null)
-                        _proc.WatchDogTickle();
+                    _proc?.WatchDogTickle();
 
                     if (delay > 0)
                         Thread.Sleep(delay);
@@ -705,9 +705,11 @@ namespace NetPinProc.Game
         /// <inheritdoc/>
         public void SafeDisableCoil(string coilName)
         {
-            SafeCoilDrive d = new SafeCoilDrive();
-            d.coil_name = coilName;
-            d.disable = true;
+            SafeCoilDrive d = new()
+            {
+                coil_name = coilName,
+                disable = true
+            };
             lock (_coil_lock_object)
             {
                 _safe_coil_drive_queue.Add(d);
@@ -717,10 +719,12 @@ namespace NetPinProc.Game
         /// <inheritdoc/>
         public void SafeDriveCoil(string coilName, ushort pulse_time = 30)
         {
-            SafeCoilDrive d = new SafeCoilDrive();
-            d.coil_name = coilName;
-            d.pulse = true;
-            d.pulse_time = pulse_time;
+            SafeCoilDrive d = new()
+            {
+                coil_name = coilName,
+                pulse = true,
+                pulse_time = pulse_time
+            };
             lock (_coil_lock_object)
             {
                 _safe_coil_drive_queue.Add(d);
@@ -746,10 +750,10 @@ namespace NetPinProc.Game
         /// <inheritdoc/>
         public virtual void TickVirtualDrivers()
         {
-            foreach (Driver coil in _coils.Values)
+            foreach (Driver coil in _coils.Values.Cast<Driver>())
                 coil.Tick();
 
-            foreach (Driver lamp in _lamps.Values)
+            foreach (Driver lamp in _lamps.Values.Cast<Driver>())
                 lamp.Tick();
 
             foreach (LED led in _leds.Values)

@@ -21,7 +21,7 @@ namespace NetPinProc.Domain
         private bool _scriptRepeat;
         private int _scriptRuntime;
         private double _scriptStartTime;
-        private IPDLED board;
+        private readonly IPDLED board;
         private string function = "none";
         private double lastTimeChanged;
 

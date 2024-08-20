@@ -10,7 +10,7 @@ namespace NetPinProc.Tests.PDLed_Tests.Integration
     public class PdStepperTests : ProcDeviceTestBase
     {
         /// <summary>PROC.SetupProcMachine will assign the items from the machine.json</summary>
-        AttrCollection<ushort, string, PdStepper> _steppers = new();
+        readonly AttrCollection<ushort, string, PdStepper> _steppers = new();
 
         /// <summary>, dont move far in case jam for too long
         /// </summary>
