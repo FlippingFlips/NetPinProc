@@ -23,5 +23,9 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\NetPinProc\NetPinProc.csproj" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Modes\" />
+	</ItemGroup>
 	
 </Project>
