@@ -15,27 +15,21 @@ namespace NetPinProc.Domain.Mode
     /// </summary>
     public class Trough : Mode
     {
-        /// <summary>
-        /// On Ball saved
-        /// </summary>
+        /// <summary>On Ball saved</summary>
         public Delegate BallSaveCallback = null;
-        /// <summary>
-        /// On Ball drained
-        /// </summary>
+
+        /// <summary>On Ball drained</summary>
         public Delegate DrainCallback;
-        /// <summary>
-        /// 
-        /// </summary>
+
+        /// <summary>On ball launched from trough</summary>
         public Delegate LaunchCallback = null;
-        /// <summary>
-        /// Number of balls in play
-        /// </summary>
+
+        /// <summary>Number of balls in play</summary>
         public int NumBallsInPlay;
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary></summary>
         public Delegate NumBallsToSaveCallback = null;
+
         bool ball_save_active = false;        
         string[] early_save_switchnames;
         string eject_coilname;
@@ -47,9 +41,7 @@ namespace NetPinProc.Domain.Mode
         string[] position_switchnames;
         string shooter_lane_switchname;
 
-        /// <summary>
-        /// Adds switch handlers for the <see cref="position_switchnames"/> and <see cref="early_save_switchnames"/>
-        /// </summary>
+        /// <summary>Adds switch handlers for the <see cref="position_switchnames"/> and <see cref="early_save_switchnames"/></summary>
         /// <param name="game"></param>
         /// <param name="position_switchnames"></param>
         /// <param name="eject_switchname">must be provided. If this switch is on then the ball is ready to be ejected. See early saves</param>
@@ -112,17 +104,17 @@ namespace NetPinProc.Domain.Mode
             game?.Config?.GetNamesFromTag("early", MachineItemType.Switch), game?.Config?.GetNameFromTag("shooterLane", MachineItemType.Switch), drain_callback)
         { }
 
-        /// <summary>
-        /// Sets the <see cref="ball_save_active"/> to _enabled
-        /// </summary>
-        /// <param name="enabled"></param>
-        public void EnableBallSave(bool enabled = true) => ball_save_active = enabled;
+        /// <summary></summary>
+        /// <returns>ball_save_active</returns>
+        public virtual bool BallSaveActive() => ball_save_active;
 
-        /// <summary>
-        /// Check whether or not the trough has all balls
-        /// </summary>
+        /// <summary>Sets the <see cref="ball_save_active"/> to _enabled</summary>
+        /// <param name="enabled"></param>
+        public virtual void EnableBallSave(bool enabled = true) => ball_save_active = enabled;
+
+        /// <summary>Check whether or not the trough has all balls</summary>
         /// <returns>True if all balls are in the trough</returns>
-        public bool IsFull() => this.NumBalls() == Game.Config.PRGame.NumBalls;
+        public virtual bool IsFull() => this.NumBalls() == Game.Config.PRGame.NumBalls;
 
         /// <summary>
         /// Launches balls into play
@@ -133,7 +125,7 @@ namespace NetPinProc.Domain.Mode
         /// <param name="stealth">Set to true if the balls being launched should NOT be added to the number of balls in play.
         /// For instance, if a ball is being locked on the playfield and a new ball is being launched to replace it as the active ball
         /// then stealth should be true</param>
-        public void LaunchBalls(int num, Delegate callback = null, bool stealth = false)
+        public virtual void LaunchBalls(int num, Delegate callback = null, bool stealth = false)
         {
             num_balls_to_launch += num;
             if (stealth)
@@ -152,15 +144,9 @@ namespace NetPinProc.Domain.Mode
         ///<inheritdoc/>
         public override void ModeStopped() => CancelDelayed(nameof(CheckSwitches));
 
-        /// <summary></summary>
-        /// <returns>ball_save_active</returns>
-        public bool BallSaveActive() => ball_save_active;
-
-        /// <summary>
-        /// Returns the number of balls in the trough by counting the trough switches that are active
-        /// </summary>
+        /// <summary>Returns the number of balls in the trough by counting the trough switches that are active</summary>
         /// <returns>The number of balls in the trough</returns>
-        public int NumBalls()
+        public virtual int NumBalls()
         {
             int ball_count = 0;
             foreach (string sw in position_switchnames)
@@ -237,9 +223,7 @@ namespace NetPinProc.Domain.Mode
             }
         }
 
-        /// <summary>
-        /// This is the part of the ball launch code that repeats for multiple launches
-        /// </summary>
+        /// <summary>This is the part of the ball launch code that repeats for multiple launches</summary>
         private void CommonLaunchCode()
         {
             // Only kick out another ball if the last ball is gone from the shooter lane
@@ -289,9 +273,7 @@ namespace NetPinProc.Domain.Mode
             return SWITCH_CONTINUE;
         }
 
-        /// <summary>
-        /// Print checks of the switch items passed to the Trough
-        /// </summary>
+        /// <summary>Print checks of the switch items passed to the Trough</summary>
         private void LogChecks()
         {
             if (position_switchnames?.Length <= 0)

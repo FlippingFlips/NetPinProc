@@ -1,17 +1,14 @@
 ﻿namespace NetPinProc.Domain.Pdb
 {
-    /// <summary>
-    /// PDLEd board stepper
-    /// </summary>
+    /// <summary>PDLEd board stepper</summary>
     public class PdStepper
     {
         /// <inheritdoc/>
         public readonly uint BoardAddress;
+
         private readonly IPDLED board;
 
-        /// <summary>
-        /// Sets up a stepper and registering the speed
-        /// </summary>
+        /// <summary>Sets up a stepper and registering the speed</summary>
         /// <param name="proc"></param>
         /// <param name="name"></param>
         /// <param name="boardId"></param>
@@ -23,6 +20,7 @@
             Name = name;
             BoardAddress = boardId;
             StepperIndex = stepperIndex;
+            StopSwitch = stopSw;
             
             //get the board this led address uses
             var pdLedBoard = PdLeds.GetPdLedBoard(BoardAddress);
@@ -39,6 +37,18 @@
         }
 
         /// <inheritdoc/>
+        public string Name { get; set; }
+
+        /// <inheritdoc/>
+        public uint Speed { get; private set; }
+
+        /// <inheritdoc/>
+        public byte StepperIndex { get; }
+
+        /// <inheritdoc/>
+        public string StopSwitch { get; set; }
+
+        /// <inheritdoc/>
         public void Move(int pos)
         {
             var sIndex = 23 + StepperIndex;
@@ -50,20 +60,9 @@
             }
         }
 
-        public void Stop() => board.WriteConfigRegister((uint)23 + StepperIndex, 0);
-
-        /// <inheritdoc/>
-        public byte StepperIndex { get; }
-
-        /// <inheritdoc/>
-        public uint Speed { get; private set; }
-
-        /// <inheritdoc/>
-        public string Name { get; set; }
-
         /// <summary>
         /// register the stepper speed = Stepper Ticks Per Half Period <para/>
-        /// Try speeds of 2500 for fast and higher values for slow
+        /// Try speeds of 2500 for fast and higher values for slow, this is totally dependent on your driver and stepper though
         /// </summary>
         /// <param name="speed"></param>
         public void SetSpeed(uint speed)
@@ -72,5 +71,8 @@
 
             board.WriteConfigRegister(22, Speed);
         }
+
+        /// <summary>Sets zero on the config register for this stepper</summary>
+        public void Stop() => board.WriteConfigRegister((uint)23 + StepperIndex, 0);
     }
 }
