@@ -740,11 +740,16 @@ namespace NetPinProc
                 {
                     if (st.IsEnabled)
                     {
-                        var stepper = new PdStepper(this,
-                        st.Name, st.BoardId,
-                        st.IsStepper1 ? (byte)1 : (byte)0,
-                        st.Speed);
-                         
+                        Switch sw = null;
+
+                        //pass in the stop switch if one is set
+                        if (!string.IsNullOrWhiteSpace(st.StopSwitch) && _switches.ContainsKey(st.StopSwitch))
+                            sw = _switches[st.StopSwitch];
+
+                        //create new PdStepper and add it
+                        var stepper = new PdStepper(this, st.Name, st.BoardId,
+                        st.IsStepper1 ? (byte)1 : (byte)0, st.Speed, sw);
+
                         _steppers.Add(i, st.Name, stepper);
                         i++;
                     }                    

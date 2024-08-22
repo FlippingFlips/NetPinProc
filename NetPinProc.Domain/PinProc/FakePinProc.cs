@@ -248,13 +248,13 @@ namespace NetPinProc.Domain
         /// </summary>
         /// <param name="dmdEvents"></param>
         /// <returns></returns>
-        public Event[] Getevents(bool dmdEvents = true)
+        public Event[] Getevents(bool dmdEvents = false)
         {
             List<Event> events = new List<Event>();
             events.AddRange(this.switch_events);
             this.switch_events.Clear();
 
-            if (dmdEvents)
+            if (_machineType != MachineType.PDB && dmdEvents)
             {
                 now = Time.GetTime();
                 double seconds_since_last_dmd_event = now - this.last_dmd_event;
@@ -364,39 +364,6 @@ namespace NetPinProc.Domain
                 }
             }
 
-            //process and add leds
-            if (_machineType == MachineType.PDB && _leds != null)
-            {
-                ushort i = 0;
-                foreach (LedConfigFileEntry le in config.PRLeds)
-                {
-                    LED led = new LED(this, le.Name, i, le.Number);
-                    string number;
-                    number = le.Number;
-                    led.Polarity = le.Polarity;
-                    _leds.Add(i, led.Name, led);
-                    i++;
-                }
-            }
-            
-            if (_machineType == MachineType.PDB && _steppers != null)
-            {
-                ushort i = 0;
-                foreach (StepperConfigFileEntry st in config.PRSteppers)
-                {
-                    if (st.IsEnabled)
-                    {
-                        var stepper = new PdStepper(this,
-                        st.Name, st.BoardId,
-                        st.IsStepper1 ? (byte)1 : (byte)0,
-                        st.Speed);
-
-                        _steppers.Add(i, st.Name, stepper);
-                        i++;
-                    }
-                }
-            }
-
             if (_switches != null)
             {
                 foreach (SwitchConfigFileEntry se in config.PRSwitches)
@@ -420,7 +387,7 @@ namespace NetPinProc.Domain
                     {
                         number = PinProcDecoder.PRDecode(_machineType, se.Number);
                     }
-                    
+
                     var s = new Switch(this, se.Name, number, se.Type);
                     s.Number = number;
                     SwitchUpdateRule(number,
@@ -447,7 +414,46 @@ namespace NetPinProc.Domain
                 }
             }
 
-            if(_lamps != null)
+            //process and add leds
+            if (_machineType == MachineType.PDB && _leds != null)
+            {
+                ushort i = 0;
+                foreach (LedConfigFileEntry le in config.PRLeds)
+                {
+                    LED led = new LED(this, le.Name, i, le.Number);
+                    string number;
+                    number = le.Number;
+                    led.Polarity = le.Polarity;
+                    _leds.Add(i, led.Name, led);
+                    i++;
+                }
+            }
+
+            //process and add steppers
+            if (_machineType == MachineType.PDB && _steppers != null)
+            {
+                ushort i = 0;
+                foreach (StepperConfigFileEntry st in config.PRSteppers)
+                {
+                    if (st.IsEnabled)
+                    {
+                        Switch sw = null;
+
+                        //pass in the stop switch if one is set
+                        if (!string.IsNullOrWhiteSpace(st.StopSwitch) && _switches.ContainsKey(st.StopSwitch))
+                            sw = _switches[st.StopSwitch];
+
+                        //create new PdStepper and add it
+                        var stepper = new PdStepper(this, st.Name, st.BoardId,
+                        st.IsStepper1 ? (byte)1 : (byte)0, st.Speed, sw);
+
+                        _steppers.Add(i, st.Name, stepper);
+                        i++;
+                    }
+                }
+            }
+
+            if (_lamps != null)
             {
                 foreach (LampConfigFileEntry le in config.PRLamps)
                 {

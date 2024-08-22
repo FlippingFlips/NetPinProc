@@ -15,7 +15,7 @@
         /// <param name="stepperIndex"></param>
         /// <param name="speed"></param>
         /// <param name="stopSw"></param>
-        public PdStepper(IProcDevice proc, string name, uint boardId, byte stepperIndex, uint speed, string stopSw = null)
+        public PdStepper(IProcDevice proc, string name, uint boardId, byte stepperIndex, uint speed, Switch stopSw = null)
         {
             Name = name;
             BoardAddress = boardId;
@@ -45,11 +45,11 @@
         /// <inheritdoc/>
         public byte StepperIndex { get; }
 
-        /// <inheritdoc/>
-        public string StopSwitch { get; set; }
+        /// <summary></summary>
+        public Switch StopSwitch { get; set; }
 
         /// <inheritdoc/>
-        public void Move(int pos)
+        public virtual void Move(int pos)
         {
             var sIndex = 23 + StepperIndex;
             if (pos > 0)
@@ -65,7 +65,7 @@
         /// Try speeds of 2500 for fast and higher values for slow, this is totally dependent on your driver and stepper though
         /// </summary>
         /// <param name="speed"></param>
-        public void SetSpeed(uint speed)
+        public virtual void SetSpeed(uint speed)
         {
             Speed = speed;
 
@@ -73,6 +73,6 @@
         }
 
         /// <summary>Sets zero on the config register for this stepper</summary>
-        public void Stop() => board.WriteConfigRegister((uint)23 + StepperIndex, 0);
+        public virtual void Stop() => board.WriteConfigRegister((uint)23 + StepperIndex, 0);
     }
 }

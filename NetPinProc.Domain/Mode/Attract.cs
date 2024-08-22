@@ -26,7 +26,7 @@
             }
             else
             {
-                Game.Logger?.Log("attract start. trough balls:" + _game.Trough.NumBalls(), PinProc.LogLevel.Debug);
+                Game.Logger?.Log("attract start. trough balls:" + Game.Trough.NumBalls(), PinProc.LogLevel.Debug);
                 //TODO: Ball search
             }
             return SWITCH_CONTINUE;

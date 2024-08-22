@@ -1,4 +1,5 @@
 ﻿using NetPinProc.Domain.Mode;
+using NetPinProc.Domain.Pdb;
 using NetPinProc.Domain.PinProc;
 using System.Collections.Generic;
 using System.Threading;
@@ -46,6 +47,12 @@ namespace NetPinProc.Domain
 
         /// <summary>PROC device driver wrapper</summary>
         IProcDevice PROC { get; }
+
+        /// <summary>All pd-led servos within the game</summary>
+        AttrCollection<ushort, string, PdServo> Servos { get; set; }
+
+        /// <summary>All pd-led steppers within the game</summary>
+        AttrCollection<ushort, string, PdStepper> Steppers { get; set; }
 
         /// <summary>A Trough mode</summary>
         Trough Trough { get; set; }
