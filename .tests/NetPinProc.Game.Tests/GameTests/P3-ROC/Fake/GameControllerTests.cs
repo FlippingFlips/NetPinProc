@@ -1,8 +1,7 @@
 using NetPinProc.Domain;
+using NetPinProc.Domain.Mode;
 using NetPinProc.Domain.PinProc;
-using NetPinProc.Game.Modes;
 using NetPinProc.Game.Tests.Base;
-using NuGet.Frameworks;
 
 namespace NetPinProc.Game.Tests.GameTests.Fake
 {

@@ -76,6 +76,11 @@
       "Name": "start",
       "Number": "0/7",
       "Tags": "start"
+    },
+    {
+      "Name": "stepperStop",
+      "Number": "0/8",
+      "Tags": ""
     }
   ],
   "PRCoils": [
@@ -117,7 +122,8 @@
       "IsStepper1": true,
       "BoardId": 0,
       "Speed": 5000,
-      "IsEnabled": true
+      "IsEnabled": true,
+      "StopSwitch": "stepperStop"
     }
   ],
   "PRGI": [

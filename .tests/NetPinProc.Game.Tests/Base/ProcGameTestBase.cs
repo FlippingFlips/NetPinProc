@@ -3,6 +3,7 @@ using NetPinProc.Game.Tests.GameTests.Fake;
 
 namespace NetPinProc.Game.Tests.Base
 {
+    /// <summary>Base test class with helper methods to load config</summary>
     public abstract class ProcGameTestBase
     {
         protected CancellationTokenSource CancelSource = new();
@@ -18,7 +19,7 @@ namespace NetPinProc.Game.Tests.Base
     {
         protected FakeGame _game;
 
-        public GameContollerTestBase(bool fake = true)
+        public GameContollerTestBase(bool fake)
         {
             _game = new FakeGame(MachineConfiguration.PRGame.MachineType, null, fake);
             _game.LoadConfig(MachineConfiguration);
