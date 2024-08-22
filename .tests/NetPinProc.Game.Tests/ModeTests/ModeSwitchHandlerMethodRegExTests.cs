@@ -69,7 +69,7 @@ namespace NetPinProc.Domain.Tests
         public void ScanAllSwitchHandler_Tests()
         {
             var assembly = Assembly.GetAssembly(typeof(GameController));
-            var types = assembly?.GetTypes()?.Where(x => x.BaseType == typeof(Mode));
+            var types = assembly?.GetTypes()?.Where(x => x.BaseType == typeof(Mode.Mode));
             var results = new List<string>();
             if (types?.Count() > 0) 
             {

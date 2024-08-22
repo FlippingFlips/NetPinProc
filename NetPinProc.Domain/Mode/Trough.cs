@@ -1,8 +1,7 @@
-﻿using NetPinProc.Domain;
-using NetPinProc.Domain.PinProc;
+﻿using NetPinProc.Domain.PinProc;
 using System;
 
-namespace NetPinProc.Domain.Modes
+namespace NetPinProc.Domain.Mode
 {
     /// <summary>
     /// Manages trough by providing the following functionality: <para/>

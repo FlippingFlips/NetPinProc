@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using NetPinProc.Domain;
+using NetPinProc.Domain.Lamps;
 using NetPinProc.Domain.Pdb;
 using NetPinProc.Domain.PinProc;
 using NetPinProc.Domain.Players;

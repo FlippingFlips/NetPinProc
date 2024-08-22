@@ -1,7 +1,7 @@
 ﻿using System;
 using NetPinProc.Domain.PinProc;
 
-namespace NetPinProc.Domain
+namespace NetPinProc.Domain.Mode
 {
     internal class Delayed : IComparable<Delayed>
     {
@@ -21,12 +21,12 @@ namespace NetPinProc.Domain
         public double Time { get; set; }
         public int CompareTo(Delayed other)
         {
-            return other.Time.CompareTo(this.Time);
+            return other.Time.CompareTo(Time);
         }
 
         public override string ToString()
         {
-            return String.Format("name={0} time={1} event_type={2}", this.Name, this.Time, this.Event_Type);
+            return string.Format("name={0} time={1} event_type={2}", Name, Time, Event_Type);
         }
     }
 }

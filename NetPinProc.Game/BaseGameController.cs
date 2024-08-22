@@ -1,5 +1,5 @@
 ﻿using NetPinProc.Domain;
-using NetPinProc.Domain.Modes;
+using NetPinProc.Domain.Mode;
 using NetPinProc.Domain.PinProc;
 using System;
 

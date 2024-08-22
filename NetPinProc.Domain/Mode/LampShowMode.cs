@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NetPinProc.Domain
+namespace NetPinProc.Domain.Mode
 {
     /// <summary>
     /// Mode subclass that manages a single LampShow class updating it in the mode_tick method

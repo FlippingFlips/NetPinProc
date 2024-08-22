@@ -1,7 +1,7 @@
 ﻿using System;
 using NetPinProc.Domain.PinProc;
 
-namespace NetPinProc.Domain
+namespace NetPinProc.Domain.Machine
 {
     /// <inheritdoc/>
     internal class AcceptedSwitch : IEquatable<AcceptedSwitch>
@@ -22,8 +22,8 @@ namespace NetPinProc.Domain
         public object Param { get; set; }
         public bool Equals(AcceptedSwitch other)
         {
-            if (other.Delay == this.Delay && other.Name == this.Name
-                && other.Event_Type == this.Event_Type && other.Handler == this.Handler)
+            if (other.Delay == Delay && other.Name == Name
+                && other.Event_Type == Event_Type && other.Handler == Handler)
             {
                 return true;
             }
@@ -32,7 +32,7 @@ namespace NetPinProc.Domain
 
         public override string ToString()
         {
-            return String.Format("<name={0} event_type={1} delay={2}>", this.Name, this.Event_Type, this.Delay);
+            return string.Format("<name={0} event_type={1} delay={2}>", Name, Event_Type, Delay);
         }
     }
 }

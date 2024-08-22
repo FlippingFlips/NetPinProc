@@ -20,7 +20,8 @@ namespace NetPinProc.Tests.PDLed_Tests.Integration
         /// <param name="stopTestDelay"></param>
         /// <returns></returns>
         [Theory]
-        [InlineData("Stepper", 10000, 5000, 4000)]
+        //[InlineData("Stepper", 5000, -20000, 10000)]
+        [InlineData("Stepper", 5000, 10000, 5000)] //Henrietta NEMA stepper - minus values moves up Playfield -47000
         public async Task MoveStepperOnPDLEDBoard_Tests(
             string name,
             uint speed,
@@ -42,18 +43,25 @@ namespace NetPinProc.Tests.PDLed_Tests.Integration
 
                 //make sure the setup has added us some steppers
                 Assert.True(_steppers.Count > 0);
-
                 Assert.True(_steppers.ContainsKey(name));
 
+                PROC.WatchDogTickle();
+
+                PdStepper stepper = _steppers[name];
+                //stepper.Stop();
+                //await Task.Delay(2000);
+
                 //we have valid stepper from config, set speed and move
-                var stepper = _steppers[name];
+                
+                //stepper.Stop();
                 stepper.SetSpeed(speed);
-                stepper.Move(move);
+                PROC.WatchDogTickle();
+                stepper.Move(move);                
 
                 //close this test on delay and stop the stepper
                 await Task.Delay(stopTestDelay);
 
-                stepper.Stop();
+                //stepper.Stop();
                 PROC?.Close();
                                 
             }

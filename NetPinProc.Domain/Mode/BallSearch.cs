@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NetPinProc.Domain.Modes
+namespace NetPinProc.Domain.Mode
 {
     /// <summary>
     /// Pops coil when ended

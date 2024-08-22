@@ -1,8 +1,9 @@
-﻿using NetPinProc.Domain.PinProc;
+﻿using NetPinProc.Domain.Mode;
+using NetPinProc.Domain.PinProc;
 using System;
 using System.Collections.Generic;
 
-namespace NetPinProc.Domain
+namespace NetPinProc.Domain.Lamps
 {
     /// <summary>
     /// Controller object that encapsulates a LampShow class and helps to restore lamp drivers to their
@@ -46,38 +47,38 @@ namespace NetPinProc.Domain
         public LampController(IGameController game)
         {
             this.game = game;
-            this.Show = new LampShowMode(game);
-            this.SavedStateDicts = new Dictionary<string, SavedLampState>();
-            this.Shows = new Dictionary<string, string>();
+            Show = new LampShowMode(game);
+            SavedStateDicts = new Dictionary<string, SavedLampState>();
+            Shows = new Dictionary<string, string>();
         }
 
         /// <inheritdoc/>
         public void PlayShow(string key, bool repeat = false, Delegate callback = null)
         {
             // Always Stop any previously running Show first
-            this.StopShow();
-            this.Show.Load(this.Shows[key], repeat, callback);
-            this.game.Modes.Add(this.Show);
-            this.ShowPlaying = true;
+            StopShow();
+            Show.Load(Shows[key], repeat, callback);
+            game.Modes.Add(Show);
+            ShowPlaying = true;
         }
 
         /// <inheritdoc/>
-        public void RegisterShow(string key, string show_file) => this.Shows.Add(key, show_file);
+        public void RegisterShow(string key, string show_file) => Shows.Add(key, show_file);
 
         /// <summary>
         /// Restores playback from <see cref="RestoreState(string)"/> by using the <see cref="ResumeKey"/>
         /// </summary>  
         public void RestorePlayback()
         {
-            this.ResumeState = false;
-            this.RestoreState(this.ResumeKey);
+            ResumeState = false;
+            RestoreState(ResumeKey);
             //this.callback() ?
         }
 
         /// <inheritdoc/>
         public void RestoreState(string key)
         {
-            if (this.SavedStateDicts.ContainsKey(key))
+            if (SavedStateDicts.ContainsKey(key))
             {
                 int duration = 0;
                 SavedLampState state = SavedStateDicts[key];
@@ -85,12 +86,12 @@ namespace NetPinProc.Domain
                 {
                     if (!lamp_name.StartsWith("gi0"))
                     {
-                        double time_remaining = (state.LampStates[lamp_name].state.OutputDriveTime + state.LampStates[lamp_name].time) - state.TimeSaved;
+                        double time_remaining = state.LampStates[lamp_name].state.OutputDriveTime + state.LampStates[lamp_name].time - state.TimeSaved;
                         // Disable the lamp if it has never been used or if there would have been
                         // less than 1 second of drive time when the state was saved
                         if ((state.LampStates[lamp_name].time == 0 || time_remaining < 1.0)
                             && state.LampStates[lamp_name].state.OutputDriveTime != 0)
-                            this.game.Lamps[lamp_name].Disable();
+                            game.Lamps[lamp_name].Disable();
                         else
                         {
                             // Otherwise, resume the lamp
@@ -103,10 +104,10 @@ namespace NetPinProc.Domain
                                 duration = (int)time_remaining;
                             }
                             if (state.LampStates[lamp_name].state.Timeslots == 0)
-                                this.game.Lamps[lamp_name].Disable();
+                                game.Lamps[lamp_name].Disable();
                             else
                             {
-                                this.game.Lamps[lamp_name].Schedule(state.LampStates[lamp_name].state.Timeslots,
+                                game.Lamps[lamp_name].Schedule(state.LampStates[lamp_name].state.Timeslots,
                                     duration,
                                     state.LampStates[lamp_name].state.WaitForFirstTimeSlot);
                             }
@@ -121,15 +122,15 @@ namespace NetPinProc.Domain
         {
             SavedLampState state = new SavedLampState();
             state.TimeSaved = Time.GetTime();
-            foreach (IDriver lamp in this.game.Lamps.Values)
+            foreach (IDriver lamp in game.Lamps.Values)
             {
                 state.LampStates.Add(lamp.Name, new LampStateRecord(lamp.LastTimeChanged, lamp.State));
             }
 
-            if (this.SavedStateDicts.ContainsKey(key))
-                this.SavedStateDicts[key] = state;
+            if (SavedStateDicts.ContainsKey(key))
+                SavedStateDicts[key] = state;
             else
-                this.SavedStateDicts.Add(key, state);
+                SavedStateDicts.Add(key, state);
         }
 
         /// <summary>
@@ -138,8 +139,8 @@ namespace NetPinProc.Domain
         public void StopShow()
         {
             if (ShowPlaying)
-                this.game.Modes.Remove(this.Show);
-            this.ShowPlaying = false;
+                game.Modes.Remove(Show);
+            ShowPlaying = false;
         }
 
         struct LampStateRecord

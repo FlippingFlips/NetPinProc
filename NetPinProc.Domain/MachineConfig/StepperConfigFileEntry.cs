@@ -19,5 +19,8 @@
 
         /// <summary> Flag to enable the servo read by config before registering to proc</summary>
         public bool IsEnabled { get; set; } = true;
+
+        /// <summary> Stop Home / End switch</summary>
+        public string StopSwitch { get; set; }
     }
 }

@@ -2,9 +2,10 @@
 using System.Threading;
 using NetProcGameTest.game;
 using NetPinProc.Domain;
-using NetPinProc.Domain.Modes;
 using NetPinProc.Domain.PinProc;
 using NetPinProc.Ports.WSLED;
+using NetPinProc.Domain.Mode;
+using NetPinProc.Domain.Lamps;
 
 namespace PinprocTest.StarterGame
 {

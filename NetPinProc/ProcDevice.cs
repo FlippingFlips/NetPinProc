@@ -665,6 +665,57 @@ namespace NetPinProc
                 }
             }
 
+            if (_switches != null)
+            {
+                foreach (SwitchConfigFileEntry se in config.PRSwitches)
+                {
+                    //Log (se.Number);
+                    var s = new Switch(this, se.Name, PinProc.PRDecode(g_machineType, se.Number), se.Type);
+
+                    ushort number = 0;
+                    if (g_machineType == MachineType.PDB)
+                    {
+                        var num = pdb_config.GetProcNumber("PRSwitches", se.Number);
+                        if (num == -1)
+                        {
+                            Console.WriteLine("Switch {0} cannot be controlled by the P-ROC. Ignoring...", se.Name);
+                            continue;
+                        }
+                        else
+                        {
+                            number = Convert.ToUInt16(num);
+                        }
+                    }
+                    else
+                    {
+                        number = PinProc.PRDecode(g_machineType, se.Number);
+                    }
+
+                    s.Number = number;
+                    SwitchUpdateRule(number,
+                        EventType.SwitchClosedDebounced,
+                        new SwitchRule { NotifyHost = true, ReloadActive = false },
+                        null,
+                        false
+                    );
+                    SwitchUpdateRule(number,
+                        EventType.SwitchOpenDebounced,
+                        new SwitchRule { NotifyHost = true, ReloadActive = false },
+                        null,
+                        false
+                    );
+                    Logger?.Log("Adding switch " + s.ToString(), LogLevel.Verbose);
+                    _switches.Add(s.Number, s.Name, s);
+                }
+
+                // TODO: THIS SHOULD RETURN A LIST OF STATES
+                EventType[] states = SwitchGetStates();
+                foreach (Switch s in _switches.Values)
+                {
+                    s.SetState(states[s.Number] == EventType.SwitchClosedDebounced);
+                }
+            }
+
             //process and add leds
             if (g_machineType == MachineType.PDB && _leds != null)
             {
@@ -693,7 +744,7 @@ namespace NetPinProc
                         st.Name, st.BoardId,
                         st.IsStepper1 ? (byte)1 : (byte)0,
                         st.Speed);
-
+                         
                         _steppers.Add(i, st.Name, stepper);
                         i++;
                     }                    
@@ -823,58 +874,7 @@ namespace NetPinProc
 
                 //todo: servoMaxValue config
                 x.WriteServoRegister(500);
-            });
-
-            if (_switches != null)
-            {
-                foreach (SwitchConfigFileEntry se in config.PRSwitches)
-                {
-                    //Log (se.Number);
-                    var s = new Switch(this, se.Name, PinProc.PRDecode(g_machineType, se.Number), se.Type);
-
-                    ushort number = 0;
-                    if (g_machineType == MachineType.PDB)
-                    {
-                        var num = pdb_config.GetProcNumber("PRSwitches", se.Number);
-                        if (num == -1)
-                        {
-                            Console.WriteLine("Switch {0} cannot be controlled by the P-ROC. Ignoring...", se.Name);
-                            continue;
-                        }
-                        else
-                        {
-                            number = Convert.ToUInt16(num);
-                        }
-                    }
-                    else
-                    {
-                        number = PinProc.PRDecode(g_machineType, se.Number);
-                    }
-
-                    s.Number = number;
-                    SwitchUpdateRule(number,
-                        EventType.SwitchClosedDebounced,
-                        new SwitchRule { NotifyHost = true, ReloadActive = false },
-                        null,
-                        false
-                    );
-                    SwitchUpdateRule(number,
-                        EventType.SwitchOpenDebounced,
-                        new SwitchRule { NotifyHost = true, ReloadActive = false },
-                        null,
-                        false
-                    );
-                    Logger?.Log("Adding switch " + s.ToString(), LogLevel.Verbose);
-                    _switches.Add(s.Number, s.Name, s);
-                }
-
-                // TODO: THIS SHOULD RETURN A LIST OF STATES
-                EventType[] states = SwitchGetStates();
-                foreach (Switch s in _switches.Values)
-                {
-                    s.SetState(states[s.Number] == EventType.SwitchClosedDebounced);
-                }
-            }
+            });            
 
             if (_gi != null)
             {

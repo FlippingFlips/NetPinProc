@@ -1,7 +1,7 @@
 ﻿using NetPinProc.Domain.PinProc;
 using System;
 
-namespace NetPinProc.Domain.Modes
+namespace NetPinProc.Domain.Mode
 {
     ///<inheritdoc/>
     public delegate void BallSaveEnable(bool enabled);

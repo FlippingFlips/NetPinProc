@@ -1,10 +1,9 @@
 ﻿using NetPinProc.Domain;
+using NetPinProc.Domain.Mode;
 
 namespace NetPinProc.Game.Modes
 {
-    /// <summary>
-    /// Base attract mode that just handles starting a game
-    /// </summary>
+    /// <summary>Base attract mode that just handles starting a game</summary>
     public class Attract : Mode
     {
         private BaseGameController _game;

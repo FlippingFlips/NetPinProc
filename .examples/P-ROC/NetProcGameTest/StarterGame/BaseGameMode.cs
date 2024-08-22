@@ -1,4 +1,5 @@
 ﻿using NetPinProc.Domain;
+using NetPinProc.Domain.Mode;
 using NetPinProc.Game;
 
 namespace PinprocTest.StarterGame

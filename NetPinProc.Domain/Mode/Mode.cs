@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using NetPinProc.Domain.Machine;
 using NetPinProc.Domain.PinProc;
 
-namespace NetPinProc.Domain
+namespace NetPinProc.Domain.Mode
 {
     /// <summary>
     /// Represents a game mode

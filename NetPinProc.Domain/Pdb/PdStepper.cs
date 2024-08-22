@@ -17,12 +17,13 @@
         /// <param name="boardId"></param>
         /// <param name="stepperIndex"></param>
         /// <param name="speed"></param>
-        public PdStepper(IProcDevice proc, string name, uint boardId, byte stepperIndex, uint speed)
+        /// <param name="stopSw"></param>
+        public PdStepper(IProcDevice proc, string name, uint boardId, byte stepperIndex, uint speed, string stopSw = null)
         {
             Name = name;
             BoardAddress = boardId;
-            StepperIndex = stepperIndex;           
-
+            StepperIndex = stepperIndex;
+            
             //get the board this led address uses
             var pdLedBoard = PdLeds.GetPdLedBoard(BoardAddress);
 

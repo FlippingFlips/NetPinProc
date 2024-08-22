@@ -68,6 +68,10 @@
     {
       "Name": "trough6",
       "Number": "6/0/0"
+    },
+    {
+      "Name": "stepperStop",
+      "Number": "7/0/0"
     }
   ],
   "PRCoils": [
@@ -117,7 +121,7 @@
       "IsStepper1": true,
       "BoardId": 0,
       "Speed": 5000,
-      "IsEnabled": true
+      "IsEnabled": true      
     }
   ],
   "PRBallSave": {
