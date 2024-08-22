@@ -66,9 +66,9 @@ namespace NetPinProc.Domain.Pdb
 
             foreach (DriverAlias alias in aliases)
             {
-                if (alias.match(addr).Success)
+                if (alias.Match(addr).Success)
                 {
-                    addr = alias.decode(addr);
+                    addr = alias.Decode(addr);
                     break;
                 }
             }

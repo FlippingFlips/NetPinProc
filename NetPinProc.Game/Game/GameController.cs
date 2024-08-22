@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using NetPinProc.Domain;
 using NetPinProc.Domain.Lamps;
+using NetPinProc.Domain.Mode;
 using NetPinProc.Domain.Pdb;
 using NetPinProc.Domain.PinProc;
 using NetPinProc.Domain.Players;
@@ -64,7 +65,7 @@ namespace NetPinProc.Game
         /// <summary>
         /// Machine type used to configure the proc device
         /// </summary>
-        protected readonly MachineType _machineType;        
+        protected readonly MachineType _machineType;
 
         /// <summary>
         /// 
@@ -95,7 +96,7 @@ namespace NetPinProc.Game
         /// List of coils to drive that is manipulated from outside/UI threads
         /// TODO: This is set to be removed in favor of the UI process communication model
         /// </summary>
-        protected readonly List<SafeCoilDrive> _safe_coil_drive_queue = new ();
+        protected readonly List<SafeCoilDrive> _safe_coil_drive_queue = new();
 
         /// <summary>
         /// TODO: implement switch object lists
@@ -177,7 +178,7 @@ namespace NetPinProc.Game
             }
             else
             {
-                Logger.Log(nameof(GameController) + nameof(SetUp) +":creating p-roc handle", LogLevel.Debug);
+                Logger.Log(nameof(GameController) + nameof(SetUp) + ":creating p-roc handle", LogLevel.Debug);
                 _proc = new ProcDevice(_machineType, Logger);
                 _proc.Reset(1);
             }
@@ -216,7 +217,7 @@ namespace NetPinProc.Game
                 LoadConfig(configuration);
             }
             else
-                Logger?.Log(nameof(GameController) + " no machine configuration loaded.", LogLevel.Warning);            
+                Logger?.Log(nameof(GameController) + " no machine configuration loaded.", LogLevel.Warning);
         }
 
         /// <summary>
@@ -224,7 +225,7 @@ namespace NetPinProc.Game
         /// </summary>
         ~GameController()
         {
-            this._proc = null;
+            _proc = null;
         }
 
         /// <inheritdoc/>
@@ -431,6 +432,9 @@ namespace NetPinProc.Game
         /// <inheritdoc/>
         public IProcDevice PROC => _proc;
 
+        /// <summary>Trough mode managed by this game controller</summary>
+        public Trough Trough { get; set; }
+
         /// <inheritdoc/>
         public AttrCollection<ushort, string, Switch> Switches
         {
@@ -482,7 +486,7 @@ namespace NetPinProc.Game
         /// <inheritdoc/>
         public virtual void BallEnded() { }
         /// <inheritdoc/>
-        public virtual void BallStarting() => this.SaveBallStartTime();
+        public virtual void BallStarting() => SaveBallStartTime();
 
         /// <inheritdoc/>
         public virtual IPlayer CreatePlayer(string name) => new Player(name);
@@ -490,8 +494,8 @@ namespace NetPinProc.Game
         /// <inheritdoc/>
         public IPlayer CurrentPlayer()
         {
-            if (this._players.Count > this.CurrentPlayerIndex)
-                return this._players[this.CurrentPlayerIndex];
+            if (_players.Count > CurrentPlayerIndex)
+                return _players[CurrentPlayerIndex];
             else
                 return null;
         }
@@ -514,7 +518,7 @@ namespace NetPinProc.Game
             //shoot again extra ball
             if (CurrentPlayer().ExtraBalls > 0)
             {
-                Logger.Log(nameof(GameController) + ":"+nameof(EndBall)+": player extra ball, shoot again", LogLevel.Debug);
+                Logger.Log(nameof(GameController) + ":" + nameof(EndBall) + ": player extra ball, shoot again", LogLevel.Debug);
                 CurrentPlayer().ExtraBalls -= 1;
                 ShootAgain();
                 return;
@@ -525,7 +529,7 @@ namespace NetPinProc.Game
             {
                 Ball += 1;
                 CurrentPlayerIndex = 0;
-                Logger.Log(nameof(GameController) + ":" + nameof(EndBall)+": next ball: " + Ball, LogLevel.Debug);
+                Logger.Log(nameof(GameController) + ":" + nameof(EndBall) + ": next ball: " + Ball, LogLevel.Debug);
             }
             else CurrentPlayerIndex += 1;
 
@@ -557,7 +561,7 @@ namespace NetPinProc.Game
         }
 
         /// <inheritdoc/>     
-        public double GetBallTime() => this.BallEndTime - this.BallStartTime;
+        public double GetBallTime() => BallEndTime - BallStartTime;
         /// <inheritdoc/>
         public virtual Event[] GetEvents(bool dmdEvents = true) => _proc.Getevents(dmdEvents);
         /// <inheritdoc/>
@@ -565,7 +569,7 @@ namespace NetPinProc.Game
         /// <inheritdoc/>
         public void LinkFlipperSwitch(string switch_name, string[] linked_coils, byte pulseMain = 34)
         {
-            
+
         }
         /// <summary>
         /// Create a new machine configuration representation in memory from a json file on disk. and invokes <see cref="LoadConfig(MachineConfiguration)"/>
@@ -588,9 +592,19 @@ namespace NetPinProc.Game
             if (config.PRGame.NumBalls <= 0) throw new NullReferenceException("Number of balls in machine configuration is set to zero");
 
             _num_balls_total = config.PRGame.NumBalls;
-            
+
             Logger?.Log(nameof(GameController) + " setting up P-ROC machine from config.", LogLevel.Info);
             PROC?.SetupProcMachine(config, _coils, _switches, _lamps, _leds, _gi, _steppers, _servos, _serialLeds);
+        }
+
+        /// <summary>
+        /// Callback when a ball drains into the <see cref="Trough"/>. <para/>
+        /// Calls <see cref="GameController.EndBall"/> when <see cref="Trough.NumBallsInPlay"/> is zero
+        /// </summary>
+        public virtual void OnBallDrainedTrough()
+        {
+            Logger?.Log(nameof(BasicGameController) + ": Ball drained", LogLevel.Debug);
+            if (Trough.NumBallsInPlay == 0) EndBall();
         }
 
         /// <inheritdoc/>
@@ -600,7 +614,7 @@ namespace NetPinProc.Game
             // Invalid event type, end run loop perhaps
             else if (evt.Type == EventType.Invalid) { }
             // DMD events
-            else if (evt.Type == EventType.DMDFrameDisplayed) { this.DmdEvent(); }
+            else if (evt.Type == EventType.DMDFrameDisplayed) { DmdEvent(); }
             //switch events
             else
             {
@@ -627,6 +641,13 @@ namespace NetPinProc.Game
             _players.Clear();
             CurrentPlayerIndex = 0;
             _modes.Clear();
+
+            //create a Trough if doesn't exist
+            if (Trough == null)
+                SetupTrough();
+
+            //add the mode
+            Modes.Add(Trough);
         }
 
         /// <summary>
@@ -663,9 +684,9 @@ namespace NetPinProc.Game
                         }
                     }
 
-                    this.Tick();
+                    Tick();
                     TickVirtualDrivers();
-                    this._modes.Tick();
+                    _modes.Tick();
 
                     // Do we have any events waiting such as pulses from the UI
                     lock (_coil_lock_object)
@@ -733,17 +754,27 @@ namespace NetPinProc.Game
         }
 
         /// <inheritdoc/>
-        public void SaveBallStartTime() => this.BallStartTime = Time.GetTime();
+        public void SaveBallStartTime() => BallStartTime = Time.GetTime();
+
+        /// <summary>Creates a new Trough mode. Called by the game when constructed.</summary>
+        public virtual void SetupTrough()
+        {
+            //add call back to OnBallDrained which other game classes can use
+            var callback = new Action(OnBallDrainedTrough);
+            //create the trough
+            Trough = new Trough(this, callback);
+        }
+
         /// <inheritdoc/>
-        public virtual void ShootAgain() => this.BallStarting();
+        public virtual void ShootAgain() => BallStarting();
 
         /// <summary>
         /// Calls see <see cref="BallStarting"/>
         /// </summary>
-        public virtual void StartBall() => this.BallStarting();
+        public virtual void StartBall() => BallStarting();
 
         /// <inheritdoc/>
-        public virtual void StartGame() => this.GameStarted();
+        public virtual void StartGame() => GameStarted();
 
         /// <inheritdoc/>
         public virtual void Tick() { }
@@ -772,8 +803,8 @@ namespace NetPinProc.Game
         /// <param name="text"></param>
         protected void Log(string text)
         {
-            if (this.Logger != null)
-                this.Logger.Log(text);
+            if (Logger != null)
+                Logger.Log(text);
             else
                 System.Diagnostics.Trace.WriteLine(text);
         }

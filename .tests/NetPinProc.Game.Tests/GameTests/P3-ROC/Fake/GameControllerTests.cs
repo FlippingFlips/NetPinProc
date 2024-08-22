@@ -14,7 +14,7 @@ namespace NetPinProc.Game.Tests.GameTests.Fake
         const string MACHINE_JSON = "machine.json";
 
         /// <summary>
-        /// Testing a simulated FAKE <see cref="BaseGameController"/>. No game loop, just config, game and mode creating. Uses the `machine.json` for configuration.
+        /// Testing a simulated FAKE <see cref="BasicGameController"/>. No game loop, just config, game and mode creating. Uses the `machine.json` for configuration.
         /// </summary>
         [Fact]
         public void CreateGameControllerAndConfig_PDB_Tests()
@@ -37,7 +37,7 @@ namespace NetPinProc.Game.Tests.GameTests.Fake
         }
 
         /// <summary>
-        /// Testing a simulated FAKE <see cref="BaseGameController"/>. No game loop. Getting events from P-ROC, setting the trough switches and checking if full.
+        /// Testing a simulated FAKE <see cref="BasicGameController"/>. No game loop. Getting events from P-ROC, setting the trough switches and checking if full.
         /// </summary>
         [Fact]
         public async Task CreateGameControllerAndConfig_FillTrough_RunGame_PDB_Tests()

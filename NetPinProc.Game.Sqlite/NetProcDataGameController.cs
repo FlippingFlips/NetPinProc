@@ -9,9 +9,9 @@ using System.Linq;
 namespace NetPinProc.Game.Sqlite
 {
     /// <summary>
-    /// Game controller using <see cref="BaseGameController"/> with an instance to the database <para/>
+    /// Game controller using <see cref="BasicGameController"/> with an instance to the database <para/>
     /// </summary>
-    public class NetProcDataGameController : BaseGameController
+    public class NetProcDataGameController : BasicGameController
     {
         /// <summary> Sqlite Entity Framework Database Context </summary>
         public static readonly INetProcDbContext Database = new NetProcDbContext();

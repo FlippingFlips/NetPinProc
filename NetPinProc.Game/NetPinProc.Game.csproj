@@ -21,7 +21,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\NetPinProc\NetPinProc.csproj"  />
+	  <ProjectReference Include="..\NetPinProc\NetPinProc.csproj" />
 	</ItemGroup>
 	
 </Project>

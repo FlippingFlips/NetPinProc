@@ -6,14 +6,14 @@ namespace NetPinProc.Game.Modes
     /// <summary>Base attract mode that just handles starting a game</summary>
     public class Attract : Mode
     {
-        private BaseGameController _game;
+        private IGameController _game;
 
         /// <summary>
         /// Init
         /// </summary>
         /// <param name="game"></param>
         /// <param name="priority"></param>
-        public Attract(BaseGameController game, int priority) : base(game, priority) { _game = game; }
+        public Attract(IGameController game, int priority) : base(game, priority) { _game = game; }
 
         /// <summary>
         /// Start button, starts game and adds a player if the trough is full

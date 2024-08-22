@@ -5,15 +5,10 @@ using System.Collections.Generic;
 
 namespace NetPinProc.Domain.Lamps
 {
-    /// <summary>
-    /// Controller object that encapsulates a LampShow class and helps to restore lamp drivers to their
-    /// prior state.
-    /// </summary>
+    /// <summary>Controller object that encapsulates a LampShow class (Mode) and helps to restore lamp drivers to their prior state.</summary>
     public class LampController : ILampController
     {
-        /// <summary>
-        /// The show to play when resumed
-        /// </summary>
+        /// <summary>The show to play when resumed</summary>
         public string ResumeKey = "";
 
         /// <summary>
