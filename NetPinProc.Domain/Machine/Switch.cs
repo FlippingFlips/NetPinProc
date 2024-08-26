@@ -124,17 +124,12 @@ namespace NetPinProc.Domain
             if (this.IsClosed())
                 return "closed";
             else
-                return "open  ";
+                return "open";
         }
 
-        /// <summary>
-        /// Gets the switch type
-        /// </summary>
+        /// <summary>Gets the switch type</summary>
         public SwitchType Type => _type;
-
-        /// <summary>
-        /// 
-        /// </summary>
+        
         /// <returns>Name and number</returns>
         public override string ToString() => $"<Switch name={Name} number={Number}/>";
     }

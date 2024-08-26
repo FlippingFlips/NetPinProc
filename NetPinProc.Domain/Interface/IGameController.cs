@@ -137,7 +137,9 @@ namespace NetPinProc.Domain
         /// <param name="PathToFile">The path to the configuration json file</param>
         void LoadConfig(string PathToFile);
 
-        /// <summary>Process the retrieved event from the PROC interface board (switch/dmd events)</summary>
+        /// <summary>Process the retrieved event from the PROC interface board (switch/dmd events) <para/>
+        /// Any changed switch events will set the state of the switch then process modes for accepted switches<para/>
+        /// Accepted switches can be delayed or invoked straight away with 0 delay</summary>
         /// <param name="evt">The event to process</param>
         void ProcessEvent(Event evt);
 
