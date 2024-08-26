@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using NetPinProc.Domain.MachineConfig;
+using NetPinProc.Domain.Pdb;
 
 namespace NetPinProc.Game.Sqlite.Config
 {

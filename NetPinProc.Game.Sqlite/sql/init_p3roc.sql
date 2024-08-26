@@ -30,7 +30,8 @@ INSERT INTO Leds (Number, Name, Bus, Polarity, Tags) VALUES
 ('A0-R21-G22-B23', 'LED8', '', 1,'');
 
 --INSERT INTO WS281xLeds (Name, DisplayName,BoardId,[Index],First,Last,IsEnabled) VALUES ('SerialChain','SerialChain',0,0,0,4,1);
-INSERT INTO Steppers (Name, DisplayName,BoardId,IsStepper1,Speed,IsEnabled)VALUES ('Stepper','Stepper',0,1,140,1);
+INSERT INTO Steppers (Name, DisplayName,BoardId,IsStepper1,Speed,IsEnabled, StopSwitch)VALUES ('Stepper','Stepper',0,1,8500,1, 'stepperStop');
+INSERT INTO Steppers (Name, DisplayName,BoardId,IsStepper1,Speed,IsEnabled, StopSwitch)VALUES ('Stepper2','Stepper',0,0,1600,1, 'stepperStop');
 
 -- Table: Switches
 INSERT INTO Switches (Number, Name, Type, Tags, SearchReset, SearchStop, ItemType) VALUES 

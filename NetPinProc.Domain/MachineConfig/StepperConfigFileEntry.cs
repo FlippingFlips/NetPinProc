@@ -1,8 +1,6 @@
 ﻿namespace NetPinProc.Domain.MachineConfig
 {
-    /// <summary>
-    /// Machine config for Steppers on PDLEd boards
-    /// </summary>
+    /// <summary>Machine config for Steppers on PDLEd boards</summary>
     public class StepperConfigFileEntry : ConfigFileEntryBase
     {
         /// <summary> Reference name </summary>
