@@ -29,7 +29,7 @@ namespace NetProc.ProcDevice
                 //load machine config.
                 var config = MachineConfiguration.FromFile("machine.json");
 
-                for (int i = 0; i < 222; i++)
+                for (int i = 1; i < 222; i++)
                 {
                     config.AddSwitch("switch" + i, i.ToString(), SwitchType.NO);
                 }
@@ -40,8 +40,6 @@ namespace NetProc.ProcDevice
                 _leds = new AttrCollection<ushort, string, LED>();
                 _coils = new AttrCollection<ushort, string, IDriver>();
                 _steppers = new AttrCollection<ushort, string, PdStepper>();
-
-                //config.AddStepper("Stepper", 0, 140, true);
 
                 //setup machine items to be able to process events.
                 PROC.SetupProcMachine(config, _switches: _switches, _leds: _leds, _coils: _coils, _steppers: _steppers);
@@ -76,7 +74,7 @@ namespace NetProc.ProcDevice
             Event[] events;
             //_coils["trough"].Pulse(255);
 
-            var flasher = _coils["flasher"];
+            //var flasher = _coils["flasher"];
 
             //flasher.Pulse(255);
 
@@ -91,41 +89,42 @@ namespace NetProc.ProcDevice
 
             //flasher.Enable();
 
-            var led = _leds["TestLED"];
-
-            led.ChangeColor(new uint[] { 0xFF, 0, 0 });
-
-            var stepper = _steppers["Stepper"];
-            //stepper.Stop();
-            stepper.Move(-5000);
-
-
             while (!source.IsCancellationRequested)
             {
                 loops++;
-                await Task.Delay(1000);
-                events = proc.Getevents();
+                //await Task.Delay(1000);
+                events = proc.Getevents(false);
                 if (events != null)
                 {
                     foreach (Event evt in events)
                     {
                         if (evt.Type != EventType.None && evt.Type != EventType.Invalid)
                         {
-                            Console.WriteLine($"{evt.Type} event");
-                            Switch sw = _switches[(ushort)evt.Value];
-                            bool recvd_state = evt.Type == EventType.SwitchClosedDebounced;
-                            if (!sw.IsState(recvd_state))
+                            if(evt.Type == EventType.SwitchClosedDebounced)
                             {
-                                Console.WriteLine($"{sw.Name} {recvd_state}");
-                                sw.SetState(recvd_state);
+                                Console.WriteLine($"{evt.Type} event");
                             }
+                            else if(evt.Type == EventType.SwitchOpenDebounced)
+                            {
+                                Console.WriteLine($"{evt.Type} event");
+                            }
+                            else
+                            {
+                                Console.WriteLine($"{evt.Type} event");
+                            }
+
+                            //Switch sw = _switches[(ushort)evt.Value];
+                            //bool recvd_state = evt.Type == EventType.SwitchClosedDebounced;
+                            //if (!sw.IsState(recvd_state))
+                            //{
+                            //    Console.WriteLine($"{sw.Name} {recvd_state}");
+                            //    sw.SetState(recvd_state);
+                            //}
                         }
                     }
                 }
 
                 proc.WatchDogTickle();
-
-                stepper.Move(16000);
             }
 
             proc.Close();
