@@ -17,10 +17,12 @@ namespace NetPinProc.Game.Tests.Base
 
     public abstract class GameContollerTestBase : ProcGameTestBase
     {
+        protected readonly bool _isSimulated;
         protected FakeGame _game;
 
         public GameContollerTestBase(bool fake)
         {
+            _isSimulated = fake;
             _game = new FakeGame(MachineConfiguration.PRGame.MachineType, null, fake);
             _game.LoadConfig(MachineConfiguration);
         }

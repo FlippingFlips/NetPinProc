@@ -38,49 +38,48 @@
   ],
   "PRSwitches": [
     {
+      "Name": "stepperStop",
+      "Number": "0"
+    },
+    {
       "Name": "trough0",
-      "Number": "0",
+      "Number": "1",
       "Tags": "trough troughEject"
     },
     {
       "Name": "trough1",
-      "Number": "0/1",
+      "Number": "2",
       "Tags": "trough"
     },
     {
       "Name": "trough2",
-      "Number": "1/2",
+      "Number": "3",
       "Tags": "trough"
     },
     {
       "Name": "trough3",
-      "Number": "0/3",
+      "Number": "4",
       "Tags": "trough"
     },
     {
       "Name": "outlaneL",
-      "Number": "0/4",
+      "Number": "5",
       "Tags": "early"
     },
     {
       "Name": "outlaneR",
-      "Number": "0/5",
+      "Number": "6",
       "Tags": "early"
     },
     {
       "Name": "plungerLane",
-      "Number": "0/6",
+      "Number": "7",
       "Tags": "shooterLane"
     },
     {
       "Name": "start",
-      "Number": "0/7",
+      "Number": "8",
       "Tags": "start"
-    },
-    {
-      "Name": "stepperStop",
-      "Number": "0/8",
-      "Tags": ""
     }
   ],
   "PRCoils": [
@@ -120,6 +119,14 @@
     {
       "Name": "Stepper",
       "IsStepper1": true,
+      "BoardId": 0,
+      "Speed": 5000,
+      "IsEnabled": true,
+      "StopSwitch": "stepperStop"
+    },
+    {
+      "Name": "Stepper2",
+      "IsStepper1": false,
       "BoardId": 0,
       "Speed": 5000,
       "IsEnabled": true,
