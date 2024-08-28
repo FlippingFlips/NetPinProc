@@ -10,8 +10,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Change Version Items", ".Change Version Items", "{8528A5E2-562C-45FA-8DFD-0BC0E30A86D3}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
-		.github\workflows\netpinproc.dev-nuget.yml = .github\workflows\netpinproc.dev-nuget.yml
-		.github\workflows\netpinproc.main-nuget.yml = .github\workflows\netpinproc.main-nuget.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetPinProc.Dmd", "NetPinProc.Dmd\NetPinProc.Dmd.csproj", "{122D5CC7-B25D-4027-98B1-CC89F386D584}"
@@ -49,6 +47,19 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetPinProc.FakeProcDevice", ".examples\P3-ROC\NetPinProc.FakeProcDevice\NetPinProc.FakeProcDevice.csproj", "{6B8C57E6-F4AE-4C19-AEAD-D5ECCB71594C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetProc.ProcDevice", ".examples\P3-ROC\NetProc.ProcDevice\NetProc.ProcDevice.csproj", "{EB032F8D-B30F-47A0-AF7D-CE17D37AD38F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{3CAF27F2-BA8D-4C9C-B996-8E873E347327}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetPinProc.Server", "NetPinProc.Server", "{A751CB1D-29C6-416F-99D3-4CE5B74419EA}"
+	ProjectSection(SolutionItems) = preProject
+		Tools\NetPinProc.Game.Server\README.md = Tools\NetPinProc.Game.Server\README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetPinProc.Game.Manager.Shared", "Tools\NetPinProc.Game.Server\Shared\NetPinProc.Game.Manager.Shared.csproj", "{F1925029-939F-481A-9925-51B7CC7331F2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetPinProc.Game.Manager.Client", "Tools\NetPinProc.Game.Server\Client\NetPinProc.Game.Manager.Client.csproj", "{942766A0-9C84-4C31-9878-74F3FD4C2F3F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetPinProc.Game.Manager.Server", "Tools\NetPinProc.Game.Server\Server\NetPinProc.Game.Manager.Server.csproj", "{693FD93F-CFFB-44EC-8D66-5E168EEB1B14}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -228,6 +239,42 @@ Global
 		{EB032F8D-B30F-47A0-AF7D-CE17D37AD38F}.Release|x64.Build.0 = Release|x64
 		{EB032F8D-B30F-47A0-AF7D-CE17D37AD38F}.Release|x86.ActiveCfg = Release|x86
 		{EB032F8D-B30F-47A0-AF7D-CE17D37AD38F}.Release|x86.Build.0 = Release|x86
+		{F1925029-939F-481A-9925-51B7CC7331F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1925029-939F-481A-9925-51B7CC7331F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1925029-939F-481A-9925-51B7CC7331F2}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F1925029-939F-481A-9925-51B7CC7331F2}.Debug|x64.Build.0 = Debug|Any CPU
+		{F1925029-939F-481A-9925-51B7CC7331F2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F1925029-939F-481A-9925-51B7CC7331F2}.Debug|x86.Build.0 = Debug|Any CPU
+		{F1925029-939F-481A-9925-51B7CC7331F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1925029-939F-481A-9925-51B7CC7331F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1925029-939F-481A-9925-51B7CC7331F2}.Release|x64.ActiveCfg = Release|Any CPU
+		{F1925029-939F-481A-9925-51B7CC7331F2}.Release|x64.Build.0 = Release|Any CPU
+		{F1925029-939F-481A-9925-51B7CC7331F2}.Release|x86.ActiveCfg = Release|Any CPU
+		{F1925029-939F-481A-9925-51B7CC7331F2}.Release|x86.Build.0 = Release|Any CPU
+		{942766A0-9C84-4C31-9878-74F3FD4C2F3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{942766A0-9C84-4C31-9878-74F3FD4C2F3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{942766A0-9C84-4C31-9878-74F3FD4C2F3F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{942766A0-9C84-4C31-9878-74F3FD4C2F3F}.Debug|x64.Build.0 = Debug|Any CPU
+		{942766A0-9C84-4C31-9878-74F3FD4C2F3F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{942766A0-9C84-4C31-9878-74F3FD4C2F3F}.Debug|x86.Build.0 = Debug|Any CPU
+		{942766A0-9C84-4C31-9878-74F3FD4C2F3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{942766A0-9C84-4C31-9878-74F3FD4C2F3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{942766A0-9C84-4C31-9878-74F3FD4C2F3F}.Release|x64.ActiveCfg = Release|Any CPU
+		{942766A0-9C84-4C31-9878-74F3FD4C2F3F}.Release|x64.Build.0 = Release|Any CPU
+		{942766A0-9C84-4C31-9878-74F3FD4C2F3F}.Release|x86.ActiveCfg = Release|Any CPU
+		{942766A0-9C84-4C31-9878-74F3FD4C2F3F}.Release|x86.Build.0 = Release|Any CPU
+		{693FD93F-CFFB-44EC-8D66-5E168EEB1B14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{693FD93F-CFFB-44EC-8D66-5E168EEB1B14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{693FD93F-CFFB-44EC-8D66-5E168EEB1B14}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{693FD93F-CFFB-44EC-8D66-5E168EEB1B14}.Debug|x64.Build.0 = Debug|Any CPU
+		{693FD93F-CFFB-44EC-8D66-5E168EEB1B14}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{693FD93F-CFFB-44EC-8D66-5E168EEB1B14}.Debug|x86.Build.0 = Debug|Any CPU
+		{693FD93F-CFFB-44EC-8D66-5E168EEB1B14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{693FD93F-CFFB-44EC-8D66-5E168EEB1B14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{693FD93F-CFFB-44EC-8D66-5E168EEB1B14}.Release|x64.ActiveCfg = Release|Any CPU
+		{693FD93F-CFFB-44EC-8D66-5E168EEB1B14}.Release|x64.Build.0 = Release|Any CPU
+		{693FD93F-CFFB-44EC-8D66-5E168EEB1B14}.Release|x86.ActiveCfg = Release|Any CPU
+		{693FD93F-CFFB-44EC-8D66-5E168EEB1B14}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -245,6 +292,10 @@ Global
 		{1DFE61E5-B4DC-4DE0-BBAA-AEEFB18D813C} = {9D30E694-91B8-49C5-86E8-34A91DB78805}
 		{6B8C57E6-F4AE-4C19-AEAD-D5ECCB71594C} = {337249E7-0B63-4466-851C-8198E3D5A11C}
 		{EB032F8D-B30F-47A0-AF7D-CE17D37AD38F} = {337249E7-0B63-4466-851C-8198E3D5A11C}
+		{A751CB1D-29C6-416F-99D3-4CE5B74419EA} = {3CAF27F2-BA8D-4C9C-B996-8E873E347327}
+		{F1925029-939F-481A-9925-51B7CC7331F2} = {A751CB1D-29C6-416F-99D3-4CE5B74419EA}
+		{942766A0-9C84-4C31-9878-74F3FD4C2F3F} = {A751CB1D-29C6-416F-99D3-4CE5B74419EA}
+		{693FD93F-CFFB-44EC-8D66-5E168EEB1B14} = {A751CB1D-29C6-416F-99D3-4CE5B74419EA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F6B501B6-A658-4441-B3C0-42E271EB1F44}

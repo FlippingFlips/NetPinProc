@@ -1,0 +1,58 @@
+﻿@using NetPinProc.Domain.Players;
+@using NetPinProc.Game.Manager.Shared;
+@inject HttpClient Http
+
+<MudPaper>
+    @if (Machine != null)
+    {
+        <MudCard>
+
+            <MudCardHeader>
+                <MudStack Row=true>
+                    <MudBadge Icon="@Icons.Material.Filled.DesktopMac" Color="Color.Secondary" />
+                    <MudText>MACHINE</MudText>
+                </MudStack>
+            </MudCardHeader>
+
+            <MudCardContent>
+                <MudSimpleTable Style="overflow-x: auto;">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Version</th>
+                            <th>Type</th>
+                            <th>Balls</th>
+                            <th>Display</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>@Machine.Title</td>
+                            <td>@Machine.Version</td>
+                            <td>@Machine.MachineType</td>
+                            <td>@Machine.NumBalls</td>
+                            <td>@Machine.DisplayMonitor</td>                            
+                        </tr>
+                    </tbody>
+                </MudSimpleTable>
+            </MudCardContent>
+        </MudCard>        
+    }
+</MudPaper>
+
+@code 
+{
+    Machine Machine;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Machine = await Http.GetFromJsonAsync<Machine>("/machine");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
+    }
+}

@@ -1,21 +1,16 @@
 <Project>
 	<PropertyGroup>
-		<VersionSuffix>1.0.0.7-dev-2</VersionSuffix>
+		<VersionSuffix>1.0.0.1</VersionSuffix>
 		<LangVersion>Latest</LangVersion>
 		<AssemblyVersion>$(VersionSuffix)</AssemblyVersion>
 		<PackageVersion>$(VersionSuffix)</PackageVersion>
 		<Version>$(VersionSuffix)</Version>
 		<FileVersion>$(VersionSuffix)</FileVersion>		
 		<PackageOutputPath>.</PackageOutputPath>		
-		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<IncludeSymbols>true</IncludeSymbols>
-		<IncludeSource>true</IncludeSource>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<PackageIconUrl>https://github.com/flipingflips/netpinproc/pinball.png</PackageIconUrl>
 		<RepositoryUrl>https://github.com/flipingflips/netpinproc</RepositoryUrl>
-		<PackageProjectUrl>https://github.com/flipingflips/netpinproc</PackageProjectUrl>
 		<NoWarn>1591, 1685</NoWarn>
 	</PropertyGroup>
 

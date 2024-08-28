@@ -1,0 +1,54 @@
+﻿@using NetPinProc.Domain.Players;
+@inject HttpClient Http
+
+<MudPaper>
+    @if(Players?.Length > 0)
+    {
+        <MudCard>
+
+            <MudCardHeader>
+                <MudStack Row=true>
+                    <MudBadge Icon="@Icons.Material.Filled.Person" Color="Color.Secondary" />
+                    <MudText>PLAYERS</MudText>
+                </MudStack>
+            </MudCardHeader>
+
+            <MudCardContent>
+                <MudSimpleTable Style="overflow-x: auto;">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>GameTime</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in Players)
+                        {
+                            <tr>
+                                <td>@p.Name</td>
+                                <td>@p.GameTime</td>
+                            </tr>
+                        }
+                    </tbody>
+                </MudSimpleTable>
+            </MudCardContent>
+        </MudCard>        
+    }
+</MudPaper>
+
+@code 
+{
+    Player[] Players;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+           Players = await Http.GetFromJsonAsync<Player[]>("/players");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
+    }
+}

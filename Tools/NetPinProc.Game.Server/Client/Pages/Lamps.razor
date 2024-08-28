@@ -1,0 +1,103 @@
+﻿@page "/machine/lamps"
+@inject HttpClient Http
+@inject ISnackbar Snackbar
+
+<PageTitle>Switches | NetProcGame Manager</PageTitle>
+
+<MudDataGrid T="LampConfigFileEntry" MultiSelection="true"
+             Items="@Elements" SortMode="SortMode.Multiple"
+             Dense=true
+             FixedHeader=true
+             Height="768px"
+             Filterable="true"
+             QuickFilter="@_quickFilter"
+             Hideable="true"
+             Bordered=true
+             ReadOnly=false
+             EditTrigger="DataGridEditTrigger.OnRowClick"
+             StartedEditingItem="@StartedEditingItem"
+             CanceledEditingItem="@CanceledEditingItem"
+             CommittedItemChanges="@CommittedItemChanges">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Database switches</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <Columns>
+        <SelectColumn T="LampConfigFileEntry" />
+        <PropertyColumn Property="x => x.Number" Title="Nr" Sortable="false" Filterable="false" />
+        <PropertyColumn Property="x => x.Name" SortBy="@_sortBy" />
+        <PropertyColumn Property="x => x.Polarity" SortBy="@_sortBy" />        
+        <PropertyColumn Property="x => x.Bus" SortBy="@_sortBy" />        
+        <PropertyColumn Property="x => x.Tags" SortBy="@_sortBy" />        
+    </Columns>
+    @*    <PagerContent>
+    <MudDataGridPager T="LampConfigFileEntry" />
+    </PagerContent>*@
+</MudDataGrid>
+
+
+@code {
+    private IEnumerable<LampConfigFileEntry> Elements = new List<LampConfigFileEntry>();
+    private string _searchString;
+    private bool _sortNameByLength;
+    private List<string> _events = new();
+    // custom sort by name length
+    private Func<LampConfigFileEntry, object> _sortBy => x =>
+    {
+        if (_sortNameByLength)
+            return x.Name.Length;
+        else
+            return x.Name;
+    };
+    // quick filter - filter globally across multiple columns with the same input
+    private Func<LampConfigFileEntry, bool> _quickFilter => x =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (x.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (x.Number.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        Elements = await Http.GetFromJsonAsync<List<LampConfigFileEntry>>("/lamps");
+    }
+
+    // events
+    void StartedEditingItem(LampConfigFileEntry item)
+    {
+        _events.Insert(0, $"Event = StartedEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+    }
+
+    void CanceledEditingItem(LampConfigFileEntry item)
+    {
+        _events.Insert(0, $"Event = CanceledEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+    }
+
+    async Task CommittedItemChanges(LampConfigFileEntry item)
+    {
+        _events.Insert(0, $"Event = CommittedItemChanges, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+
+        var response = await Http.PutAsJsonAsync("/lamps", item);
+        if (!response.IsSuccessStatusCode)
+        {
+            Snackbar.Add("failed to update lamp", Severity.Error);
+        }
+        else
+        {
+            var result = await response.Content.ReadFromJsonAsync<bool>();
+            if (result)
+                Snackbar.Add("lamp updated", Severity.Success);
+            else
+                Snackbar.Add("failed to update led", Severity.Warning);
+        }
+    }
+}
