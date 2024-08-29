@@ -68,9 +68,7 @@ namespace NetPinProc.Domain
             proc.WriteData(PROC_OUTPUT_MODULE, PROC_PDB_BUS_ADDRESS, ref data);
         }
 
-        /// <summary>
-        /// Write to the boards config register
-        /// </summary>
+        /// <summary>Write to the boards config register</summary>
         /// <param name="addr"></param>
         /// <param name="data"></param>
         public void WriteConfigRegister(uint addr, uint data)

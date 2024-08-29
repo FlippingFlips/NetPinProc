@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>1a2cb741-958e-4f15-92e3-9025852d2b15</UserSecretsId>
+		<PackageIcon>pinball.png</PackageIcon>
+		<ApplicationIcon>pinball.ico</ApplicationIcon>
+		<NoWarn>1591</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Content Include="pinball.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="..\pinball.png">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="7.0.20" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\NetPinProc.Game.Sqlite\NetPinProc.Game.Sqlite.csproj" />
+	  <ProjectReference Include="..\Client\NetPinProc.Game.Manager.Client.csproj" />
+	  <ProjectReference Include="..\Shared\NetPinProc.Game.Manager.Shared.csproj" />
+	</ItemGroup>
+</Project>

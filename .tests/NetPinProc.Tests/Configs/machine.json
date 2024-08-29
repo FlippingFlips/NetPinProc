@@ -120,7 +120,15 @@
       "Name": "Stepper",
       "IsStepper1": true,
       "BoardId": 0,
-      "Speed": 5000,
+      "Speed": 8500,
+      "IsEnabled": false,
+      "StopSwitch": "stepperStop"
+    },
+    {
+      "Name": "Stepper2",
+      "IsStepper1": false,
+      "BoardId": 0,
+      "Speed": 8500,
       "IsEnabled": true,
       "StopSwitch": "stepperStop"
     }

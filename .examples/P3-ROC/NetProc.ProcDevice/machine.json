@@ -49,10 +49,10 @@
      *    'NC' (normally closed.  Common for optos)
 	 */
     /* Dedicated Grounded Swtches */
-    //{
-    //  "Name": "trough",
-    //  "Number": "0"
-    //},
+    {
+      "Name": "trough",
+      "Number": "0"
+    },
     //{
     //  "Name": "trough3",
     //  "Number": "7"

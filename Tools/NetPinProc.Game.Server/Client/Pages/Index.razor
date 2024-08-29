@@ -1,0 +1,15 @@
+﻿@page "/"
+
+<PageTitle>Dashboard | @Names.SITE_NAME</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large">
+    <MudGrid>
+        <MudItem xs="12" sm="6">
+            <NetPinProc.Game.Manager.Client.Shared.Components.MachineComponent />
+        </MudItem>
+
+        <MudItem xs="12" sm="6">
+            <NetPinProc.Game.Manager.Client.Shared.Components.PlayerComponent />
+        </MudItem>        
+    </MudGrid>
+</MudContainer>

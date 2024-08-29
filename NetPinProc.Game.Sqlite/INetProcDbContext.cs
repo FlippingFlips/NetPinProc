@@ -86,9 +86,14 @@ namespace NetPinProc.Game.Sqlite
         /// <param name="key"></param>
         /// <returns>-255 if fail. Some adjustments will be using minus values, but not this low</returns>
         int GetAuditValue(string key);
-        /// <summary>
-        /// Creates a <see cref="MachineConfiguration"/> from database entries <para/>
-        /// All machine items and the game type and ball search switches
+
+        /// <summary>Creates a <see cref="MachineConfiguration"/> from database entries <para/>
+        /// All machine items, the game type and ball search switches <para/>
+        /// Normally in a machine.json you would add "PRFlippers" to map the flippers and switch rules to coils but this finds the switches with an item type of flipper<para/>
+        /// Similarly with PRBumpers, bumper switches set as item type bumper will be added to this list, you should do the same for slingshots = bumpers <para/>
+        /// PRBallSearch in a machine.json contains coils to pulse, switches to trigger stop and reset on a ball search...<para/>
+        ///    Any driver found in the config with a search pulse greater than 0 will be fired in a ball search
+        ///    Set open or closed on the switches ball search properties
         /// </summary>
         /// <returns></returns>
         MachineConfiguration GetMachineConfiguration();

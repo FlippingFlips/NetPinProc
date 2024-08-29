@@ -608,7 +608,7 @@ namespace NetPinProc.Game
         }
 
         /// <inheritdoc/>
-        public void ProcessEvent(Event evt)
+        public virtual void ProcessEvent(Event evt)
         {
             if (evt.Type == EventType.None) { }
             // Invalid event type, end run loop perhaps
@@ -621,11 +621,14 @@ namespace NetPinProc.Game
                 Switch sw = _switches[(ushort)evt.Value];
                 bool recvd_state = evt.Type == EventType.SwitchClosedDebounced;
 
-                Logger.Log(nameof(ProcessEvent) + ":" + evt.ToString(), LogLevel.Verbose);
-
                 if (!sw.IsState(recvd_state))
                 {
+                    Logger.Log(nameof(ProcessEvent) + $"|switch {sw.Name}:" + evt.ToString(), LogLevel.Verbose);
+
+                    //change state of switch
                     sw.SetState(recvd_state);
+
+                    //process the switch event in all modes for accepted switches
                     _modes.HandleEvent(evt);
                 }
             }
@@ -669,13 +672,14 @@ namespace NetPinProc.Game
             long loops = 0;
             DmdEvent();
             Event[] events;
+            bool getDmdEvents = this.Config.PRGame.MachineType != MachineType.PDB;
 
             try
             {
                 while (!_gameLoopCancelToken.IsCancellationRequested)
                 {
                     loops++;
-                    events = GetEvents();
+                    events = GetEvents(getDmdEvents);
                     if (events != null)
                     {
                         foreach (Event evt in events)

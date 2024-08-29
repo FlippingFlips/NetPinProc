@@ -57,10 +57,7 @@ namespace NetProcGame.RgbLeds
 
         async static Task GameLoop(Game game)
         {
-            await Task.Run(() =>
-            {
-                game.RunLoop();
-            });
+            await Task.Run(() => { game.RunLoop();});
         }
 
         /// <summary>

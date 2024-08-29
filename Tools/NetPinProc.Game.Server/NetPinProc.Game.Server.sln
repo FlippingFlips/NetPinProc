@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "!Solution Items", "!Solution Items", "{C13FBBF4-B412-4A35-AD5A-0D21F0E1855D}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetPinProc.Game.Manager.Shared", "Shared\NetPinProc.Game.Manager.Shared.csproj", "{2CEBD989-E7BE-4DD4-AA5D-064705EB3D23}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetPinProc.Game.Manager.Client", "Client\NetPinProc.Game.Manager.Client.csproj", "{A9934680-03C8-4468-BB18-5FDEA2DC930D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetPinProc.Game.Manager.Server", "Server\NetPinProc.Game.Manager.Server.csproj", "{A54E5F95-6EE0-428D-B27E-365C2DEEDB1E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2CEBD989-E7BE-4DD4-AA5D-064705EB3D23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CEBD989-E7BE-4DD4-AA5D-064705EB3D23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CEBD989-E7BE-4DD4-AA5D-064705EB3D23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CEBD989-E7BE-4DD4-AA5D-064705EB3D23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9934680-03C8-4468-BB18-5FDEA2DC930D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9934680-03C8-4468-BB18-5FDEA2DC930D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9934680-03C8-4468-BB18-5FDEA2DC930D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9934680-03C8-4468-BB18-5FDEA2DC930D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A54E5F95-6EE0-428D-B27E-365C2DEEDB1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A54E5F95-6EE0-428D-B27E-365C2DEEDB1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A54E5F95-6EE0-428D-B27E-365C2DEEDB1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A54E5F95-6EE0-428D-B27E-365C2DEEDB1E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {73BB0713-EB13-45FA-A722-6ED0BB1B2741}
+	EndGlobalSection
+EndGlobal

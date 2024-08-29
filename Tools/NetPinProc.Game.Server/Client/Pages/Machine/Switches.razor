@@ -1,0 +1,345 @@
+﻿@page "/machine/switches"
+@using NetPinProc.Game.Manager.Client.Shared.DialogComponents;
+@using NetPinProc.Game.Manager.Client.Shared.HelpComponents
+@inject HttpClient Http
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+
+<PageTitle>Switches | @Names.SITE_NAME</PageTitle>
+
+<MudDataGrid T="SwitchConfigFileEntry"
+             Class="netpinprocdatagrid"
+             MultiSelection="false"
+             Items="@Elements"
+             SortMode="SortMode.Multiple"
+             Dense=true
+             FixedHeader=true
+             Height="668px"
+             Filterable="true"
+             QuickFilter="@_quickFilter"
+             Hideable="true"
+             Bordered=true
+             ReadOnly=false
+             EditDialogOptions="new DialogOptions{ FullWidth = true, MaxWidth = MaxWidth.Medium}"
+             EditMode=DataGridEditMode.Form
+             EditTrigger="DataGridEditTrigger.OnRowClick"
+             StartedEditingItem="@StartedEditingItem"
+             CanceledEditingItem="@CanceledEditingItem"
+             CommittedItemChanges="@CommittedItemChanges">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Switches</MudText>
+        <MudText Class="pl-2" Typo="Typo.caption">
+            Use this page to add, edit and remove switches from the database. Hover over the column headers for help and click rows to edit switches.
+        </MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="_searchString" Placeholder="Quick filter Switch Name, Num, Tags" Adornment="Adornment.Start" Immediate="true"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+
+    <Columns>
+        <TemplateColumn Sortable="false" Filterable="false">
+            <CellTemplate>
+                <MudToolBar Dense Class="netpinproctoolbar">
+                    <MudIconButton Size="Size.Small" Variant="Variant.Filled"
+                                   Icon="@Icons.Material.Filled.Delete" Color="Color.Error"
+                                   OnClick="@(_ => ShowDeleteDialog(context.Item.Number))" />
+                </MudToolBar>
+            </CellTemplate>
+            </TemplateColumn>
+
+            <PropertyColumn Property="x => x.Number" Sortable="true" Filterable="true" ShowFilterIcon="false">
+            <HeaderTemplate>
+                <MudTooltip Text="The number can be a string as used in older P-ROC boards, see other machine.json's">SwNum</MudTooltip>
+            </HeaderTemplate>
+            <EditTemplate>
+                <MudTextField @bind-Value=@context.Item.Number Label="Number"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                        Required RequiredError="A switch needs a number to apply config to the PROC" />
+            </EditTemplate>
+            </PropertyColumn>
+            <PropertyColumn Property="x => x.Name" ShowFilterIcon="false">
+            <HeaderTemplate>
+                <MudTooltip>
+                    <TooltipContent><SwitchNameHelp /></TooltipContent>
+                    <ChildContent>Name</ChildContent>
+                </MudTooltip>
+            </HeaderTemplate>
+            <EditTemplate>
+                <MudTextField @bind-Value=@context.Item.Name Label="Name"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Required=true RequiredError="A switch needs a name to reference from software and interfaces" />
+            </EditTemplate>
+            </PropertyColumn>
+            <PropertyColumn Property="x => x.DisplayName" ShowFilterIcon="false">
+            <EditTemplate>
+                <MudTextField @bind-Value=@context.Item.DisplayName Label="DisplayName"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Required=false />
+            </EditTemplate>
+            </PropertyColumn>
+            <PropertyColumn Property="x => x.ItemType" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
+            <HeaderTemplate>
+                <MudTooltip>
+                    <TooltipContent><SwitchItemTypeHelp /></TooltipContent>
+                    <ChildContent>Item Type</ChildContent>
+                </MudTooltip>
+            </HeaderTemplate>
+            <EditTemplate>
+                <MudTextField @bind-Value=@context.Item.ItemType Label="ItemType"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Required=false />
+            </EditTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="x => x.Tags" ShowFilterIcon="false">
+            <HeaderTemplate>
+                <MudTooltip>
+                    <TooltipContent><SwitchTagsHelp /></TooltipContent>
+                    <ChildContent>Tags</ChildContent>
+                </MudTooltip>
+            </HeaderTemplate>
+            <EditTemplate>
+                <MudTextField @bind-Value=@context.Item.Tags Label="Tags"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Required=false />
+            </EditTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="x => x.SearchReset" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
+            <HeaderTemplate>
+                <MudTooltip>
+                    <TooltipContent><SwitchBallSearchHelp /></TooltipContent>
+                    <ChildContent>Search Reset</ChildContent>
+                </MudTooltip>
+            </HeaderTemplate>
+            <EditTemplate>
+                <MudSelect T="string" @bind-Value="context.Item.SearchReset" Margin="@Margin.Dense"
+                           Label="Search Reset"
+                           Required=false
+                           Variant="Variant.Outlined">
+                    <MudSelectItem Value="null" T="string">none</MudSelectItem>
+                    <MudSelectItem Value="@("open")" T="string">open</MudSelectItem>
+                    <MudSelectItem Value="@("closed")" T="string">closed</MudSelectItem>
+                </MudSelect>
+            </EditTemplate>
+            </PropertyColumn>
+            <PropertyColumn Property="x => x.SearchStop" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
+            <HeaderTemplate>
+                <MudTooltip>
+                    <TooltipContent><SwitchBallSearchHelp /></TooltipContent>
+                    <ChildContent>Search Stop</ChildContent>
+                </MudTooltip>
+            </HeaderTemplate>
+            <EditTemplate>
+                <MudSelect T="string" @bind-Value="context.Item.SearchStop" Margin="@Margin.Dense"
+                           Label="Search Stop"
+                           Required=false
+                           Variant="Variant.Outlined">
+                    <MudSelectItem Value="null" T="string">none</MudSelectItem>
+                    <MudSelectItem Value="@("open")" T="string">open</MudSelectItem>
+                    <MudSelectItem Value="@("closed")" T="string">closed</MudSelectItem>
+                </MudSelect>
+            </EditTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="x => x.Conn" ShowFilterIcon="false">
+            <HeaderTemplate>
+                <MudTooltip>
+                    <TooltipContent><ConnectionHelp /></TooltipContent>
+                    <ChildContent>Conn</ChildContent>
+                </MudTooltip>
+            </HeaderTemplate>
+            <EditTemplate>
+                <MudTextField @bind-Value=@context.Item.Conn Label="Conn"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Required=false />
+            </EditTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="x => x.InputWire" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
+            <HeaderTemplate>
+                <MudTooltip>
+                    <TooltipContent><WireColorHelp /></TooltipContent>
+                    <ChildContent>InputWire</ChildContent>
+                </MudTooltip>
+            </HeaderTemplate>
+            <EditTemplate>
+                <MudTextField @bind-Value=@context.Item.InputWire Label="InputWire"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Required=false />
+            </EditTemplate>
+            </PropertyColumn>
+            <PropertyColumn Property="x => x.GroundWire" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
+            <HeaderTemplate>
+                <MudTooltip>
+                    <TooltipContent><WireColorHelp /></TooltipContent>
+                    <ChildContent>Gnd</ChildContent>
+                </MudTooltip>
+            </HeaderTemplate>
+            <EditTemplate>
+                <MudTextField @bind-Value=@context.Item.GroundWire Label="GroundWire"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Required=false />
+            </EditTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="x => x.Location" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
+            <HeaderTemplate>
+                <MudTooltip>
+                    <TooltipContent>Location string name. Could be a location like cabinet, playfield, under playfield, apron, etc...</TooltipContent>
+                    <ChildContent>Location</ChildContent>
+                </MudTooltip>
+            </HeaderTemplate>
+            <EditTemplate>
+                <MudTextField @bind-Value=@context.Item.Location Label="Location"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Required=false />
+            </EditTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="x => x.XPos" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
+            <EditTemplate>
+                <MudNumericField @bind-Value=context.Item.XPos Variant="Variant.Outlined"
+                                 Label="XPos" Min="0.00" Max="3600.00" T="double?" />
+            </EditTemplate>
+            <HeaderTemplate>
+                <MudTooltip>
+                    <TooltipContent><MachineItemPositionHelp /></TooltipContent>
+                    <ChildContent>XPos</ChildContent>
+                </MudTooltip>
+            </HeaderTemplate>
+            </PropertyColumn>
+            <PropertyColumn Property="x => x.YPos" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
+            <EditTemplate>
+                <MudNumericField @bind-Value=context.Item.YPos Variant="Variant.Outlined"
+                                 Label="YPos" Min="0.00" Max="3600.00" T="double?" />
+            </EditTemplate>
+            <HeaderTemplate>
+                <MudTooltip>
+                    <TooltipContent><MachineItemPositionHelp /></TooltipContent>
+                    <ChildContent>YPos</ChildContent>
+                </MudTooltip>
+            </HeaderTemplate>
+            </PropertyColumn>
+        </Columns>
+        </MudDataGrid>
+
+        <MudStack Row>
+    <MudSpacer />
+    <MudButton Variant="Variant.Filled" Color="Color.Error"
+               Size="Size.Small"
+               Class="mt-2"
+               OnClick="@ShowAddDialog">ADD SWITCH</MudButton>
+</MudStack>
+
+@code {
+    private IEnumerable<SwitchConfigFileEntry> Elements = new List<SwitchConfigFileEntry>();
+    private string _searchString;
+    private bool _sortNameByLength;
+    private List<string> _events = new();
+
+    bool _isHelpExanded = false;
+
+    // custom sort by name length
+    private Func<SwitchConfigFileEntry, object> _sortBy => x =>
+    {
+        if (_sortNameByLength)
+            return x.Name.Length;
+        else
+            return x.Name;
+    };
+
+    // quick filter - filter globally across multiple columns with the same input
+    private Func<SwitchConfigFileEntry, bool> _quickFilter => x =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (x.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (x.Number.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (x.Tags.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    };
+
+    protected override async Task OnInitializedAsync() => await GetSwitchesFromDatabaseAsync();
+
+    async Task ShowAddDialog()
+    {
+        var dialog = await DialogService.ShowAsync<AddSwitchDialog>();
+        var result = await dialog.Result;
+        if (!result.Canceled)
+            await GetSwitchesFromDatabaseAsync();
+    }
+
+    async Task GetSwitchesFromDatabaseAsync() => Elements = await Http.GetFromJsonAsync<List<SwitchConfigFileEntry>>("api/switches");
+
+    async Task ShowDeleteDialog(string swNum)
+    {
+        bool? result = await DialogService.ShowMessageBox(
+            "Warning: Deleting Switch: " + swNum,
+            "Deleting can not be undone!",
+            yesText: "Delete!", cancelText: "Cancel", options: new DialogOptions { MaxWidth = MaxWidth.Small });
+        if (result.HasValue && result.Value)
+        {
+            try
+            {
+                var response = await Http.DeleteAsync("api/switches/" + swNum);
+                if (response.IsSuccessStatusCode)
+                {
+                    Snackbar.Add($"switch: {swNum} deleted", Severity.Success);
+                    await GetSwitchesFromDatabaseAsync();
+                }
+                else
+                {
+                    Snackbar.Add(await response.Content.ReadAsStringAsync(), Severity.Error);
+                }
+
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Add(ex.Message, Severity.Error);
+            }
+        }
+    }
+
+    // events
+    void StartedEditingItem(SwitchConfigFileEntry item)
+    {
+        _events.Insert(0, $"Event = StartedEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+    }
+
+    void CanceledEditingItem(SwitchConfigFileEntry item)
+    {
+        _events.Insert(0, $"Event = CanceledEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+    }
+
+    async Task CommittedItemChanges(SwitchConfigFileEntry item)
+    {
+        _events.Insert(0, $"Event = CommittedItemChanges, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+
+        var response = await Http.PutAsJsonAsync("api/switches", item);
+        if (!response.IsSuccessStatusCode)
+        {
+            Snackbar.Add(await response.Content.ReadAsStringAsync(), Severity.Error);
+        }
+        else
+        {
+            var result = await response.Content.ReadFromJsonAsync<SwitchConfigFileEntry>();
+            if (result != null)
+            {
+                Snackbar.Add("switch updated", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add(await response.Content.ReadAsStringAsync(), Severity.Error);
+            }
+        }
+    }
+}

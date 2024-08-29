@@ -1,0 +1,245 @@
+﻿@page "/machine/lamps"
+@using NetPinProc.Game.Manager.Client.Shared.DialogComponents;
+@using NetPinProc.Game.Manager.Client.Shared.HelpComponents
+@inject HttpClient Http
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+
+<PageTitle>Lamps | @Names.SITE_NAME</PageTitle>
+
+<MudDataGrid T="LampConfigFileEntry" MultiSelection="true"
+             Class="netpinprocdatagrid"
+             Items="@Elements" SortMode="SortMode.Multiple"
+             Dense=true
+             FixedHeader=true
+             Height="668px"
+             Filterable="true"
+             QuickFilter="@_quickFilter"
+             Hideable="true"
+             Bordered=true
+             ReadOnly=false
+             EditTrigger="DataGridEditTrigger.OnRowClick"
+             StartedEditingItem="@StartedEditingItem"
+             CanceledEditingItem="@CanceledEditingItem"
+             CommittedItemChanges="@CommittedItemChanges">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Lamps</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="_searchString" Placeholder="Quick filter Lamp Name, Num, Tags"
+        Adornment="Adornment.Start" Immediate="true"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <Columns>
+        @*<SelectColumn T="LampConfigFileEntry" />*@
+        <TemplateColumn Sortable="false" Filterable="false">
+            <CellTemplate>
+                <MudToolBar Dense Class="netpinproctoolbar">
+                    <MudIconButton Size="Size.Small" Variant="Variant.Filled"
+                                   Icon="@Icons.Material.Filled.Delete" Color="Color.Error"
+                                   OnClick="@(_ => ShowDeleteDialog(context.Item.Number))" />
+                </MudToolBar>
+            </CellTemplate>
+        </TemplateColumn>
+        <PropertyColumn Property="x => x.Number" Title="Nr" Sortable="false" Filterable="false" />
+
+        <PropertyColumn Property="x => x.Name" SortBy="@_sortBy" />
+
+        <PropertyColumn Property="x => x.Polarity" SortBy="@_sortBy" />        
+
+        <PropertyColumn Property="x => x.Tags" ShowFilterIcon="false">
+            <HeaderTemplate>
+                <MudTooltip>
+                    <TooltipContent><LedsTagsHelp /></TooltipContent>
+                    <ChildContent>Tags</ChildContent>
+                </MudTooltip>
+            </HeaderTemplate>
+            <EditTemplate>
+                <MudTextField @bind-Value=@context.Item.Tags Label="Tags"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Required=false />
+            </EditTemplate>
+        </PropertyColumn>
+
+        <PropertyColumn Property="x => x.Bus">
+            <HeaderTemplate>
+                <MudTooltip>
+                    <TooltipContent>Unused?</TooltipContent>
+                    <ChildContent>Bus</ChildContent>
+                </MudTooltip>
+            </HeaderTemplate>
+            <EditTemplate>
+                <MudTextField @bind-Value=@context.Item.Bus Label="Bus"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Required=false />
+            </EditTemplate>
+        </PropertyColumn>
+
+        <PropertyColumn Property="x => x.Conn" ShowFilterIcon="false">
+            <HeaderTemplate>
+                <MudTooltip>
+                    <TooltipContent><ConnectionHelp /></TooltipContent>
+                    <ChildContent>Conn</ChildContent>
+                </MudTooltip>
+            </HeaderTemplate>
+            <EditTemplate>
+                <MudTextField @bind-Value=@context.Item.Conn Label="Conn"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Required=false />
+            </EditTemplate>
+        </PropertyColumn>
+
+            <PropertyColumn Property="x => x.Location" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
+            <HeaderTemplate>
+                <MudTooltip>
+                    <TooltipContent>Location string name. Could be a location like cabinet, playfield, under playfield, apron, etc...</TooltipContent>
+                    <ChildContent>Location</ChildContent>
+                </MudTooltip>
+            </HeaderTemplate>
+            <EditTemplate>
+                <MudTextField @bind-Value=@context.Item.Location Label="Location"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Required=false />
+            </EditTemplate>
+            </PropertyColumn>
+
+        <PropertyColumn Property="x => x.XPos">
+            <EditTemplate>
+                <MudNumericField @bind-Value=context.Item.XPos Variant="Variant.Outlined"
+                                 Label="XPos" Min="0.00" Max="3600.00" T="double?" />
+            </EditTemplate>
+            <HeaderTemplate>
+                <MudTooltip>
+                    <TooltipContent><MachineItemPositionHelp /></TooltipContent>
+                    <ChildContent>X</ChildContent>
+                </MudTooltip>
+            </HeaderTemplate>
+        </PropertyColumn>
+
+        <PropertyColumn Property="x => x.YPos">
+            <EditTemplate>
+                <MudNumericField @bind-Value=context.Item.YPos Variant="Variant.Outlined"
+                                 Label="YPos" Min="0.00" Max="3600.00" T="double?" />
+            </EditTemplate>
+            <HeaderTemplate>
+                <MudTooltip>
+                    <TooltipContent><MachineItemPositionHelp /></TooltipContent>
+                    <ChildContent>Y</ChildContent>
+                </MudTooltip>
+            </HeaderTemplate>
+        </PropertyColumn>
+    </Columns>
+</MudDataGrid>
+
+<MudStack Row>
+    <MudSpacer />
+    <MudButton Variant="Variant.Filled" Color="Color.Error"
+               Size="Size.Small"
+               Class="mt-2"
+               OnClick="@ShowAddDialog">ADD LAMP</MudButton>
+</MudStack>
+
+@code {
+    private IEnumerable<LampConfigFileEntry> Elements = new List<LampConfigFileEntry>();
+    private string? _searchString;
+    private bool _sortNameByLength;
+    private List<string> _events = new();
+    // custom sort by name length
+    private Func<LampConfigFileEntry, object> _sortBy => x =>
+    {
+        if (_sortNameByLength)
+            return x.Name.Length;
+        else
+            return x.Name;
+    };
+    // quick filter - filter globally across multiple columns with the same input
+    private Func<LampConfigFileEntry, bool> _quickFilter => x =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (x.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (x.Number.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    };
+
+    protected override async Task OnInitializedAsync() =>
+       await RefreshViewDataAsync();
+
+    protected async Task RefreshViewDataAsync() 
+    {
+        try { Elements = await Http.GetFromJsonAsync<List<LampConfigFileEntry>>("/api/lamps"); }
+        catch (Exception){ }
+    }
+
+    // events
+    void StartedEditingItem(LampConfigFileEntry item)
+    {
+        _events.Insert(0, $"Event = StartedEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+    }
+
+    void CanceledEditingItem(LampConfigFileEntry item)
+    {
+        _events.Insert(0, $"Event = CanceledEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+    }
+
+    async Task CommittedItemChanges(LampConfigFileEntry item)
+    {
+        _events.Insert(0, $"Event = CommittedItemChanges, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+
+        var response = await Http.PutAsJsonAsync("api/lamps", item);
+        if (!response.IsSuccessStatusCode)
+        {
+            Snackbar.Add("failed to update lamp", Severity.Error);
+        }
+        else
+        {
+            var result = await response.Content.ReadFromJsonAsync<bool>();
+            if (result)
+                Snackbar.Add("lamp updated", Severity.Success);
+            else
+                Snackbar.Add("failed to update led", Severity.Warning);
+        }
+    }
+
+    async Task ShowDeleteDialog(string lampName)
+    {
+        bool? result = await DialogService.ShowMessageBox(
+            "Warning: Deleting Lamp: " + lampName,
+            "Deleting can not be undone!",
+            yesText: "Delete!", cancelText: "Cancel", options: new DialogOptions { MaxWidth = MaxWidth.Small });
+        if (result.HasValue && result.Value)
+        {
+            try
+            {
+                var response = await Http.DeleteAsync("api/lamps/" + lampName);
+                if (response.IsSuccessStatusCode)
+                {
+                    Snackbar.Add($"lamp: {lampName} deleted", Severity.Success);
+                    await RefreshViewDataAsync();
+                }
+                else
+                {
+                    Snackbar.Add(await response.Content.ReadAsStringAsync(), Severity.Error);
+                }
+
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Add(ex.Message, Severity.Error);
+            }
+        }
+    }
+
+    async Task ShowAddDialog()
+    {
+        var dialog = await DialogService.ShowAsync<AddLampDialog>();
+        var result = await dialog.Result;
+        if (!result.Canceled)
+            await RefreshViewDataAsync();
+    }
+}

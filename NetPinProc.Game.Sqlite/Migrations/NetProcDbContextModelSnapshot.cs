@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetPinProc.Game.Sqlite;
 
+#nullable disable
+
 namespace NetPinProc.Game.Sqlite.Migrations
 {
     [DbContext(typeof(NetProcDbContext))]
@@ -13,8 +15,412 @@ namespace NetPinProc.Game.Sqlite.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.22");
+            modelBuilder.HasAnnotation("ProductVersion", "7.0.12");
+
+            modelBuilder.Entity("NetPinProc.Domain.MachineConfig.CoilConfigFileEntry", b =>
+                {
+                    b.Property<string>("Number")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Bus")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Conn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DisplayName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ItemType")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("Polarity")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PulseTime")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ReturnWire")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Search")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Tags")
+                        .HasColumnType("TEXT");
+
+                    b.Property<byte?>("Voltage")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("VoltageWire")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double?>("XPos")
+                        .HasColumnType("REAL");
+
+                    b.Property<double?>("YPos")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("Number");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("Number")
+                        .IsUnique();
+
+                    b.ToTable("Coils", (string)null);
+                });
+
+            modelBuilder.Entity("NetPinProc.Domain.MachineConfig.LampConfigFileEntry", b =>
+                {
+                    b.Property<string>("Number")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Bus")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Conn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DisplayName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ItemType")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("Polarity")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Tags")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double?>("XPos")
+                        .HasColumnType("REAL");
+
+                    b.Property<double?>("YPos")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("Number");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("Number")
+                        .IsUnique();
+
+                    b.ToTable("Lamps", (string)null);
+                });
+
+            modelBuilder.Entity("NetPinProc.Domain.MachineConfig.LedConfigFileEntry", b =>
+                {
+                    b.Property<string>("Number")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Bus")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Conn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DisplayName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ItemType")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("Polarity")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Tags")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double?>("XPos")
+                        .HasColumnType("REAL");
+
+                    b.Property<double?>("YPos")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("Number");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("Number")
+                        .IsUnique();
+
+                    b.ToTable("Leds", (string)null);
+                });
+
+            modelBuilder.Entity("NetPinProc.Domain.MachineConfig.Lpd8806ConfigFileEntry", b =>
+                {
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<byte>("BoardId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Conn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DisplayName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<uint>("First")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Index")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsEnabled")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ItemType")
+                        .HasColumnType("TEXT");
+
+                    b.Property<uint>("Last")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double?>("XPos")
+                        .HasColumnType("REAL");
+
+                    b.Property<double?>("YPos")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("Name");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("BoardId", "Index")
+                        .IsUnique();
+
+                    b.ToTable("Lpd8806Leds", (string)null);
+                });
+
+            modelBuilder.Entity("NetPinProc.Domain.MachineConfig.ServoConfigFileEntry", b =>
+                {
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<byte>("BoardId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Conn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DisplayName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<uint>("Index")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsEnabled")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ItemType")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("MinValue")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double?>("XPos")
+                        .HasColumnType("REAL");
+
+                    b.Property<double?>("YPos")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("Name");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("BoardId", "Index")
+                        .IsUnique();
+
+                    b.ToTable("Servos", (string)null);
+                });
+
+            modelBuilder.Entity("NetPinProc.Domain.MachineConfig.StepperConfigFileEntry", b =>
+                {
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<byte>("BoardId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Conn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DisplayName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsEnabled")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsStepper1")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ItemType")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("TEXT");
+
+                    b.Property<uint>("Speed")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("StopSwitch")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double?>("XPos")
+                        .HasColumnType("REAL");
+
+                    b.Property<double?>("YPos")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("Name");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("BoardId", "IsStepper1")
+                        .IsUnique();
+
+                    b.ToTable("Steppers", (string)null);
+                });
+
+            modelBuilder.Entity("NetPinProc.Domain.MachineConfig.SwitchConfigFileEntry", b =>
+                {
+                    b.Property<string>("Number")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Conn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DisplayName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("GroundWire")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("InputWire")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ItemType")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SearchReset")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SearchStop")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Tags")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double?>("XPos")
+                        .HasColumnType("REAL");
+
+                    b.Property<double?>("YPos")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("Number");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("Number")
+                        .IsUnique();
+
+                    b.ToTable("Switches", (string)null);
+                });
+
+            modelBuilder.Entity("NetPinProc.Domain.MachineConfig.WS281xConfigFileEntry", b =>
+                {
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<byte>("BoardId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Conn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DisplayName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<uint>("First")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Index")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsEnabled")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ItemType")
+                        .HasColumnType("TEXT");
+
+                    b.Property<uint>("Last")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double?>("XPos")
+                        .HasColumnType("REAL");
+
+                    b.Property<double?>("YPos")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("Name");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("BoardId", "Index")
+                        .IsUnique();
+
+                    b.ToTable("WS281xLeds", (string)null);
+                });
 
             modelBuilder.Entity("NetPinProc.Game.Sqlite.Model.Adjustment", b =>
                 {
@@ -54,7 +460,7 @@ namespace NetPinProc.Game.Sqlite.Migrations
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.ToTable("Adjustments");
+                    b.ToTable("Adjustments", (string)null);
                 });
 
             modelBuilder.Entity("NetPinProc.Game.Sqlite.Model.Audit", b =>
@@ -112,8 +518,8 @@ namespace NetPinProc.Game.Sqlite.Migrations
             modelBuilder.Entity("NetPinProc.Game.Sqlite.Model.ColorSet", b =>
                 {
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(6);
+                        .HasMaxLength(6)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("HtmlCode")
                         .HasColumnType("TEXT");
@@ -257,7 +663,7 @@ namespace NetPinProc.Game.Sqlite.Migrations
 
                     b.HasKey("Name");
 
-                    b.ToTable("Parts");
+                    b.ToTable("Parts", (string)null);
                 });
 
             modelBuilder.Entity("NetPinProc.Game.Sqlite.Model.Player", b =>
@@ -311,408 +717,6 @@ namespace NetPinProc.Game.Sqlite.Migrations
                     b.ToTable("Scores");
                 });
 
-            modelBuilder.Entity("NetPinProc.Domain.MachineConfig.CoilConfigFileEntry", b =>
-                {
-                    b.Property<string>("Number")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Bus")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Conn")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("DisplayName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ItemType")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Location")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("Polarity")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("PulseTime")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("ReturnWire")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Search")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Tags")
-                        .HasColumnType("TEXT");
-
-                    b.Property<byte?>("Voltage")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("VoltageWire")
-                        .HasColumnType("TEXT");
-
-                    b.Property<double?>("XPos")
-                        .HasColumnType("REAL");
-
-                    b.Property<double?>("YPos")
-                        .HasColumnType("REAL");
-
-                    b.HasKey("Number");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.HasIndex("Number")
-                        .IsUnique();
-
-                    b.ToTable("Coils");
-                });
-
-            modelBuilder.Entity("NetPinProc.Domain.MachineConfig.LampConfigFileEntry", b =>
-                {
-                    b.Property<string>("Number")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Bus")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Conn")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("DisplayName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ItemType")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Location")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("Polarity")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Tags")
-                        .HasColumnType("TEXT");
-
-                    b.Property<double?>("XPos")
-                        .HasColumnType("REAL");
-
-                    b.Property<double?>("YPos")
-                        .HasColumnType("REAL");
-
-                    b.HasKey("Number");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.HasIndex("Number")
-                        .IsUnique();
-
-                    b.ToTable("Lamps");
-                });
-
-            modelBuilder.Entity("NetPinProc.Domain.MachineConfig.LedConfigFileEntry", b =>
-                {
-                    b.Property<string>("Number")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Bus")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Conn")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("DisplayName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ItemType")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Location")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("Polarity")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Tags")
-                        .HasColumnType("TEXT");
-
-                    b.Property<double?>("XPos")
-                        .HasColumnType("REAL");
-
-                    b.Property<double?>("YPos")
-                        .HasColumnType("REAL");
-
-                    b.HasKey("Number");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.HasIndex("Number")
-                        .IsUnique();
-
-                    b.ToTable("Leds");
-                });
-
-            modelBuilder.Entity("NetPinProc.Domain.MachineConfig.Lpd8806ConfigFileEntry", b =>
-                {
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.Property<byte>("BoardId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Conn")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("DisplayName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<uint>("First")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Index")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("IsEnabled")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("ItemType")
-                        .HasColumnType("TEXT");
-
-                    b.Property<uint>("Last")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Location")
-                        .HasColumnType("TEXT");
-
-                    b.Property<double?>("XPos")
-                        .HasColumnType("REAL");
-
-                    b.Property<double?>("YPos")
-                        .HasColumnType("REAL");
-
-                    b.HasKey("Name");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.HasIndex("BoardId", "Index")
-                        .IsUnique();
-
-                    b.ToTable("Lpd8806Leds");
-                });
-
-            modelBuilder.Entity("NetPinProc.Domain.MachineConfig.ServoConfigFileEntry", b =>
-                {
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.Property<byte>("BoardId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Conn")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("DisplayName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<uint>("Index")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("IsEnabled")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("ItemType")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Location")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("MinValue")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<double?>("XPos")
-                        .HasColumnType("REAL");
-
-                    b.Property<double?>("YPos")
-                        .HasColumnType("REAL");
-
-                    b.HasKey("Name");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.HasIndex("BoardId", "Index")
-                        .IsUnique();
-
-                    b.ToTable("Servos");
-                });
-
-            modelBuilder.Entity("NetPinProc.Domain.MachineConfig.StepperConfigFileEntry", b =>
-                {
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.Property<byte>("BoardId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Conn")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("DisplayName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsEnabled")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("IsStepper1")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("ItemType")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Location")
-                        .HasColumnType("TEXT");
-
-                    b.Property<uint>("Speed")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<double?>("XPos")
-                        .HasColumnType("REAL");
-
-                    b.Property<double?>("YPos")
-                        .HasColumnType("REAL");
-
-                    b.HasKey("Name");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.HasIndex("BoardId", "IsStepper1")
-                        .IsUnique();
-
-                    b.ToTable("Steppers");
-                });
-
-            modelBuilder.Entity("NetPinProc.Domain.MachineConfig.SwitchConfigFileEntry", b =>
-                {
-                    b.Property<string>("Number")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Conn")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("DisplayName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("GroundWire")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("InputWire")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ItemType")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Location")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("SearchReset")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("SearchStop")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Tags")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<double?>("XPos")
-                        .HasColumnType("REAL");
-
-                    b.Property<double?>("YPos")
-                        .HasColumnType("REAL");
-
-                    b.HasKey("Number");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.HasIndex("Number")
-                        .IsUnique();
-
-                    b.ToTable("Switches");
-                });
-
-            modelBuilder.Entity("NetPinProc.Domain.MachineConfig.WS281xConfigFileEntry", b =>
-                {
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.Property<byte>("BoardId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Conn")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("DisplayName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<uint>("First")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Index")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("IsEnabled")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("ItemType")
-                        .HasColumnType("TEXT");
-
-                    b.Property<uint>("Last")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Location")
-                        .HasColumnType("TEXT");
-
-                    b.Property<double?>("XPos")
-                        .HasColumnType("REAL");
-
-                    b.Property<double?>("YPos")
-                        .HasColumnType("REAL");
-
-                    b.HasKey("Name");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.HasIndex("BoardId", "Index")
-                        .IsUnique();
-
-                    b.ToTable("WS281xLeds");
-                });
-
             modelBuilder.Entity("NetPinProc.Game.Sqlite.Model.BallPlayed", b =>
                 {
                     b.HasOne("NetPinProc.Game.Sqlite.Model.Player", "Player")
@@ -726,6 +730,10 @@ namespace NetPinProc.Game.Sqlite.Migrations
                         .HasForeignKey("ScoreId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Player");
+
+                    b.Navigation("Score");
                 });
 
             modelBuilder.Entity("NetPinProc.Game.Sqlite.Model.Score", b =>
@@ -741,6 +749,20 @@ namespace NetPinProc.Game.Sqlite.Migrations
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("GamePlayed");
+
+                    b.Navigation("Player");
+                });
+
+            modelBuilder.Entity("NetPinProc.Game.Sqlite.Model.GamePlayed", b =>
+                {
+                    b.Navigation("Scores");
+                });
+
+            modelBuilder.Entity("NetPinProc.Game.Sqlite.Model.Score", b =>
+                {
+                    b.Navigation("BallsPlayed");
                 });
 #pragma warning restore 612, 618
         }

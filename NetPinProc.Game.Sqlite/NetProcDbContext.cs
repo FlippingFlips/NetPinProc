@@ -192,7 +192,8 @@ namespace NetPinProc.Game.Sqlite
             //init ball search config
             mc.PRBallSearch = new BallSearchConfigFileEntry()
             {
-                PulseCoils = mc.PRCoils.Where(x => x.Search > 0)?.Select(x => x.Name).ToList(),
+                PulseCoils = mc.PRCoils
+                    .Where(x => x.Search > 0)?.Select(x => x.Name).ToList(),
                 StopSwitches = stops,
                 ResetSwitches = resets,
             };
