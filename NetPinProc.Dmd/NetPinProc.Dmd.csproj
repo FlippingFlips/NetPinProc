@@ -19,6 +19,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\NetPinProc.Domain\NetPinProc.Domain.csproj" />
+		<ProjectReference Include="..\NetPinProc\NetPinProc.csproj" />
 	</ItemGroup>
 
 </Project>

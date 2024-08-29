@@ -1,4 +1,4 @@
-﻿using NetPinProc.Game.Sqlite.Model;
+﻿using NetPinProc.Domain.Data;
 
 namespace NetPinProc.Game.Sqlite.Tests.Database_Tests
 {

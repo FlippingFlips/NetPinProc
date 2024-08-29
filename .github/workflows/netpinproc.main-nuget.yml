@@ -6,7 +6,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-        VERSION: 1.0.0.8
+        VERSION: 1.0.0.9
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
         NUGETAPIKEY: --api-key ${{ secrets.GITHUB_TOKEN }} --source github
     steps:
@@ -31,3 +31,22 @@ jobs:
             dotnet nuget push ".nuget/NetPinProc.Game.${VERSION}.nupkg" ${NUGETAPIKEY}
             dotnet nuget push ".nuget/NetPinProc.Game.Sqlite.${VERSION}.nupkg" ${NUGETAPIKEY}
             dotnet nuget push ".nuget/NetPinProc.Ports.WSLED.${VERSION}.nupkg" ${NUGETAPIKEY}
+
+      - name: Dotnet Publish NetpinProc.Server
+        run: |
+            dotnet publish "Tools\NetPinProc.Game.Server\Server\NetPinProc.Game.Manager.Server.csproj" -c Release -o netpinproc.server
+            7z a -tzip "NetPinProc.Server-win-${VERSION}.zip" "netpinproc.server" # add pingod addons
+
+      - name: create release
+        uses: ncipollo/release-action@v1.12.0
+        with:
+             token: ${{ secrets.GITHUB_TOKEN }}        
+             generateReleaseNotes: false    
+             replacesArtifacts: true
+             prerelease: false # Pre release dev flag
+             allowUpdates: true # allow the release files to be updated and not create a new release every time
+             makeLatest: true
+             #tag: ${{ github.ref_name }} # branch or tag name
+             name: "NetPinProc.Server Builds" # Use a fixed name and upload the artifacts to it
+             # include exported windows game zip and source project zip
+             artifacts: "*.zip"
