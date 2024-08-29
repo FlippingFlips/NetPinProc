@@ -1,0 +1,230 @@
+﻿@page "/machine/adjustments"
+@using NetPinProc.Domain.Data;
+@using NetPinProc.Game.Manager.Client.Shared.DialogComponents;
+@inject HttpClient Http
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+
+<PageTitle>Adjustments | @Names.SITE_NAME</PageTitle>
+
+@if (Elements?.Any() ?? false)
+{
+    <MudDataGrid T="NetPinProc.Domain.Data.Adjustment"
+             MultiSelection="false"
+             Class="netpinprocdatagrid"
+             Items="@Elements.Select(x=>x.Value)"
+             QuickFilter="@_quickFilter"
+             SortMode="SortMode.Multiple"
+             Dense=true
+             FixedHeader=true
+             Height="668px"
+             Filterable="true"
+             Hideable="true"
+             Bordered=true
+             ReadOnly=false
+             EditDialogOptions="new DialogOptions{ FullWidth = true, MaxWidth = MaxWidth.Medium}"
+             EditMode=DataGridEditMode.Form
+             EditTrigger="DataGridEditTrigger.OnRowClick"
+             StartedEditingItem="@StartedEditingItem"
+             CanceledEditingItem="@CanceledEditingItem"
+             CommittedItemChanges="@CommittedItemChanges">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Adjustments</MudText>
+            <MudText Class="pl-2" Typo="Typo.caption">
+                Adjustments with options and default values. These can be read from the game / modes.
+            </MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString"
+                      Placeholder="Quick filter adjustments id, name"
+                      Adornment="Adornment.Start" Immediate="true"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+
+        <Columns>
+            @*<SelectColumn T="CoilConfigFileEntry" />*@
+
+            <TemplateColumn Sortable="false" Filterable="false" ShowFilterIcon=false>
+                <CellTemplate>
+                    <MudToolBar Dense Class="netpinproctoolbar">
+                    <MudIconButton Size="Size.Small" Variant="Variant.Filled"
+                                   Icon="@Icons.Material.Filled.Delete" Color="Color.Error"
+                                   OnClick="@(_ => ShowDeleteDialog(context.Item.Id))" />
+                    </MudToolBar>
+                </CellTemplate>
+                </TemplateColumn>
+
+                <PropertyColumn Property="x => x.Id" Title="Id" Sortable="true"
+                        Resizable="false" ShowFilterIcon=false HeaderStyle="white-space:nowrap">
+                <HeaderTemplate>
+                    <MudTooltip>Id</MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudTextField @bind-Value=@context.Item.Id Label="Id"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                            Required RequiredError="Every adjustment needs a unique id" />
+                </EditTemplate>
+                </PropertyColumn>
+
+                <PropertyColumn Property="x => x.MenuName" ShowFilterIcon=false>
+                <EditTemplate>
+                    <MudTextField @bind-Value=@context.Item.MenuName Label="MenuName"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Required=false RequiredError="A menu is required" />
+                </EditTemplate>
+                </PropertyColumn>
+
+                <PropertyColumn Property="x => x.SubMenuName" ShowFilterIcon=false>
+                <EditTemplate>
+                    <MudTextField @bind-Value=@context.Item.SubMenuName Label="SubMenuName"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Required=false RequiredError="Every adjustment needs a unique id" />
+                </EditTemplate>
+                </PropertyColumn>
+
+                <PropertyColumn Property="x => x.Name" ShowFilterIcon=false />
+
+                <PropertyColumn Property="x => x.Description" ShowFilterIcon=false>
+                <EditTemplate>
+                    <MudTextField @bind-Value=@context.Item.Description Label="Description"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Required=false />
+                </EditTemplate>
+                </PropertyColumn>
+
+                <PropertyColumn Property="x => x.Value" ShowFilterIcon=false />
+                <PropertyColumn Property="x => x.ValueDefault" ShowFilterIcon=false />
+
+                <PropertyColumn Property="x => x.OptionType" ShowFilterIcon=false>
+                <HeaderTemplate>
+                    <MudTooltip>OptionType</MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudSelect T="NetPinProc.Domain.Data.OptionType"
+                           Variant="Variant.Outlined"
+                           @bind-Value=context.Item.OptionType>
+                        @foreach (OptionType item in Enum.GetValues(typeof(NetPinProc.Domain.Data.OptionType)))
+                        {
+                            <MudSelectItem Value="@item">@item.ToString()</MudSelectItem>
+                        }
+                    </MudSelect>
+                </EditTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="x => x.Options" ShowFilterIcon=false />
+
+        </Columns>
+        @*    <PagerContent>
+    <MudDataGridPager T="SwitchConfigFileEntry" />
+    </PagerContent>*@
+    </MudDataGrid>
+
+    <MudStack Row>
+    <MudSpacer />
+    <MudButton Variant="Variant.Filled"
+               Color="Color.Error"
+               Size="Size.Small"
+               Class="mt-2"
+               OnClick="@ShowAddDialog">ADD ADJUSTMENT</MudButton>
+</MudStack>
+}
+
+@code
+{
+    private IDictionary<string, NetPinProc.Domain.Data.Adjustment> Elements;
+
+    private string _searchString;
+
+    private bool _sortNameByLength;
+
+    private List<string> _events = new();
+
+    protected override async Task OnInitializedAsync() => await RefreshViewData();
+
+    protected async Task RefreshViewData()
+    {
+        Elements = await Http.GetFromJsonAsync<IDictionary<string, NetPinProc.Domain.Data.Adjustment>>("/api/adjustments");
+    }
+
+    // events
+    void StartedEditingItem(NetPinProc.Domain.Data.Adjustment item)
+    {
+        _events.Insert(0, $"Event = StartedEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+    }
+
+    void CanceledEditingItem(NetPinProc.Domain.Data.Adjustment item)
+    {
+        _events.Insert(0, $"Event = CanceledEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+    }
+
+    async Task CommittedItemChanges(NetPinProc.Domain.Data.Adjustment item)
+    {
+        _events.Insert(0, $"Event = CommittedItemChanges, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+
+        var response = await Http.PutAsJsonAsync("api/adjustments", item);
+        if (!response.IsSuccessStatusCode)
+        {
+            Snackbar.Add("failed to update adjustment", Severity.Error);
+        }
+        else
+        {
+            var result = await response.Content.ReadFromJsonAsync<NetPinProc.Domain.Data.Adjustment>();
+            if (result != null)
+                Snackbar.Add("driver updated", Severity.Success);
+            else
+                Snackbar.Add("failed to update adjustment", Severity.Warning);
+        }
+    }
+
+    // quick filter - filter globally across multiple columns with the same input
+    private Func<NetPinProc.Domain.Data.Adjustment, bool> _quickFilter => x =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (x.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (x.Id.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    };
+
+    async Task ShowDeleteDialog(string adjustmentId)
+    {
+        bool? result = await DialogService.ShowMessageBox(
+            "Warning: Deleting Adjustment: " + adjustmentId,
+            "Deleting can not be undone!",
+            yesText: "Delete!", cancelText: "Cancel", options: new DialogOptions { MaxWidth = MaxWidth.Small });
+        if (result.HasValue && result.Value)
+        {
+            try
+            {
+                var response = await Http.DeleteAsync("api/adjustments/" + adjustmentId);
+                if (response.IsSuccessStatusCode)
+                {
+                    Snackbar.Add($"adjustment: {adjustmentId} deleted", Severity.Success);
+                    await RefreshViewData();
+                }
+                else
+                {
+                    Snackbar.Add(await response.Content.ReadAsStringAsync(), Severity.Error);
+                }
+
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Add(ex.Message, Severity.Error);
+            }
+        }
+    }
+
+    async Task ShowAddDialog()
+    {
+        var dialog = await DialogService.ShowAsync<AddAdjustmentDialog>();
+        var result = await dialog.Result;
+        if (!result.Canceled)
+            await RefreshViewData();
+    }
+}

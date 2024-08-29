@@ -1,0 +1,59 @@
+﻿@using NetPinProc.Domain.Data;
+@using NetPinProc.Domain.Players;
+@using NetPinProc.Domain.Data;
+@inject HttpClient Http
+
+<MudPaper>
+    <MudCard>
+        <MudCardHeader>
+            <MudStack Row=true>
+                <MudBadge Icon="@Icons.Material.Filled.InsertChart" Color="Color.Secondary" />
+                <MudText>AUDITS</MudText>
+            </MudStack>
+        </MudCardHeader>
+
+        @if (Audits?.Any() ?? false)
+        {
+            <MudCardContent>
+                <MudSimpleTable Style="overflow-x: auto;">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Description</th>
+                            <th>Audit Type</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in Audits)
+                        {
+                            <tr>
+                                <td>@p.Value.Id</td>
+                                <td>@p.Value.Description</td>
+                                <td>@p.Value.Type</td>
+                                <td>@p.Value.Value</td>
+                            </tr>
+                        }
+                    </tbody>
+                </MudSimpleTable>
+            </MudCardContent>
+        }
+    </MudCard>
+</MudPaper>
+
+@code
+{
+    IDictionary<string, Audit> Audits;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Audits = await Http.GetFromJsonAsync<IDictionary<string, Audit>>("api/audits");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
+    }
+}

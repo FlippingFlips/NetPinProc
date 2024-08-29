@@ -2,21 +2,20 @@
 
     <MudNavLink Href="/" Match="NavLinkMatch.All">Dashboard</MudNavLink>    
 
-    <MudNavGroup Title="Adjustments" Expanded="false">
-        <MudNavLink Href="/adjustments/standard" Match="NavLinkMatch.Prefix" Disabled>Standard</MudNavLink>
-    </MudNavGroup>
-
     <MudNavGroup Title="Audits" Expanded="false">
         <MudNavLink Href="/audits" Match="NavLinkMatch.Prefix" Disabled>Standard</MudNavLink>
     </MudNavGroup>
 
     <MudNavGroup Title="Machine Setup" Expanded="false">
-        <MudNavLink Href="/machine/switches" Match="NavLinkMatch.Prefix">Switches</MudNavLink>
-        <MudNavLink Href="/machine/drivers" Match="NavLinkMatch.Prefix">Drivers</MudNavLink>
-        <MudNavLink Href="/machine/leds" Match="NavLinkMatch.Prefix">LEDS</MudNavLink>
-        <MudNavLink Href="/machine/lamps" Match="NavLinkMatch.Prefix">Lamps</MudNavLink>
-        <MudNavLink Href="/machine/steppers" Match="NavLinkMatch.Prefix" Disabled>Steppers</MudNavLink>
-        <MudNavLink Href="/machine/servos" Match="NavLinkMatch.Prefix" Disabled>Servos</MudNavLink>
+        <MudNavLink Href="/machine/adjustments" Match="NavLinkMatch.Prefix">Adjustments</MudNavLink>
+        <MudNavGroup Title="Items" Expanded="true">
+            <MudNavLink Href="/machine/items/switches" Match="NavLinkMatch.Prefix">Switches</MudNavLink>
+            <MudNavLink Href="/machine/items/drivers" Match="NavLinkMatch.Prefix">Drivers</MudNavLink>
+            <MudNavLink Href="/machine/items/leds" Match="NavLinkMatch.Prefix">LEDS</MudNavLink>
+            <MudNavLink Href="/machine/items/lamps" Match="NavLinkMatch.Prefix">Lamps</MudNavLink>
+            <MudNavLink Href="/machine/items/steppers" Match="NavLinkMatch.Prefix" Disabled>Steppers</MudNavLink>
+            <MudNavLink Href="/machine/items/servos" Match="NavLinkMatch.Prefix" Disabled>Servos</MudNavLink>
+        </MudNavGroup>        
     </MudNavGroup>
 
 </MudNavMenu>

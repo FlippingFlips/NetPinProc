@@ -1,0 +1,96 @@
+﻿@using NetPinProc.Domain.Data;
+@inject HttpClient Http
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <TitleContent>Add a new adjustment</TitleContent>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="12">
+                <MudPaper Class="pa-4">
+                    <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
+
+                        <MudTextField T="string" @bind-Value=Adjustment.Id Label="Id" Required="true" RequiredError="An ID is required" 
+                            Variant="Variant.Outlined"/>
+
+                        <MudTextField T="string" @bind-Value=Adjustment.MenuName
+                                      Label="MenuName" Required="true"
+                                      Variant="Variant.Outlined" />
+
+                        <MudTextField T="string" @bind-Value=Adjustment.SubMenuName
+                                      Label="SubMenuName" Required="true"
+                                      Variant="Variant.Outlined" />
+
+                        <MudTextField T="string" @bind-Value=Adjustment.Name Label="Name" Required="true" RequiredError="A name is required"
+                                      Variant="Variant.Outlined" />
+
+                        <MudTextField T="string" @bind-Value=Adjustment.Description Lines="2" Label="Description" Required="false"
+                                      Variant="Variant.Outlined" />
+
+                        <MudTextField T="int" @bind-Value=Adjustment.Value Label="Value" Required="true"
+                                      Variant="Variant.Outlined" />
+
+                        <MudTextField T="int" @bind-Value=Adjustment.ValueDefault Label="DefaultValue" Required="true"
+                                      Variant="Variant.Outlined" />
+
+                        <MudSelect T="OptionType" @bind-Value=Adjustment.OptionType
+                            Variant="Variant.Outlined" Required RequiredError="The options for this adjustment needs a type">
+                            @foreach (OptionType item in Enum.GetValues(typeof(OptionType)))
+                            {
+                                <MudSelectItem Value="@item">@item.ToString()</MudSelectItem>
+                            }
+                        </MudSelect>
+
+                        <MudTextField T="string" @bind-Value=Adjustment.Options
+                                      Label="Options" Required="true"
+                                      Variant="Variant.Outlined" />
+                    </MudForm>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12">
+                <MudPaper Class="pa-4 mt-4">
+                    <MudStack Row>
+                        <MudSpacer />
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled=!success DropShadow="false" OnClick="@SubmitAsync">Add</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" OnClick="@Cancel">Cancel</MudButton>
+                    </MudStack>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+</MudDialog>
+@code
+{
+    [CascadingParameter]
+    private MudDialogInstance MudDialog { get; set; }
+
+    public Adjustment Adjustment { get; set; } = new();
+
+    bool success;
+    string[] errors = { };
+    MudForm? form;
+
+    private async Task SubmitAsync()
+    {
+        try
+        {
+            var reponse = await Http.PostAsJsonAsync("api/adjustments", Adjustment);
+
+            if (reponse.IsSuccessStatusCode)
+            {
+                Snackbar.Add($"Added New Adjustment: {Adjustment.Id}:{Adjustment.Name}", Severity.Success);
+                MudDialog.Close(DialogResult.Ok(true));
+            }
+            else
+            {
+                Snackbar.Add(await reponse.Content.ReadAsStringAsync(), Severity.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.ToString(), Severity.Error);
+        }
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+}
