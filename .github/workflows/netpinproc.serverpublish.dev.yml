@@ -28,9 +28,8 @@ jobs:
              replacesArtifacts: true
              prerelease: false # Pre release dev flag
              allowUpdates: true # allow the release files to be updated and not create a new release every time
-             
+             makeLatest: true
              #tag: ${{ github.ref_name }} # branch or tag name
-             tag: "NetPinProc.Server Builds" # Use a fixed name and upload the artifacts to it
-
+             name: "NetPinProc.Server Builds" # Use a fixed name and upload the artifacts to it
              # include exported windows game zip and source project zip
              artifacts: "*.zip"
