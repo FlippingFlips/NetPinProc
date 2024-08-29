@@ -6,7 +6,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-        VERSION: 1.0.0.8
+        VERSION: 1.0.0.9-dev1
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v3
@@ -26,8 +26,11 @@ jobs:
              token: ${{ secrets.GITHUB_TOKEN }}        
              generateReleaseNotes: false    
              replacesArtifacts: true
-             prerelease: true # Pre release dev flag
+             prerelease: false # Pre release dev flag
              allowUpdates: true # allow the release files to be updated and not create a new release every time
-             tag: ${{ github.ref_name }} # branch or tag name
+             
+             #tag: ${{ github.ref_name }} # branch or tag name
+             tag: "NetPinProc.Server Builds" # Use a fixed name and upload the artifacts to it
+
              # include exported windows game zip and source project zip
              artifacts: "*.zip"
