@@ -2,7 +2,7 @@
 @inject HttpClient Http
 @inject ISnackbar Snackbar
 
-<PageTitle>Switches | NetProcGame Manager</PageTitle>
+<PageTitle>Lamps | @Names.SITE_NAME</PageTitle>
 
 <MudDataGrid T="LampConfigFileEntry" MultiSelection="true"
              Items="@Elements" SortMode="SortMode.Multiple"
@@ -19,7 +19,7 @@
              CanceledEditingItem="@CanceledEditingItem"
              CommittedItemChanges="@CommittedItemChanges">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">Database switches</MudText>
+        <MudText Typo="Typo.h6">Lamps</MudText>
         <MudSpacer />
         <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
@@ -40,7 +40,7 @@
 
 @code {
     private IEnumerable<LampConfigFileEntry> Elements = new List<LampConfigFileEntry>();
-    private string _searchString;
+    private string? _searchString;
     private bool _sortNameByLength;
     private List<string> _events = new();
     // custom sort by name length
@@ -66,10 +66,7 @@
         return false;
     };
 
-    protected override async Task OnInitializedAsync()
-    {
-        Elements = await Http.GetFromJsonAsync<List<LampConfigFileEntry>>("/lamps");
-    }
+    protected override async Task OnInitializedAsync() => Elements = await Http.GetFromJsonAsync<List<LampConfigFileEntry>>("/lamps");
 
     // events
     void StartedEditingItem(LampConfigFileEntry item)
