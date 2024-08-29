@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NetPinProc.Domain;
+using NetPinProc.Domain.Data;
 using NetPinProc.Domain.MachineConfig;
 using NetPinProc.Game.Sqlite.Config;
 using NetPinProc.Game.Sqlite.Model;

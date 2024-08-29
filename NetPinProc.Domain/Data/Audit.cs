@@ -1,7 +1,6 @@
-﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-using System;
+﻿using NetPinProc.Domain.Enums;
 
-namespace NetPinProc.Game.Sqlite.Model
+namespace NetPinProc.Domain.Data
 {
     public class Audit
     {
@@ -10,13 +9,5 @@ namespace NetPinProc.Game.Sqlite.Model
         public string Name { get; set; }
         public int Value { get; set; }
         public AuditType Type { get; set; }
-    }
-
-    [Flags]
-    public enum AuditType
-    {
-        Standard,
-        Game,
-        Earnings
     }
 }
