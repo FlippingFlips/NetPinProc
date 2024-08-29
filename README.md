@@ -7,6 +7,8 @@
 - [NetPinProc.Game.Sqlite](NetPinProc.Game.Sqlite) = Database Sqlite version of `IGameController` building off the `NetPinProc.Game`
 - [NetPinProc.Ports.WSLED](NetPinProc.Ports.WSLED) = Serial LED drivers
 
+These projects are also on nuget as packages, see `Using these NetPinProc Nuget Packages` below.
+
 ## Tools
 - [NetPinProc.Game.Server](Tools\NetPinProc.Game.Server) - Manages the database & pinball machine with a client web application.
 You can run this locally while developing or serve from your pinball machine. Builds can be found in releases.
@@ -22,3 +24,8 @@ See testing examples for how to test and write your own methods
 
 ## Examples
 - [.examples](.examples) - P-ROC and P3-ROC console applications
+
+### Using these NetPinProc Nuget Packages
+- Create a personal Github token under `settings > developer settings > classic token`. Set the token so it has read access to packages from Github
+- Add a nuget source on your machine or in a project adding the url `https://nuget.pkg.github.com/FlippingFlips/index.json`
+- The password for the source is the token you created and copied.
