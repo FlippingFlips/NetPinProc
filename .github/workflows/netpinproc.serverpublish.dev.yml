@@ -1,6 +1,7 @@
 name: netpinproc.server.dev
 on:
   push:    
+    tags: [server-*]
     branches: [ netpinproc.server.build ]  
 jobs:
   build:
