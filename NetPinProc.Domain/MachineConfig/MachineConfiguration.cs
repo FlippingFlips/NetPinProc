@@ -79,9 +79,8 @@ namespace NetPinProc.Domain
         /// <summary> Used in WPC machines MachineType.WPC MachineType.WPC95 MachineType.WPCAlphanumeric</summary>
         public List<string> PRFlipperRight { get; set; } = new List<string>();
 
-        /// <summary>
-        /// Flipper coils should match these switches and be named with Main or Hold eg: switch: flipperLwL and coils: flipperLwLMain, flipperLwLHold <para/>
-        /// </summary>
+        /// <summary>Flipper coils should match these switches and be named with Main or Hold<para/>
+        /// eg: switch: flipperLwL and coils: flipperLwLMain, flipperLwLHold <para/></summary>
         public List<string> PRFlippers { get; set; } = new List<string>();
 
         /// <inheritdoc/>
