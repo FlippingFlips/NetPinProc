@@ -1,0 +1,327 @@
+﻿@page "/machine/drivers"
+@using NetPinProc.Game.Manager.Client.Shared.DialogComponents;
+@using NetPinProc.Game.Manager.Client.Shared.HelpComponents
+@inject HttpClient Http
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+
+<PageTitle>Drivers / Coils | @Names.SITE_NAME</PageTitle>
+
+@*RowClick="@RowClicked"*@
+@**@
+@*EditMode="DataGridEditMode.Cell"*@
+
+<MudDataGrid T="CoilConfigFileEntry" MultiSelection="false"
+             Class="netpinprocdatagrid"
+             Items="@Elements"
+             SortMode="SortMode.Multiple"
+             Dense=true
+             FixedHeader=true
+             Height="668px"
+             Filterable="true"
+             QuickFilter="@_quickFilter"
+             Hideable="true"                          
+             Bordered=true
+             ReadOnly=false        
+             EditDialogOptions="new DialogOptions{ FullWidth = true, MaxWidth = MaxWidth.Medium}"
+             EditMode=DataGridEditMode.Form
+             EditTrigger="DataGridEditTrigger.OnRowClick"
+             StartedEditingItem="@StartedEditingItem"
+             CanceledEditingItem="@CanceledEditingItem"
+             CommittedItemChanges="@CommittedItemChanges">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Drivers</MudText>
+        <MudText Class="pl-2" Typo="Typo.caption">
+            Use this page to add, edit and remove high power drivers / coils from the database. Hover over the column headers for help and click rows to edit drivers.
+        </MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="_searchString"
+                      Placeholder="Quick filter Driver Name, Num, Tags"
+                      Adornment="Adornment.Start" Immediate="true"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+
+    <Columns>
+        @*<SelectColumn T="CoilConfigFileEntry" />*@
+        <TemplateColumn Sortable="false" Filterable="false">
+            <CellTemplate>
+                <MudToolBar Dense Class="netpinproctoolbar">
+                    <MudIconButton Size="Size.Small" Variant="Variant.Filled"
+                                   Icon="@Icons.Material.Filled.Delete" Color="Color.Error"
+                                   OnClick="@(_ => ShowDeleteDialog(context.Item.Number))" />
+                </MudToolBar>
+            </CellTemplate>
+        </TemplateColumn>
+
+        <PropertyColumn Property="x => x.Number" Title="Number"
+                SortBy=@_sortBy Sortable="true" Filterable="false" Resizable="false" StickyLeft="true" ShowFilterIcon=false HeaderStyle="white-space:nowrap">
+            <HeaderTemplate>
+                <MudTooltip Text="The number can be a string as used in older P-ROC boards, see other machine.json's">Number</MudTooltip>
+            </HeaderTemplate>
+            <EditTemplate>
+                <MudTextField @bind-Value=@context.Item.Number Label="Number"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                        Required RequiredError="This machine item needs a number to apply config to the PROC" />
+            </EditTemplate>
+        </PropertyColumn>
+
+        <PropertyColumn Property="x => x.Name" StickyLeft="true" />
+
+        <PropertyColumn Property="x => x.PulseTime" Filterable=false Resizable="true" Sortable="false" />
+
+        <PropertyColumn Property="x => x.ItemType" Filterable=false Resizable="true" Sortable="false">
+            <HeaderTemplate>
+                <MudTooltip>
+                    <TooltipContent><SwitchItemTypeHelp /></TooltipContent>
+                    <ChildContent>Item Type</ChildContent>
+                </MudTooltip>
+            </HeaderTemplate>
+            <EditTemplate>
+                <MudTextField @bind-Value=@context.Item.ItemType Label="ItemType"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Required=false />
+            </EditTemplate>
+        </PropertyColumn>
+
+        <PropertyColumn Property="x => x.Search" ShowFilterIcon="false">
+            <HeaderTemplate>
+                <MudTooltip>
+                    <TooltipContent><DriverBallSearchHelp /></TooltipContent>
+                    <ChildContent>Search</ChildContent>
+                </MudTooltip>
+            </HeaderTemplate>
+            <EditTemplate>
+                <MudTextField @bind-Value=@context.Item.Tags Label="Tags"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Required=false />
+            </EditTemplate>
+        </PropertyColumn>
+
+        <PropertyColumn Property="x => x.Polarity" Filterable=false Resizable="true" Sortable="false" />
+
+        <PropertyColumn Property="x => x.Tags" ShowFilterIcon="false">
+            <HeaderTemplate>
+                <MudTooltip>
+                    <TooltipContent><SwitchTagsHelp /></TooltipContent>
+                    <ChildContent>Tags</ChildContent>
+                </MudTooltip>
+            </HeaderTemplate>
+            <EditTemplate>
+                <MudTextField @bind-Value=@context.Item.Tags Label="Tags"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Required=false />
+            </EditTemplate>
+        </PropertyColumn>
+
+        <PropertyColumn Property="x => x.Voltage" ShowFilterIcon="false">        
+            <HeaderTemplate>
+                <MudTooltip>
+                    <TooltipContent>Amount of volts. PDDriver boards can take different voltage each side but not mixed.</TooltipContent>
+                    <ChildContent>Voltage</ChildContent>
+                </MudTooltip>
+            </HeaderTemplate>
+            <EditTemplate>
+                <MudNumericField @bind-Value=@context.Item.Voltage Label="Voltage"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Required=false />
+            </EditTemplate>
+        </PropertyColumn>
+
+        <PropertyColumn Property="x => x.VoltageWire">
+            <HeaderTemplate>
+                <MudTooltip>
+                    <TooltipContent><WireColorHelp /></TooltipContent>
+                    <ChildContent>VoltageWire</ChildContent>
+                </MudTooltip>
+            </HeaderTemplate>
+            <EditTemplate>
+                <MudTextField @bind-Value=@context.Item.VoltageWire Label="VoltageWire"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Required=false />
+            </EditTemplate>
+        </PropertyColumn>
+
+        <PropertyColumn Property="x => x.ReturnWire">
+            <HeaderTemplate>
+                <MudTooltip>
+                    <TooltipContent><WireColorHelp /></TooltipContent>
+                    <ChildContent>ReturnWire</ChildContent>
+                </MudTooltip>
+            </HeaderTemplate>
+            <EditTemplate>
+                <MudTextField @bind-Value=@context.Item.ReturnWire Label="ReturnWire"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Required=false />
+            </EditTemplate>
+        </PropertyColumn>
+
+        <PropertyColumn Property="x => x.Conn" ShowFilterIcon="false">
+            <HeaderTemplate>
+                <MudTooltip>
+                    <TooltipContent><ConnectionHelp /></TooltipContent>
+                    <ChildContent>Conn</ChildContent>
+                </MudTooltip>
+            </HeaderTemplate>
+            <EditTemplate>
+                <MudTextField @bind-Value=@context.Item.Conn Label="Conn"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Required=false />
+            </EditTemplate>
+        </PropertyColumn>
+
+        <PropertyColumn Property="x => x.Bus">
+            <HeaderTemplate>
+                <MudTooltip>
+                    <TooltipContent>Bus / Aux port</TooltipContent>
+                    <ChildContent>Bus</ChildContent>
+                </MudTooltip>
+            </HeaderTemplate>
+            <EditTemplate>
+                <MudTextField @bind-Value=@context.Item.Bus Label="Bus - Aux"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Required=false />
+            </EditTemplate>
+        </PropertyColumn>
+
+        <PropertyColumn Property="x => x.XPos">
+            <EditTemplate>
+                <MudNumericField @bind-Value=context.Item.XPos Variant="Variant.Outlined"
+                    Label="XPos" Min="0.00" Max="3600.00" T="double?"/>
+            </EditTemplate>
+            <HeaderTemplate>
+                <MudTooltip>
+                    <TooltipContent><MachineItemPositionHelp /></TooltipContent>
+                    <ChildContent>X</ChildContent>
+                </MudTooltip>
+            </HeaderTemplate>
+        </PropertyColumn>
+
+        <PropertyColumn Property="x => x.YPos">
+            <EditTemplate>
+                <MudNumericField @bind-Value=context.Item.YPos Variant ="Variant.Outlined"
+                    Label="YPos" Min="0.00" Max="3600.00" T="double?" />
+            </EditTemplate>
+            <HeaderTemplate>
+                <MudTooltip>
+                    <TooltipContent><MachineItemPositionHelp /></TooltipContent>
+                    <ChildContent>Y</ChildContent>
+                </MudTooltip>
+            </HeaderTemplate>
+        </PropertyColumn>
+    </Columns>
+    @*    <PagerContent>
+    <MudDataGridPager T="SwitchConfigFileEntry" />
+    </PagerContent>*@
+</MudDataGrid>
+
+<MudStack Row>
+    <MudSpacer />
+    <MudButton Variant="Variant.Filled" Color="Color.Error"
+               Size="Size.Small"
+               Class="mt-2"
+               OnClick="@ShowAddDialog">ADD DRIVER</MudButton>
+</MudStack>
+
+@code {
+    private List<CoilConfigFileEntry> Elements = new List<CoilConfigFileEntry>();
+    private string _searchString;
+    private bool _sortNameByLength;
+    private List<string> _events = new();
+    // custom sort by name length
+    private Func<CoilConfigFileEntry, object> _sortBy => x =>
+    {
+        if (_sortNameByLength)
+            return x.Name.Length;
+        else
+            return x.Name;
+    };
+    // quick filter - filter globally across multiple columns with the same input
+    private Func<CoilConfigFileEntry, bool> _quickFilter => x =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (x.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (x.Number.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (x.Tags.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    };
+
+    protected override async Task OnInitializedAsync() => await RefreshViewData();
+
+    protected async Task RefreshViewData() => Elements = await Http.GetFromJsonAsync<List<CoilConfigFileEntry>>("/api/drivers");
+
+    // events
+    void StartedEditingItem(CoilConfigFileEntry item)
+    {
+        _events.Insert(0, $"Event = StartedEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+    }
+
+    void CanceledEditingItem(CoilConfigFileEntry item)
+    {
+        _events.Insert(0, $"Event = CanceledEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+    }
+
+    async Task CommittedItemChanges(CoilConfigFileEntry item)
+    {
+        _events.Insert(0, $"Event = CommittedItemChanges, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+
+        var response = await Http.PutAsJsonAsync("api/drivers", item);
+        if (!response.IsSuccessStatusCode)
+        {
+            Snackbar.Add("failed to update coil", Severity.Error);
+        }
+        else
+        {
+            var result = await response.Content.ReadFromJsonAsync<CoilConfigFileEntry>();
+            if(result != null)
+                Snackbar.Add("driver updated", Severity.Success);
+            else
+                Snackbar.Add("failed to update coil", Severity.Warning);
+        }
+    }
+
+    async Task ShowDeleteDialog(string drvName)
+    {
+        bool? result = await DialogService.ShowMessageBox(
+            "Warning: Deleting Driver: " + drvName,
+            "Deleting can not be undone!",
+            yesText: "Delete!", cancelText: "Cancel", options: new DialogOptions { MaxWidth = MaxWidth.Small });
+        if (result.HasValue && result.Value)
+        {
+            try
+            {
+                var response = await Http.DeleteAsync("api/drivers/" + drvName);
+                if (response.IsSuccessStatusCode)
+                {
+                    Snackbar.Add($"driver: {drvName} deleted", Severity.Success);
+                    await RefreshViewData();
+                }
+                else
+                {
+                    Snackbar.Add(await response.Content.ReadAsStringAsync(), Severity.Error);
+                }
+
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Add(ex.Message, Severity.Error);
+            }
+        }
+    }
+
+    async Task ShowAddDialog()
+    {
+        var dialog = await DialogService.ShowAsync<AddDriverDialog>();
+        var result = await dialog.Result;
+        if (!result.Canceled)
+            await RefreshViewData();
+    }
+}

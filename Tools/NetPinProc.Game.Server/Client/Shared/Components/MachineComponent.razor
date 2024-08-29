@@ -48,7 +48,7 @@
     {
         try
         {
-            Machine = await Http.GetFromJsonAsync<Machine>("/machine");
+            Machine = await Http.GetFromJsonAsync<Machine>("api/machine");
         }
         catch (Exception ex)
         {

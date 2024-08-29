@@ -44,7 +44,7 @@
     {
         try
         {
-           Players = await Http.GetFromJsonAsync<Player[]>("/players");
+           Players = await Http.GetFromJsonAsync<Player[]>("api/players");
         }
         catch (Exception ex)
         {

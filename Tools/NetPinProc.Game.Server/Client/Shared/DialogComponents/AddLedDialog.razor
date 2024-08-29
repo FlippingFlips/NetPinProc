@@ -2,13 +2,13 @@
 @inject ISnackbar Snackbar
 
 <MudDialog>
-    <TitleContent>Add a new switch</TitleContent>
+    <TitleContent>Add a new LED</TitleContent>
     <DialogContent>
         <MudGrid>
             <MudItem xs="12">
                 <MudPaper Class="pa-4">
                     <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
-                        <MudTextField T="string" @bind-Value=Number Label="Number" Required="true" RequiredError="Switch number is required" />
+                        <MudTextField T="string" @bind-Value=Number Label="Number" Required="true" RequiredError="A number is required" />
                         <MudTextField T="string" @bind-Value=Name Label="Name" Required="true" RequiredError="Name is required" />
                         <MudTextField T="string" @bind-Value=DisplayName Label="DisplayName" Required="false" />
                     </MudForm>
@@ -43,7 +43,7 @@
     {
         try
         {
-            var reponse = await Http.PostAsJsonAsync("api/switches", new SwitchConfigFileEntry
+            var reponse = await Http.PostAsJsonAsync("api/leds", new LedConfigFileEntry
                 {
                     Number = Number,
                     DisplayName = DisplayName,
@@ -52,7 +52,7 @@
 
             if (reponse.IsSuccessStatusCode)
             {
-                Snackbar.Add($"Added New Switch: {Name}", Severity.Success);
+                Snackbar.Add($"Added New LED: {Name}", Severity.Success);
                 MudDialog.Close(DialogResult.Ok(true));
             }
             else
