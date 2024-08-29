@@ -1,12 +1,13 @@
 ﻿@inherits LayoutComponentBase
 <MudThemeProvider IsDarkMode=true/>
-<MudDialogProvider />
+<MudPopoverProvider />
+<MudDialogProvider BackdropClick=true MaxWidth="MaxWidth.Medium" FullWidth="true" CloseOnEscapeKey="true" CloseButton="true"/>
 <MudSnackbarProvider />
 
 <MudLayout>
     <MudAppBar>
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        NetProcGame Manager
+        @Names.SITE_NAME
     </MudAppBar>
     <MudDrawer @bind-Open="@_drawerOpen">
         <NavMenu/>

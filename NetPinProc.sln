@@ -52,6 +52,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{3CAF27F2
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetPinProc.Server", "NetPinProc.Server", "{A751CB1D-29C6-416F-99D3-4CE5B74419EA}"
 	ProjectSection(SolutionItems) = preProject
+		Tools\NetPinProc.Game.Server\Directory.Build.props = Tools\NetPinProc.Game.Server\Directory.Build.props
 		Tools\NetPinProc.Game.Server\README.md = Tools\NetPinProc.Game.Server\README.md
 	EndProjectSection
 EndProject

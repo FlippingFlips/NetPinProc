@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;net6.0;net7.0</TargetFrameworks>
+		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
 		<Description>Pinball base class library with no dependencies for NetPinProc</Description>
 		<Authors>Adam Preble, Jimmy Lipham, David Horsefield</Authors>				
 		<DebugType>Embedded</DebugType>
