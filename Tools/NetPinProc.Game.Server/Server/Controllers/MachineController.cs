@@ -6,7 +6,7 @@ using NetPinProc.Game.Sqlite.Model;
 namespace NetPinProc.Game.Manager.Server.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class MachineController : NetProcBaseController
     {
         public MachineController(

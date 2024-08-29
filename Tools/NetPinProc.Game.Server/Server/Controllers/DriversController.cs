@@ -8,25 +8,26 @@ namespace NetPinProc.Game.Manager.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class SwitchesController : NetProcBaseController
+    public class DriversController : NetProcBaseController
     {
-        public SwitchesController(ILogger<SwitchesController> logger, 
+        public DriversController(ILogger<DriversController> logger,
             INetProcDbContext netProcDb) : base(logger, netProcDb) { }
 
         /// <summary>Gets all the switches in database</summary>
         /// <returns></returns>
-        public async Task<IEnumerable<SwitchConfigFileEntry>> OnGetAsync() => 
-            await _netProcDb.Switches.ToListAsync();
+        public async Task<IEnumerable<CoilConfigFileEntry>> OnGetAsync() =>
+            await _netProcDb.Coils.ToListAsync();
 
         [HttpPost]
-        public async Task<ActionResult<SwitchConfigFileEntry>> OnPostAsync([FromBody] SwitchConfigFileEntry swConfig)
+        public async Task<ActionResult<CoilConfigFileEntry>> OnPostAsync(
+            [FromBody] CoilConfigFileEntry coilConfig)
         {
             try
             {
-                _netProcDb.Switches.Add(swConfig);
+                _netProcDb.Coils.Add(coilConfig);
                 await _netProcDb.SaveChangesAsync();
 
-                return Ok(swConfig);
+                return Ok(coilConfig);
             }
             catch (Exception ex)
             {
@@ -36,14 +37,15 @@ namespace NetPinProc.Game.Manager.Server.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<SwitchConfigFileEntry>> OnPutAsync([FromBody] SwitchConfigFileEntry swConfig)
+        public async Task<ActionResult<CoilConfigFileEntry>> OnPutAsync(
+            [FromBody] CoilConfigFileEntry coilConfig)
         {
             try
             {
-                _netProcDb.Switches.Update(swConfig);
+                _netProcDb.Coils.Update(coilConfig);
                 await _netProcDb.SaveChangesAsync();
 
-                return Ok(swConfig);
+                return Ok(coilConfig);
             }
             catch (Exception ex)
             {
@@ -52,16 +54,16 @@ namespace NetPinProc.Game.Manager.Server.Controllers
             }
         }
 
-        [HttpDelete("{swNum}")]
-        public async Task<ActionResult<int>> OnDeleteAsync(string swNum)
+        [HttpDelete("{coilNum}")]
+        public async Task<ActionResult<int>> OnDeleteAsync(string coilNum)
         {
             try
             {
-                var item = await _netProcDb.Switches.FirstOrDefaultAsync(x => x.Number == swNum);
+                var item = await _netProcDb.Coils.FirstOrDefaultAsync(x => x.Number == coilNum);
 
-                if (item == null) throw new SwitchNotFoundException($"{swNum} doesn't exist to delete!");
+                if (item == null) throw new DriverNotFoundException($"{coilNum} doesn't exist to delete!");
 
-                _netProcDb.Switches.Remove(item);
+                _netProcDb.Coils.Remove(item);
 
                 return Ok(await _netProcDb.SaveChangesAsync());
             }
@@ -71,6 +73,5 @@ namespace NetPinProc.Game.Manager.Server.Controllers
                 return BadRequest($"{ex.Message} - {ex.InnerException?.Message}");
             }
         }
-
     }
 }
