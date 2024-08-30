@@ -37,7 +37,7 @@ namespace NetPinProc.Domain
         AttrCollection<ushort, string, LED> LEDS { get; set; }
 
         /// <summary>Public logging interface class. Make sure all games have a class that implements this interface</summary>
-        ILogger Logger { get; set; }
+        ILoggerPROC Logger { get; set; }
 
         /// <summary>The current list of modes that are active in the game</summary>
         IModeQueue Modes { get; set; }

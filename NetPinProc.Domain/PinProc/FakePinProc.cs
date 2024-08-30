@@ -29,7 +29,7 @@ namespace NetPinProc.Domain
         /// </summary>
         /// <param name="machineType"></param>
         /// <param name="logger"></param>
-        public FakePinProc(MachineType machineType, ILogger logger)
+        public FakePinProc(MachineType machineType, ILoggerPROC logger)
         {
             _machineType = machineType;
             Logger = logger;
@@ -51,7 +51,7 @@ namespace NetPinProc.Domain
         /// <summary>
         /// 
         /// </summary>
-        public ILogger Logger { get; set; }
+        public ILoggerPROC Logger { get; set; }
         /// <summary>
         /// Adds switch event to <see cref="switch_events"/>
         /// </summary>

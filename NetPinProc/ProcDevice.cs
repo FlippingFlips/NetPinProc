@@ -50,7 +50,7 @@ namespace NetPinProc
         /// <param name="machineType"></param>
         /// <param name="logger"></param>
         /// <exception cref="InvalidOperationException"></exception>
-        public ProcDevice(MachineType machineType, ILogger logger = null)
+        public ProcDevice(MachineType machineType, ILoggerPROC logger = null)
         {
             this.Logger = logger;
 
@@ -79,7 +79,7 @@ namespace NetPinProc
         /// <summary>
         /// 
         /// </summary>
-        public ILogger Logger { get; set; }
+        public ILoggerPROC Logger { get; set; }
 
         /// <summary>
         /// TODO: Send aux commands Not implemented yet

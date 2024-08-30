@@ -44,7 +44,7 @@ namespace NetPinProc.Game.Tests.GameTests.Fake
 
     public class FakeGame : GameController
     {
-        public FakeGame(MachineType machineType, ILogger? logger = null, bool simulated = true) : base(machineType, logger, simulated)
+        public FakeGame(MachineType machineType, ILoggerPROC? logger = null, bool simulated = true) : base(machineType, logger, simulated)
         {
         }
     }

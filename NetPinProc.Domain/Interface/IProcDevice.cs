@@ -7,7 +7,7 @@ namespace NetPinProc.Domain
 {
     public interface IProcDevice
     {
-        ILogger Logger { get; set; }
+        ILoggerPROC Logger { get; set; }
         void AuxSendCommands(ushort address, ushort aux_commands);
         void Close();
         void DmdDraw(byte[] bytes);

@@ -6,7 +6,7 @@ namespace NetPinProc.Domain
     /// <summary>
     /// Console WriteLine logger
     /// </summary>
-    public class ConsoleLogger : ILogger
+    public class ConsoleLogger : ILoggerPROC
     {
         /// <inheritdoc/>
         public LogLevel LogLevel { get; set; }

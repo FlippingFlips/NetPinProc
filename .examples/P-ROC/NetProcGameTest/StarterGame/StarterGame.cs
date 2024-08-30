@@ -27,7 +27,7 @@ namespace PinprocTest.StarterGame
 		public I2cServo flasherMotor3;
 		public WSLEDDriver ledDriver;
 
-        public StarterGame(ILogger logger, bool simulated = false)
+        public StarterGame(ILoggerPROC logger, bool simulated = false)
 			: base(MachineType.WPC95, logger, simulated)
         {
             this.lampctrl = new LampController(this);
