@@ -17,5 +17,8 @@
 
         /// <summary> Flag to enable the servo read by config before registering to proc</summary>
         public bool IsEnabled { get; set; } = true;
+
+        /// <summary> Voltage of the stepper motor</summary>
+        public byte? Voltage { get; set; } = 5;
     }
 }
