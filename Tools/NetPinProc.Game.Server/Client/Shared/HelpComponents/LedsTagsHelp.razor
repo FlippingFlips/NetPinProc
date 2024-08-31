@@ -1,7 +1,9 @@
-﻿<MudStack>
-    Tag lamps / leds with comma separated names to group them by tag.
+﻿@inject ILanguageContainerService lang
+
+<MudStack>
+    @lang.Keys["MachineItem:Tags"]
 
     <MudText Typo="Typo.caption" Color="Color.Warning" Align="Align.Left">
-        shootAgain: used in ball saves, extra balls
+        @lang.Keys["TagsLamp:shootAgain"]
     </MudText>
 </MudStack>

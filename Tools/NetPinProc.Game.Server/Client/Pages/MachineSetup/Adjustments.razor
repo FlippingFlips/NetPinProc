@@ -4,6 +4,7 @@
 @inject HttpClient Http
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
+@inject ILanguageContainerService lang
 
 <PageTitle>Adjustments | @Names.SITE_NAME</PageTitle>
 
@@ -31,7 +32,7 @@
         <ToolBarContent>
             <MudText Typo="Typo.h6">Adjustments</MudText>
             <MudText Class="pl-2" Typo="Typo.caption">
-                Adjustments with options and default values. These can be read from the game / modes.
+                @lang.Keys["Pages:Adjustments"]
             </MudText>
             <MudSpacer />
             <MudTextField @bind-Value="_searchString"
@@ -92,6 +93,7 @@
                 </PropertyColumn>
 
                 <PropertyColumn Property="x => x.Value" ShowFilterIcon=false />
+
                 <PropertyColumn Property="x => x.ValueDefault" ShowFilterIcon=false />
 
                 <PropertyColumn Property="x => x.OptionType" ShowFilterIcon=false>

@@ -1,0 +1,31 @@
+﻿BallSearch:
+ Driver: Set a value higher than 0 to pulse the coil when a ball search is triggered
+ SwitchReset: Reset search. set to `open` or `closed`, this will reset the ball search timer
+ SwitchStop: Stop search. set to `open` or `closed`, this will stop the ball search
+MachineItem:
+ BoardId: Id number of connected board, starting at index 0
+ Connection: Connection fitting name (not required, for your reference only)
+ ItemType: Set item types on switches to program switch rules to a coil. Some coils like `bumpers, slings, flippers` you will want the hardware to fire the coil automatically, to be faster than software.
+ Name: Names should be unique. Switch names should start lower cased and using "_" instead of spaces. Leave switch names to `not_used*` if not using them.
+ Number: The number can be a string as used in older P-ROC boards, see other machine.json's
+ Position: The X pos and Y pos of the item on or under the playfield
+ Tags: Machine items can be tagged with single names or comma separated.
+SwitchItemTypes:
+ Flipper: flipper| set all flippers ItemType to flipper to create switch rules and map any flipper coils with the same name
+ Bumper: bumper| set all Bumpers and Slingshots to create switch rules and map any coils with the same name as the switch
+Pages:
+ Summary: Use this page to add, edit and remove {item} from the database.
+ Adjustments: Adjustments with options and default values. These can be read from the game / modes.
+Steppers:
+ IsStepper1: Sets the PDLEd to stepper 1. 2 steppers per board
+ Stepper: Stepper
+ StopSwitch: A switch to stop the stepper from a mode callback
+ Speed: Stepper ticks per half period. Can be changed in game with SetSpeed
+ Voltage: Voltage of the Stepper for reference
+TagsLamp:
+ shootAgain: used in ball saves, extra balls
+TagsSwitch:
+ trough: tag your trough switches with `trough` and the last eject switch with `troughEject`
+ shooterLane: tag the plunger lane switch with `shooterLane` to interact with the trough and ball saves
+ door: handles door switches for service modes and machine monitor
+ early: early ball save switches. `outlaneL,outlaneR`

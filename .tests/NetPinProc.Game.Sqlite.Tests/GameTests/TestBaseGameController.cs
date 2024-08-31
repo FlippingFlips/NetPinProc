@@ -7,7 +7,7 @@ namespace NetPinProc.Game.Sqlite.Tests.GameTests
     public class TestBaseGameController : NetProcDataGameController
     {
         public TestBaseGameController(MachineType machineType,
-            ILogger? logger = null,
+            ILoggerPROC? logger = null,
             bool simulated = false) :
             base(machineType, false, logger, simulated)
         {

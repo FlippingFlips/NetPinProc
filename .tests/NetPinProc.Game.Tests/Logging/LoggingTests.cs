@@ -14,7 +14,7 @@ namespace NetPinProc.Domain.Tests.Logging
         [Fact]
         public void LoggingLevel_SetWarning_ShouldSkipInfoLog_Tests()
         {
-            var logger = new ConsoleLogger(LogLevel.Warning) as ILogger;
+            var logger = new ConsoleLogger(LogLevel.Warning) as ILoggerPROC;
             logger.Log("info logging", LogLevel.Info);
         }
     }

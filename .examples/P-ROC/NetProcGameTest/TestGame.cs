@@ -13,7 +13,7 @@ namespace PinprocTest
         /// Compy - Demo man test - real board
         /// </summary>
         /// <param name="logger"></param>
-        public TestGame(ILogger logger)
+        public TestGame(ILoggerPROC logger)
             : base(MachineType.WPC, logger, false)
         {
             LoadConfig(@"C:\Users\Jimmy\Documents\Pinball\dm_reloaded\config\machine.json");

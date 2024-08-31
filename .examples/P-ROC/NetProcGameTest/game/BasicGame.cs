@@ -16,7 +16,7 @@ namespace NetProcGameTest.game
         public DmdDisplayController dmd = null;
         public ScoreDisplay score_display = null;
 
-		public BasicGame(MachineType machine_type, ILogger logger, bool simulated = false)
+		public BasicGame(MachineType machine_type, ILoggerPROC logger, bool simulated = false)
             : base(machine_type, logger, simulated)
         {
             FontManager manager = new FontManager(@"fonts/");

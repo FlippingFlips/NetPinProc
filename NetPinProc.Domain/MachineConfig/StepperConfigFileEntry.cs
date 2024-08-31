@@ -20,5 +20,8 @@
 
         /// <summary> Stop Home / End switch</summary>
         public string StopSwitch { get; set; }
+
+        /// <summary> Voltage of the stepper motor</summary>
+        public byte? Voltage { get; set; } = 12;
     }
 }

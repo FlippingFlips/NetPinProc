@@ -50,7 +50,7 @@ namespace NetPinProc
         /// <param name="machineType"></param>
         /// <param name="logger"></param>
         /// <exception cref="InvalidOperationException"></exception>
-        public ProcDevice(MachineType machineType, ILogger logger = null)
+        public ProcDevice(MachineType machineType, ILoggerPROC logger = null)
         {
             this.Logger = logger;
 
@@ -79,7 +79,7 @@ namespace NetPinProc
         /// <summary>
         /// 
         /// </summary>
-        public ILogger Logger { get; set; }
+        public ILoggerPROC Logger { get; set; }
 
         /// <summary>
         /// TODO: Send aux commands Not implemented yet
@@ -640,7 +640,7 @@ namespace NetPinProc
 
                         if (number == -1)
                         {
-                            Console.WriteLine("Coil {0} cannot be controlled by the P-ROC. Ignoring...", ce.Name);
+                            Logger.Log($"Coil {ce.Name} cannot be controlled by the P-ROC. Ignoring...", LogLevel.Warning);
                             continue;
                         }
                     }
@@ -678,7 +678,7 @@ namespace NetPinProc
                         var num = pdb_config.GetProcNumber("PRSwitches", se.Number);
                         if (num == -1)
                         {
-                            Console.WriteLine("Switch {0} cannot be controlled by the P-ROC. Ignoring...", se.Name);
+                            Logger.Log($"Switch {se.Name} cannot be controlled by the P-ROC. Ignoring...", LogLevel.Warning);
                             continue;
                         }
                         else

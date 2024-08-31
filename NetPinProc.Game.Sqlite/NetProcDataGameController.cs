@@ -30,7 +30,7 @@ namespace NetPinProc.Game.Sqlite
         /// <param name="logger"></param>
         /// <param name="simulated"></param>
         /// <param name="configuration"></param>
-        public NetProcDataGameController(MachineType machineType, bool deleteOnInit, ILogger logger = null, bool simulated = false, MachineConfiguration configuration = null) 
+        public NetProcDataGameController(MachineType machineType, bool deleteOnInit, ILoggerPROC logger = null, bool simulated = false, MachineConfiguration configuration = null) 
             : base(machineType, logger, simulated, configuration)
         {
             this.deleteOnInit = deleteOnInit;

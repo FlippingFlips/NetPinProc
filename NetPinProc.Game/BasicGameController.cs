@@ -18,7 +18,7 @@ namespace NetPinProc.Game
         /// <param name="logger"></param>
         /// <param name="simulated"></param>
         /// <param name="configuration"></param>
-        public BasicGameController(MachineType machineType, ILogger logger = null, bool simulated = false, MachineConfiguration configuration = null) : base(machineType, logger, simulated, configuration)
+        public BasicGameController(MachineType machineType, ILoggerPROC logger = null, bool simulated = false, MachineConfiguration configuration = null) : base(machineType, logger, simulated, configuration)
         {
             //BallSearch bs = new BallSearch()
             //BallSave bs = new BallSave(this, "");

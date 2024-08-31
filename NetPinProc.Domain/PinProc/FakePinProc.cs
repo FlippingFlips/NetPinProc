@@ -29,7 +29,7 @@ namespace NetPinProc.Domain
         /// </summary>
         /// <param name="machineType"></param>
         /// <param name="logger"></param>
-        public FakePinProc(MachineType machineType, ILogger logger)
+        public FakePinProc(MachineType machineType, ILoggerPROC logger)
         {
             _machineType = machineType;
             Logger = logger;
@@ -47,11 +47,13 @@ namespace NetPinProc.Domain
             {
                 switch_rules[j] = new FakeSwitchRule() { NotifyHost = true, ReloadActive = false, Drivers = new List<IDriver>() };
             }
+
+            logger?.Log("-- FAKE - SIMULATED PROC INITIALIZED");
         }
         /// <summary>
         /// 
         /// </summary>
-        public ILogger Logger { get; set; }
+        public ILoggerPROC Logger { get; set; }
         /// <summary>
         /// Adds switch event to <see cref="switch_events"/>
         /// </summary>
@@ -341,7 +343,7 @@ namespace NetPinProc.Domain
 
                         if (number == -1)
                         {
-                            Console.WriteLine("Coil {0} cannot be controlled by the P-ROC. Ignoring...", ce.Name);
+                            Logger.Log($"Coil {ce.Name} cannot be controlled by the P-ROC. Ignoring...");
                             continue;
                         }
                     }
@@ -375,7 +377,7 @@ namespace NetPinProc.Domain
                         var num = pdb_config.GetProcNumber("PRSwitches", se.Number);
                         if (num == -1)
                         {
-                            Console.WriteLine("Switch {0} cannot be controlled by the P-ROC. Ignoring...", se.Name);
+                            Console.WriteLine($"Switch {se.Name} cannot be controlled by the P-ROC. Ignoring...", LogLevel.Warning);
                             continue;
                         }
                         else
@@ -465,7 +467,7 @@ namespace NetPinProc.Domain
 
                         if (number == -1)
                         {
-                            Console.WriteLine("Lamp {0} cannot be controlled by the P-ROC. Ignoring...", le.Name);
+                            Console.WriteLine($"Lamp {le.Name} cannot be controlled by the P-ROC. Ignoring...", LogLevel.Warning);
                             continue;
                         }
                     }

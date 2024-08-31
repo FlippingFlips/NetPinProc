@@ -130,10 +130,10 @@ namespace NetPinProc.Domain
             {
                 PDBLampEntry lamp_dict = lamp_list[i];
                 if (group_ctr >= num_proc_banks || lamp_dict.SinkBank >= 16)
-                    Console.WriteLine("Lamp matrix banks can't be mapped to index {0} because thats outside of the banks that P-ROC can control.", lamp_dict.SinkBank);
+                    this.proc.Logger.Log("Lamp matrix banks can't be mapped to index {0} because thats outside of the banks that P-ROC can control.", lamp_dict.SinkBank);
                 else
                 {
-                    Console.WriteLine("Driver group {0}: slow_time={1} enable_index={2} row_activate_index={3} row_enable_index={4} matrix={5}", group_ctr, lamp_matrix_strobe_time, lamp_dict.SinkBank, lamp_dict.SourceOutput, lamp_dict.SourceIndex);
+                    this.proc.Logger.Log("Driver group {0}: slow_time={1} enable_index={2} row_activate_index={3} row_enable_index={4} matrix={5}", group_ctr, lamp_matrix_strobe_time, lamp_dict.SinkBank, lamp_dict.SourceOutput, lamp_dict.SourceIndex);
                     this.indexes[group_ctr] = lamp_list_for_index[i];
                     proc.DriverUpdateGroupConfig((byte)group_ctr,
                         (byte)lamp_matrix_strobe_time,
@@ -157,12 +157,13 @@ namespace NetPinProc.Domain
                 // Appending the Bank avoids conflicts when the group counter (group_ctr) gets too high.
                 if (group_ctr >= num_proc_banks || coil_bank_list[i] >= 16)
                 {
-                    Console.WriteLine("Driver group {0} mapped to driver index outside of P-ROC control. These drivers will become VirtualDrivers. Note, the index will not match the board/bank number; so software will need to request those values before updating the drivers.", coil_bank_list[i]);
+                    this.proc.Logger.Log($"Driver group {coil_bank_list[i]} mapped to driver index outside of P-ROC control. These drivers will become VirtualDrivers." +
+                        "Note, the index will not match the board/bank number; so software will need to request those values before updating the drivers.");
                     indexes.Add(coil_bank_list[i]);
                 }
                 else
                 {
-                    Console.WriteLine("Driver group {0}: slow_time={1} Enable Index={2}", group_ctr, 0, coil_bank_list[i]);
+                    proc.Logger.Log($"Driver group {group_ctr}: slow_time=0 Enable Index={coil_bank_list[i]}");
                     indexes[group_ctr] = coil_bank_list[i];
                     proc.DriverUpdateGroupConfig((byte)group_ctr,
                         0,
@@ -180,7 +181,7 @@ namespace NetPinProc.Domain
 
             for (int i = group_ctr; i < 26; i++)
             {
-                Console.WriteLine("Driver group {0} disabled", i);
+                this.proc.Logger.Log($"Driver group {i} disabled");
                 proc.DriverUpdateGroupConfig((byte)i,
                     lamp_matrix_strobe_time,
                     0,
@@ -304,7 +305,7 @@ namespace NetPinProc.Domain
         {
             if (enable)
             {
-                Console.WriteLine(String.Format("Configuring PDB driver globals: polarity = {0}  matrix column index 0 = {1}  matrix column index 1 = {2}", true, lamp_source_bank_list[0], lamp_source_bank_list[1]));
+                this.proc.Logger.Log($"Configuring PDB driver globals: polarity = true, matrix column index 0 = {lamp_source_bank_list[0]}  matrix column index 1 = {lamp_source_bank_list[1]}");
             }
 
             proc.DriverUpdateGlobalConfig(

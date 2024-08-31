@@ -152,7 +152,7 @@ namespace NetPinProc.Game
         /// <param name="machineType">Machine type to use (WPC, STERN, PDB etc)</param>
         /// <param name="logger">The logger the interface will use. If set to null the console logger is used</param>
         /// <param name="simulated">If true then a <see cref="FakePinProc"/> will be created instead of a <see cref="ProcDevice"/></param>
-        public GameController(MachineType machineType, ILogger logger = null, bool simulated = false)
+        public GameController(MachineType machineType, ILoggerPROC logger = null, bool simulated = false)
         {
             logger ??= new ConsoleLogger(LogLevel.Verbose);
             Logger = logger;
@@ -209,7 +209,7 @@ namespace NetPinProc.Game
         /// <param name="logger">The logger interface to use</param>
         /// <param name="simulated">If true then a <see cref="FakePinProc"/> will be created instead of a <see cref="ProcDevice"/></param>
         /// <param name="configuration">Optional machine configuration to setup the machine with.</param>
-        public GameController(MachineType machineType, ILogger logger, bool simulated = false, MachineConfiguration configuration = null) : this(machineType, logger, simulated)
+        public GameController(MachineType machineType, ILoggerPROC logger, bool simulated = false, MachineConfiguration configuration = null) : this(machineType, logger, simulated)
         {
             _config = configuration;
             if (_config != null)
@@ -413,7 +413,7 @@ namespace NetPinProc.Game
         }
 
         /// <inheritdoc/>
-        public ILogger Logger { get; set; }
+        public ILoggerPROC Logger { get; set; }
 
         /// <inheritdoc/>
         public IModeQueue Modes
@@ -800,17 +800,5 @@ namespace NetPinProc.Game
         /// 
         /// </summary>
         public virtual void UpdateLamps() { }
-
-        /// <summary>
-        /// Log the specified text to the given logger. If no logger is set up, log to the trace output
-        /// </summary>
-        /// <param name="text"></param>
-        protected void Log(string text)
-        {
-            if (Logger != null)
-                Logger.Log(text);
-            else
-                System.Diagnostics.Trace.WriteLine(text);
-        }
     }
 }

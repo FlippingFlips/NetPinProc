@@ -6,7 +6,7 @@ namespace NetProcGame.RgbLeds
 {
     internal class Game : GameController
     {
-        public Game(MachineType machineType, ILogger logger, bool Simulated = false) : base(machineType, logger, Simulated)
+        public Game(MachineType machineType, ILoggerPROC logger, bool Simulated = false) : base(machineType, logger, Simulated)
         {
 
         }

@@ -7,7 +7,7 @@ namespace NetPinProc.Game.Tests.Base
     public class TestBaseGameController : BasicGameController
     {
         public TestBaseGameController(MachineType machineType,
-            ILogger? logger = null,
+            ILoggerPROC? logger = null,
             bool simulated = false,
             MachineConfiguration? configuration = null) :
             base(machineType, logger, simulated, configuration)

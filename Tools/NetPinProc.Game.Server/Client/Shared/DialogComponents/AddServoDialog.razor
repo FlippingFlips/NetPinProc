@@ -1,0 +1,70 @@
+﻿@inject HttpClient Http
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <TitleContent>Add a new Servo</TitleContent>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="12">
+                <MudPaper Class="pa-4">
+                    <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
+                        <MudTextField T="byte" @bind-Value=BoardId Label="BoardId" Required="true" RequiredError="Servo BoardId is required" />
+                        <MudTextField T="string" @bind-Value=Name Label="Name" Required="true" RequiredError="Name is required" />
+                        <MudTextField T="string" @bind-Value=DisplayName Label="DisplayName" Required="false" />
+                    </MudForm>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12">
+                <MudPaper Class="pa-4 mt-4">
+                    <MudStack Row>
+                        <MudSpacer />
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled=!success DropShadow="false" OnClick="@SubmitAsync">Add</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" OnClick="@Cancel">Cancel</MudButton>                        
+                    </MudStack>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+</MudDialog>
+@code
+{
+    [CascadingParameter]
+    private MudDialogInstance MudDialog { get; set; }
+
+    public string? DisplayName { get; set; }
+    public string? Name { get; set; }
+    public byte BoardId { get; set; }
+
+    bool success;
+    string[] errors = { };
+    MudForm? form;
+
+    private async Task SubmitAsync()
+    {
+        try
+        {
+            var reponse = await Http.PostAsJsonAsync("api/Servos", new ServoConfigFileEntry
+                {
+                    BoardId = BoardId,
+                    DisplayName = DisplayName,
+                    Name = Name
+                });
+
+            if (reponse.IsSuccessStatusCode)
+            {
+                Snackbar.Add($"Added New Servo: {Name}", Severity.Success);
+                MudDialog.Close(DialogResult.Ok(true));
+            }
+            else
+            {
+                Snackbar.Add(await reponse.Content.ReadAsStringAsync(), Severity.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.ToString(), Severity.Error);
+        }
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+}

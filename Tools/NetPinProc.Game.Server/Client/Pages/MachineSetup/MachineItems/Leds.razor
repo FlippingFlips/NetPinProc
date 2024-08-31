@@ -1,9 +1,8 @@
 ﻿@page "/machine/items/leds"
+@using NetPinProc.Game.Manager.Client.Pages.Machine_Setup.MachineItems;
 @using NetPinProc.Game.Manager.Client.Shared.DialogComponents;
 @using NetPinProc.Game.Manager.Client.Shared.HelpComponents
-@inject HttpClient Http
-@inject ISnackbar Snackbar
-@inject IDialogService DialogService
+@inherits ConfigFileEntryBaseComponentBase
 
 <PageTitle>Leds | @Names.SITE_NAME</PageTitle>
 
@@ -29,7 +28,7 @@
     <ToolBarContent>
         <MudText Typo="Typo.h6">LEDS</MudText>
         <MudText Class="pl-2" Typo="Typo.caption">
-            Use this page to add, edit and remove LEDS for PD-LED boards. Hover over the column headers for help and click rows to edit leds.
+            @lang.Keys["Pages:Summary", new { Item = "leds"}]
         </MudText>
         <MudSpacer />
         <MudTextField @bind-Value="_searchString" Placeholder="Quick filter Led Name, Num, Tags" Adornment="Adornment.Start" Immediate="true"
@@ -80,7 +79,9 @@
             <PropertyColumn Property="x => x.Conn" ShowFilterIcon="false">
             <HeaderTemplate>
                 <MudTooltip>
-                    <TooltipContent><ConnectionHelp /></TooltipContent>
+                    <TooltipContent>
+                        @lang.Keys["MachineItem:Connection"]
+                    </TooltipContent>
                     <ChildContent>Conn</ChildContent>
                 </MudTooltip>
             </HeaderTemplate>
@@ -96,7 +97,9 @@
             <PropertyColumn Property="x => x.Location" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
             <HeaderTemplate>
                 <MudTooltip>
-                    <TooltipContent>Location string name. Could be a location like cabinet, playfield, under playfield, apron, etc...</TooltipContent>
+                    <TooltipContent>
+                        @lang.Keys["MachineItem:Location"]
+                    </TooltipContent>
                     <ChildContent>Location</ChildContent>
                 </MudTooltip>
             </HeaderTemplate>
@@ -150,6 +153,9 @@
     private string _searchString;
     private bool _sortNameByLength;
     private List<string> _events = new();
+
+    protected override void OnInitialized() { ApiUrl = ApiUrl; }
+
     // custom sort by name length
     private Func<LedConfigFileEntry, object> _sortBy => x =>
     {
@@ -176,55 +182,29 @@
         return false;
     };
 
-    protected override async Task OnInitializedAsync() => await RefreshViewDataAsync();
+    protected override async Task OnInitializedAsync() 
+    {
+        ApiUrl = "api/leds/";
+        await RefreshViewDataAsync();
+    }
 
     async Task RefreshViewDataAsync() =>
-        Elements = await Http.GetFromJsonAsync<List<LedConfigFileEntry>>("/api/leds");
-
-    // events
-    void StartedEditingItem(LedConfigFileEntry item)
-    {
-        _events.Insert(0, $"Event = StartedEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
-    }
-
-    void CanceledEditingItem(LedConfigFileEntry item)
-    {
-        _events.Insert(0, $"Event = CanceledEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
-    }
-
-    async Task CommittedItemChanges(LedConfigFileEntry item)
-    {
-        _events.Insert(0, $"Event = CommittedItemChanges, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
-
-        var response = await Http.PutAsJsonAsync("api/leds", item);
-        if (!response.IsSuccessStatusCode)
-        {
-            Snackbar.Add("failed to update led", Severity.Error);
-        }
-        else
-        {
-            var result = await response.Content.ReadFromJsonAsync<bool>();
-            if (result)
-                Snackbar.Add("led updated", Severity.Success);
-            else
-                Snackbar.Add("failed to update led", Severity.Warning);
-        }
-    }
+        Elements = await Http.GetFromJsonAsync<List<LedConfigFileEntry>>(ApiUrl);
 
     async Task ShowDeleteDialog(string ledName)
     {
         bool? result = await DialogService.ShowMessageBox(
-            "Warning: Deleting LED: " + ledName,
+            "Warning: Deleting: " + ledName,
             "Deleting can not be undone!",
             yesText: "Delete!", cancelText: "Cancel", options: new DialogOptions { MaxWidth = MaxWidth.Small });
         if (result.HasValue && result.Value)
         {
             try
             {
-                var response = await Http.DeleteAsync("api/leds/" + ledName);
+                var response = await Http.DeleteAsync(ApiUrl + ledName);
                 if (response.IsSuccessStatusCode)
                 {
-                    Snackbar.Add($"led: {ledName} deleted", Severity.Success);
+                    Snackbar.Add($"{ledName} deleted", Severity.Success);
                     await RefreshViewDataAsync();
                 }
                 else
