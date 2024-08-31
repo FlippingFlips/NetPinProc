@@ -1,20 +1,22 @@
-﻿<MudStack>
+﻿@inject ILanguageContainerService lang
 
-    Tag switches to group them by tag.
+<MudStack>
+
+    @lang.Keys["MachineItem:Tags"]
 
     <MudText Typo="Typo.caption" Color="Color.Warning" Align="Align.Left">
-        trough: tag trough switches with `trough` and last eject switch with `troughEject`
+        @lang.Keys["TagsSwitch:trough"]
     </MudText>
 
     <MudText Typo="Typo.caption" Color="Color.Warning" Align="Align.Left">
-        shooterLane: tag the plunger lane switch with `shooterLane` to use with trough and ball saves
+        @lang.Keys["TagsSwitch:shooterLane"]
     </MudText>
 
-    <MudText Typo="Typo.caption" Color="Color.Warning" Align="Align.Left">
-        door: handles door switches for service modes etc
+    <MudText Typo="Typo.caption" Color="Color.Warning" Align="Align.Left">        
+        @lang.Keys["TagsSwitch:door"]
     </MudText>
 
-    <MudText Typo="Typo.caption" Color="Color.Warning" Align="Align.Left">
-        early: early ball save switches
+    <MudText Typo="Typo.caption" Color="Color.Warning" Align="Align.Left">        
+        @lang.Keys["TagsSwitch:early"]
     </MudText>
 </MudStack>

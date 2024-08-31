@@ -1,5 +1,7 @@
-﻿<MudStack Class="mt-2">
+﻿@inject ILanguageContainerService lang
+
+<MudStack Class="mt-2">
     <MudText Typo="Typo.caption" Color="Color.Warning" Align="Align.Left">
-        The X pos and Y pos of the item on or under the playfield
+        @lang.Keys["MachineItem:Position"]
     </MudText>
 </MudStack>

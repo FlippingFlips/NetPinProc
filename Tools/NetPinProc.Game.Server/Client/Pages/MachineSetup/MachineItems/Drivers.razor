@@ -1,9 +1,8 @@
 ﻿@page "/machine/items/drivers"
+@using NetPinProc.Game.Manager.Client.Pages.Machine_Setup.MachineItems;
 @using NetPinProc.Game.Manager.Client.Shared.DialogComponents;
 @using NetPinProc.Game.Manager.Client.Shared.HelpComponents
-@inject HttpClient Http
-@inject ISnackbar Snackbar
-@inject IDialogService DialogService
+@inherits ConfigFileEntryBaseComponentBase
 
 <PageTitle>Drivers / Coils | @Names.SITE_NAME</PageTitle>
 
@@ -32,7 +31,7 @@
     <ToolBarContent>
         <MudText Typo="Typo.h6">Drivers</MudText>
         <MudText Class="pl-2" Typo="Typo.caption">
-            Use this page to add, edit and remove high power drivers / coils from the database. Hover over the column headers for help and click rows to edit drivers.
+            @lang.Keys["Pages:Summary", new { Item = "drivers"}]
         </MudText>
         <MudSpacer />
         <MudTextField @bind-Value="_searchString"
@@ -72,7 +71,9 @@
         <PropertyColumn Property="x => x.ItemType" Filterable=false Resizable="true" Sortable="false">
             <HeaderTemplate>
                 <MudTooltip>
-                    <TooltipContent><SwitchItemTypeHelp /></TooltipContent>
+                    <TooltipContent>
+                        @lang.Keys["MachineItem:ItemType"]
+                    </TooltipContent>
                     <ChildContent>Item Type</ChildContent>
                 </MudTooltip>
             </HeaderTemplate>
@@ -86,7 +87,11 @@
         <PropertyColumn Property="x => x.Search" ShowFilterIcon="false">
             <HeaderTemplate>
                 <MudTooltip>
-                    <TooltipContent><DriverBallSearchHelp /></TooltipContent>
+                    <TooltipContent>
+                        <MudText Typo="Typo.caption" Color="Color.Warning" Align="Align.Left">
+                            @lang.Keys["BallSearch:Driver"]
+                        </MudText>
+                    </TooltipContent>
                     <ChildContent>Search</ChildContent>
                 </MudTooltip>
             </HeaderTemplate>
@@ -102,7 +107,9 @@
         <PropertyColumn Property="x => x.Tags" ShowFilterIcon="false">
             <HeaderTemplate>
                 <MudTooltip>
-                    <TooltipContent><SwitchTagsHelp /></TooltipContent>
+                    <TooltipContent>
+                        @lang.Keys["MachineItem:Tags"]
+                    </TooltipContent>
                     <ChildContent>Tags</ChildContent>
                 </MudTooltip>
             </HeaderTemplate>
@@ -158,7 +165,9 @@
         <PropertyColumn Property="x => x.Conn" ShowFilterIcon="false">
             <HeaderTemplate>
                 <MudTooltip>
-                    <TooltipContent><ConnectionHelp /></TooltipContent>
+                    <TooltipContent>
+                        @lang.Keys["MachineItem:Connection"]
+                    </TooltipContent>
                     <ChildContent>Conn</ChildContent>
                 </MudTooltip>
             </HeaderTemplate>
@@ -227,6 +236,13 @@
     private string _searchString;
     private bool _sortNameByLength;
     private List<string> _events = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ApiUrl = "api/drivers/";
+        await RefreshViewData();
+    }
+
     // custom sort by name length
     private Func<CoilConfigFileEntry, object> _sortBy => x =>
     {
@@ -235,6 +251,7 @@
         else
             return x.Name;
     };
+
     // quick filter - filter globally across multiple columns with the same input
     private Func<CoilConfigFileEntry, bool> _quickFilter => x =>
     {
@@ -253,54 +270,22 @@
         return false;
     };
 
-    protected override async Task OnInitializedAsync() => await RefreshViewData();
-
-    protected async Task RefreshViewData() => Elements = await Http.GetFromJsonAsync<List<CoilConfigFileEntry>>("/api/drivers");
-
-    // events
-    void StartedEditingItem(CoilConfigFileEntry item)
-    {
-        _events.Insert(0, $"Event = StartedEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
-    }
-
-    void CanceledEditingItem(CoilConfigFileEntry item)
-    {
-        _events.Insert(0, $"Event = CanceledEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
-    }
-
-    async Task CommittedItemChanges(CoilConfigFileEntry item)
-    {
-        _events.Insert(0, $"Event = CommittedItemChanges, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
-
-        var response = await Http.PutAsJsonAsync("api/drivers", item);
-        if (!response.IsSuccessStatusCode)
-        {
-            Snackbar.Add("failed to update coil", Severity.Error);
-        }
-        else
-        {
-            var result = await response.Content.ReadFromJsonAsync<CoilConfigFileEntry>();
-            if(result != null)
-                Snackbar.Add("driver updated", Severity.Success);
-            else
-                Snackbar.Add("failed to update coil", Severity.Warning);
-        }
-    }
+    protected async Task RefreshViewData() => Elements = await Http.GetFromJsonAsync<List<CoilConfigFileEntry>>(ApiUrl);
 
     async Task ShowDeleteDialog(string drvName)
     {
         bool? result = await DialogService.ShowMessageBox(
-            "Warning: Deleting Driver: " + drvName,
+            "Warning: Deleting: " + drvName,
             "Deleting can not be undone!",
             yesText: "Delete!", cancelText: "Cancel", options: new DialogOptions { MaxWidth = MaxWidth.Small });
         if (result.HasValue && result.Value)
         {
             try
             {
-                var response = await Http.DeleteAsync("api/drivers/" + drvName);
+                var response = await Http.DeleteAsync(ApiUrl + drvName);
                 if (response.IsSuccessStatusCode)
                 {
-                    Snackbar.Add($"driver: {drvName} deleted", Severity.Success);
+                    Snackbar.Add($"{drvName} deleted", Severity.Success);
                     await RefreshViewData();
                 }
                 else

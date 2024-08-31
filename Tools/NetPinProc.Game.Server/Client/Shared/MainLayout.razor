@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@inject ILanguageContainerService language
 <MudThemeProvider IsDarkMode=true/>
 <MudPopoverProvider />
 <MudDialogProvider BackdropClick=true MaxWidth="MaxWidth.Medium" FullWidth="true" CloseOnEscapeKey="true" CloseButton="true"/>
@@ -21,6 +22,12 @@
 
 @code {
     bool _drawerOpen = true;
+
+    protected async override Task OnInitializedAsync()
+    {
+        string languageCode = "en-US";
+        language.SetLanguage(System.Globalization.CultureInfo.GetCultureInfo(languageCode));
+    }
 
     void DrawerToggle()
     {

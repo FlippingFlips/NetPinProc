@@ -30,4 +30,10 @@
 	  <ProjectReference Include="..\Client\NetPinProc.Game.Manager.Client.csproj" />
 	  <ProjectReference Include="..\Shared\NetPinProc.Game.Manager.Shared.csproj" />
 	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="Resources\en-US.yml">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
 </Project>

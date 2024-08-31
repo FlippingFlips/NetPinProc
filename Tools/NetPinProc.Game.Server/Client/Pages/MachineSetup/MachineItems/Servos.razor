@@ -1,13 +1,12 @@
-﻿@page "/machine/items/lamps"
+﻿@page "/machine/items/servos"
+@using NetPinProc.Game.Manager.Client.Pages.Machine_Setup.MachineItems;
 @using NetPinProc.Game.Manager.Client.Shared.DialogComponents;
 @using NetPinProc.Game.Manager.Client.Shared.HelpComponents
-@inject HttpClient Http
-@inject ISnackbar Snackbar
-@inject IDialogService DialogService
+@inherits ConfigFileEntryBaseComponentBase
 
-<PageTitle>Lamps | @Names.SITE_NAME</PageTitle>
+<PageTitle>Servos | @Names.SITE_NAME</PageTitle>
 
-<MudDataGrid T="LampConfigFileEntry" MultiSelection="true"
+<MudDataGrid T="ServoConfigFileEntry" MultiSelection="true"
              Class="netpinprocdatagrid"
              Items="@Elements" SortMode="SortMode.Multiple"
              Dense=true
@@ -22,59 +21,47 @@
              StartedEditingItem="@StartedEditingItem"
              CanceledEditingItem="@CanceledEditingItem"
              CommittedItemChanges="@CommittedItemChanges">
+
     <ToolBarContent>
-        <MudText Typo="Typo.h6">Lamps</MudText>
+        <MudText Typo="Typo.h6">Servos</MudText>
+        <MudText Class="pl-2" Typo="Typo.caption">
+            @lang.Keys["Pages:Summary", new { Item = "servos"}]
+        </MudText>
         <MudSpacer />
-        <MudTextField @bind-Value="_searchString" Placeholder="Quick filter Lamp Name, Num, Tags"
-        Adornment="Adornment.Start" Immediate="true"
+        <MudTextField @bind-Value="_searchString" Placeholder="Quick filter Servo Name, Num, Tags"
+                      Adornment="Adornment.Start" Immediate="true"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
+
     <Columns>
-        @*<SelectColumn T="LampConfigFileEntry" />*@
+        @*<SelectColumn T="ServoConfigFileEntry" />*@
         <TemplateColumn Sortable="false" Filterable="false">
             <CellTemplate>
                 <MudToolBar Dense Class="netpinproctoolbar">
                     <MudIconButton Size="Size.Small" Variant="Variant.Filled"
                                    Icon="@Icons.Material.Filled.Delete" Color="Color.Error"
-                                   OnClick="@(_ => ShowDeleteDialog(context.Item.Number))" />
+                                   OnClick="@(_ => ShowDeleteDialog(context.Item.Name))" />
                 </MudToolBar>
             </CellTemplate>
-        </TemplateColumn>
-        <PropertyColumn Property="x => x.Number" Title="Nr" Sortable="false" Filterable="false" />
+            </TemplateColumn>
 
-        <PropertyColumn Property="x => x.Name" SortBy="@_sortBy" />
+            <PropertyColumn Property="x => x.BoardId" Title="BoardId" Sortable="false" Filterable="false" />
 
-        <PropertyColumn Property="x => x.Polarity" SortBy="@_sortBy" />        
+            <PropertyColumn Property="x => x.Name" SortBy="@_sortBy" />
 
-        <PropertyColumn Property="x => x.Tags" ShowFilterIcon="false">
-            <HeaderTemplate>
-                <MudTooltip>
-                    <TooltipContent><LedsTagsHelp /></TooltipContent>
-                    <ChildContent>Tags</ChildContent>
-                </MudTooltip>
-            </HeaderTemplate>
-            <EditTemplate>
-                <MudTextField @bind-Value=@context.Item.Tags Label="Tags"
-                              Variant="Variant.Outlined" Margin="Margin.Dense"
-                              Required=false />
-            </EditTemplate>
-        </PropertyColumn>
+            <PropertyColumn Property="x => x.DisplayName" />
 
-        <PropertyColumn Property="x => x.Bus">
-            <HeaderTemplate>
-                <MudTooltip>
-                    <TooltipContent>Unused?</TooltipContent>
-                    <ChildContent>Bus</ChildContent>
-                </MudTooltip>
-            </HeaderTemplate>
-            <EditTemplate>
-                <MudTextField @bind-Value=@context.Item.Bus Label="Bus"
-                              Variant="Variant.Outlined" Margin="Margin.Dense"
-                              Required=false />
-            </EditTemplate>
-        </PropertyColumn>
+            <PropertyColumn Property="x => x.MinValue" />
 
-        <PropertyColumn Property="x => x.Conn" ShowFilterIcon="false">
+            <PropertyColumn Property="x => x.IsEnabled" />
+
+            <PropertyColumn Property="x => x.Index" />
+
+            <PropertyColumn Property="x => x.ItemType" />
+
+            <PropertyColumn Property="x => x.Voltage" />
+
+            <PropertyColumn Property="x => x.Conn" ShowFilterIcon="false">
             <HeaderTemplate>
                 <MudTooltip>
                     <TooltipContent><ConnectionHelp /></TooltipContent>
@@ -86,7 +73,7 @@
                               Variant="Variant.Outlined" Margin="Margin.Dense"
                               Required=false />
             </EditTemplate>
-        </PropertyColumn>
+            </PropertyColumn>
 
             <PropertyColumn Property="x => x.Location" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
             <HeaderTemplate>
@@ -102,7 +89,7 @@
             </EditTemplate>
             </PropertyColumn>
 
-        <PropertyColumn Property="x => x.XPos">
+            <PropertyColumn Property="x => x.XPos">
             <EditTemplate>
                 <MudNumericField @bind-Value=context.Item.XPos Variant="Variant.Outlined"
                                  Label="XPos" Min="0.00" Max="3600.00" T="double?" />
@@ -113,9 +100,9 @@
                     <ChildContent>X</ChildContent>
                 </MudTooltip>
             </HeaderTemplate>
-        </PropertyColumn>
+            </PropertyColumn>
 
-        <PropertyColumn Property="x => x.YPos">
+            <PropertyColumn Property="x => x.YPos">
             <EditTemplate>
                 <MudNumericField @bind-Value=context.Item.YPos Variant="Variant.Outlined"
                                  Label="YPos" Min="0.00" Max="3600.00" T="double?" />
@@ -126,25 +113,25 @@
                     <ChildContent>Y</ChildContent>
                 </MudTooltip>
             </HeaderTemplate>
-        </PropertyColumn>
-    </Columns>
-</MudDataGrid>
+            </PropertyColumn>
+        </Columns>
+        </MudDataGrid>
 
-<MudStack Row>
+        <MudStack Row>
     <MudSpacer />
     <MudButton Variant="Variant.Filled" Color="Color.Error"
                Size="Size.Small"
                Class="mt-2"
-               OnClick="@ShowAddDialog">ADD LAMP</MudButton>
+               OnClick="@ShowAddDialog">ADD Servo</MudButton>
 </MudStack>
 
 @code {
-    private IEnumerable<LampConfigFileEntry> Elements = new List<LampConfigFileEntry>();
+    private IEnumerable<ServoConfigFileEntry> Elements = new List<ServoConfigFileEntry>();
     private string? _searchString;
     private bool _sortNameByLength;
-    private List<string> _events = new();
+
     // custom sort by name length
-    private Func<LampConfigFileEntry, object> _sortBy => x =>
+    private Func<ServoConfigFileEntry, object> _sortBy => x =>
     {
         if (_sortNameByLength)
             return x.Name.Length;
@@ -152,7 +139,7 @@
             return x.Name;
     };
     // quick filter - filter globally across multiple columns with the same input
-    private Func<LampConfigFileEntry, bool> _quickFilter => x =>
+    private Func<ServoConfigFileEntry, bool> _quickFilter => x =>
     {
         if (string.IsNullOrWhiteSpace(_searchString))
             return true;
@@ -160,65 +147,35 @@
         if (x.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
             return true;
 
-        if (x.Number.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
-            return true;
-
         return false;
     };
 
-    protected override async Task OnInitializedAsync() =>
-       await RefreshViewDataAsync();
-
-    protected async Task RefreshViewDataAsync() 
+    protected override async Task OnInitializedAsync()
     {
-        try { Elements = await Http.GetFromJsonAsync<List<LampConfigFileEntry>>("/api/lamps"); }
-        catch (Exception){ }
+        ApiUrl = "api/servos/";
+        await RefreshViewDataAsync();
     }
 
-    // events
-    void StartedEditingItem(LampConfigFileEntry item)
+    protected async Task RefreshViewDataAsync()
     {
-        _events.Insert(0, $"Event = StartedEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+        try { Elements = await Http.GetFromJsonAsync<List<ServoConfigFileEntry>>(ApiUrl); }
+        catch (Exception) { }
     }
 
-    void CanceledEditingItem(LampConfigFileEntry item)
-    {
-        _events.Insert(0, $"Event = CanceledEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
-    }
-
-    async Task CommittedItemChanges(LampConfigFileEntry item)
-    {
-        _events.Insert(0, $"Event = CommittedItemChanges, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
-
-        var response = await Http.PutAsJsonAsync("api/lamps", item);
-        if (!response.IsSuccessStatusCode)
-        {
-            Snackbar.Add("failed to update lamp", Severity.Error);
-        }
-        else
-        {
-            var result = await response.Content.ReadFromJsonAsync<bool>();
-            if (result)
-                Snackbar.Add("lamp updated", Severity.Success);
-            else
-                Snackbar.Add("failed to update led", Severity.Warning);
-        }
-    }
-
-    async Task ShowDeleteDialog(string lampName)
+    async Task ShowDeleteDialog(string ServoName)
     {
         bool? result = await DialogService.ShowMessageBox(
-            "Warning: Deleting Lamp: " + lampName,
+            "Warning: Deleting: " + ServoName,
             "Deleting can not be undone!",
             yesText: "Delete!", cancelText: "Cancel", options: new DialogOptions { MaxWidth = MaxWidth.Small });
         if (result.HasValue && result.Value)
         {
             try
             {
-                var response = await Http.DeleteAsync("api/lamps/" + lampName);
+                var response = await Http.DeleteAsync(ApiUrl + ServoName);
                 if (response.IsSuccessStatusCode)
                 {
-                    Snackbar.Add($"lamp: {lampName} deleted", Severity.Success);
+                    Snackbar.Add($"{ServoName} deleted", Severity.Success);
                     await RefreshViewDataAsync();
                 }
                 else
@@ -237,7 +194,7 @@
 
     async Task ShowAddDialog()
     {
-        var dialog = await DialogService.ShowAsync<AddLampDialog>();
+        var dialog = await DialogService.ShowAsync<AddServoDialog>();
         var result = await dialog.Result;
         if (!result.Canceled)
             await RefreshViewDataAsync();
