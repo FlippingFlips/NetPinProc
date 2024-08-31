@@ -640,7 +640,7 @@ namespace NetPinProc
 
                         if (number == -1)
                         {
-                            Console.WriteLine("Coil {0} cannot be controlled by the P-ROC. Ignoring...", ce.Name);
+                            Logger.Log($"Coil {ce.Name} cannot be controlled by the P-ROC. Ignoring...", LogLevel.Warning);
                             continue;
                         }
                     }
@@ -678,7 +678,7 @@ namespace NetPinProc
                         var num = pdb_config.GetProcNumber("PRSwitches", se.Number);
                         if (num == -1)
                         {
-                            Console.WriteLine("Switch {0} cannot be controlled by the P-ROC. Ignoring...", se.Name);
+                            Logger.Log($"Switch {se.Name} cannot be controlled by the P-ROC. Ignoring...", LogLevel.Warning);
                             continue;
                         }
                         else

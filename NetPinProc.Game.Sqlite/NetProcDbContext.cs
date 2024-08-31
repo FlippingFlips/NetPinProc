@@ -249,7 +249,7 @@ namespace NetPinProc.Game.Sqlite
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
-            {
+            {                
                 System.Console.WriteLine($"{nameof(NetProcDbContext)} isn't configured, creating sqlite configuration for local netproc.db");
                 optionsBuilder.UseSqlite(CONNECTION_STRING);
             }

@@ -3,8 +3,13 @@
 namespace NetPinProc.Domain
 {
     public interface ILoggerPROC
-
     {
+        /// <summary>Prefix lines output</summary>
+        string LogPrefix { get; set; }
+
+        /// <summary>Time stamp output line</summary>
+        bool TimeStamp { get; set; }
+
         /// <summary>Logging level</summary>
         LogLevel LogLevel { get; set; }
 

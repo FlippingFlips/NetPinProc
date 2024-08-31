@@ -800,17 +800,5 @@ namespace NetPinProc.Game
         /// 
         /// </summary>
         public virtual void UpdateLamps() { }
-
-        /// <summary>
-        /// Log the specified text to the given logger. If no logger is set up, log to the trace output
-        /// </summary>
-        /// <param name="text"></param>
-        protected void Log(string text)
-        {
-            if (Logger != null)
-                Logger.Log(text);
-            else
-                System.Diagnostics.Trace.WriteLine(text);
-        }
     }
 }
