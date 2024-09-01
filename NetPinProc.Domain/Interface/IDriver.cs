@@ -64,9 +64,9 @@ namespace NetPinProc.Domain
         /// </summary>
         /// <param name="milliseconds">The number of milliseconds to pulse the coil</param>
         void Pulse(int milliseconds = -1);
+
         /// <summary>
-        /// Enables a pitter-patter response that runs for 'run_time' milliseconds
-        /// 
+        /// Enables a pitter-patter response that runs for 'run_time' milliseconds<para/>
         /// Until it ends, the sequence repeatedly turns the driver on for 'on_time' milliseconds and off for 'off_time' milliseconds.
         /// </summary>
         /// <param name="on_time"></param>

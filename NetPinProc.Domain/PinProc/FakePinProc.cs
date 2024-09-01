@@ -48,12 +48,11 @@ namespace NetPinProc.Domain
                 switch_rules[j] = new FakeSwitchRule() { NotifyHost = true, ReloadActive = false, Drivers = new List<IDriver>() };
             }
 
-            logger?.Log("-- FAKE - SIMULATED PROC INITIALIZED");
+            logger?.Log(LogLevel.Info, "-- FAKE - SIMULATED PROC INITIALIZED");
         }
-        /// <summary>
-        /// 
-        /// </summary>
+
         public ILoggerPROC Logger { get; set; }
+
         /// <summary>
         /// Adds switch event to <see cref="switch_events"/>
         /// </summary>

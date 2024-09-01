@@ -32,10 +32,10 @@ namespace NetPinProc.Domain
         /// <param name="Event_Type">The type of event to delay</param>
         /// <param name="Delay">The delay in ms before the callback is fired</param>
         /// <param name="Handler">The callback to fire</param>
-        /// <param name="Param">The parameters to the given callback</param>
-        void Delay(string Name, EventType Event_Type, double Delay, Delegate Handler, object Param = null);
+        /// <param name="Params">The parameters to the given callback</param>
+        void Delay(string Name, EventType Event_Type, double Delay, Delegate Handler, params object[] Params);
 
-        /// <summary>Called by the GameController to dispatch any delayed events</summary>
+        /// <summary>Called by the GameController to dispatch (invoke) any delayed events</summary>
         void DispatchDelayed();
 
         /// <summary>Handles any switch event in the _accepted_switches<para/>

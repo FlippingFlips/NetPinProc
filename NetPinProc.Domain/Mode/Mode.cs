@@ -95,11 +95,12 @@ namespace NetPinProc.Domain.Mode
             else
                 return -1;
         }
+
         /// <inheritdoc/>
-        public void Delay(string Name, EventType Event_Type, double Delay, Delegate Handler, object Param = null)
+        public void Delay(string Name, EventType Event_Type, double Delay, Delegate Handler, params object[] Params)
         {
             Game.Logger.Log(String.Format("Adding delay name={0} Event_Type={1} delay={2}", Name, Event_Type, Delay), LogLevel.Verbose);
-            Delayed d = new Delayed(Name, Time.GetTime() + Delay, Handler, Event_Type, Param);
+            Delayed d = new Delayed(Name, Time.GetTime() + Delay, Handler, Event_Type, Params);
             _delayed.Add(d);
             _delayed.Sort();
         }
@@ -113,10 +114,7 @@ namespace NetPinProc.Domain.Mode
                 if (_delayed[i].Time <= t)
                 {
                     Game.Logger?.Log("dispatch_delayed() " + _delayed[i].Name + " " + _delayed[i].Time.ToString() + " <= " + t.ToString(), LogLevel.Verbose);
-                    if (_delayed[i].Param != null)
-                        _delayed[i].Handler.DynamicInvoke(_delayed[i].Param);
-                    else
-                        _delayed[i].Handler.DynamicInvoke(null);
+                    _delayed[i].Handler.DynamicInvoke(_delayed[i].Params);
                 }
             }
             _delayed = _delayed.Where<Delayed>(x => x.Time > t).ToList<Delayed>();
