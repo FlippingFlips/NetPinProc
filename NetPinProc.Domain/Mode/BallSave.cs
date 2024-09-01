@@ -34,9 +34,7 @@ namespace NetPinProc.Domain.Mode
         int timer = 0;
         int timer_hold;
 
-        /// <summary>
-        /// Creates a ball save, balls saved defaults to 1 <para/>
-        /// </summary>
+        /// <summary>Creates a ball save, balls saved defaults to 1 <para/></summary>
         /// <param name="game"></param>
         /// <param name="lamp">the lamp / led to blink</param>
         /// <param name="delayed_start_switch">Delay switch, after this is hit the ball save starts</param>
@@ -48,19 +46,19 @@ namespace NetPinProc.Domain.Mode
             if (game.Lamps.ContainsKey(lamp)) 
             {                
                 this.lamp = lamp;
-                game.Logger.Log($"{nameof(BallSave)}: ball save lamp found={lamp}");
+                game.Logger.Log(LogLevel.Debug, $"{nameof(BallSave)}: ball save lamp found={lamp}");
             }
             else
             {
-                game.Logger.Log($"{nameof(BallSave)}: no lamp found for {lamp}, looking for led...");
+                game.Logger.Log(LogLevel.Debug, $"{nameof(BallSave)}: no lamp found for {lamp}, looking for led...");
                 if (game.LEDS.ContainsKey(lamp))
                 {
                     led = lamp;
-                    game.Logger.Log($"{nameof(BallSave)}: ball save led found={lamp}");
+                    game.Logger.Log(LogLevel.Debug, $"{nameof(BallSave)}: ball save led found={lamp}");
                 }                    
                 else 
                 { 
-                    game.Logger.Log($"{nameof(BallSave)}: no led found for {lamp}, returning, provide a lamp or led"); 
+                    game.Logger.Log(LogLevel.Warning, $"{nameof(BallSave)}: no led found for {lamp}, returning, provide a lamp or led"); 
                     throw new NullReferenceException("No led or lamp found for ballsave"); 
                 }
             }            
