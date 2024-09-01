@@ -10,12 +10,14 @@ namespace NetPinProc.Domain.Mode
     /// </summary>
     /// <param name="coil"></param>
     public delegate void BallSearchCoilDelayHandler(string coil);
-    /// <summary>
-    /// Performs search
-    /// </summary>
+
+    /// <summary>Performs search</summary>
     /// <param name="completion_wait_time"></param>
-    /// <param name="completion_handler"></param>
-    public delegate void BallSearchDelayHandler(int completion_wait_time, Delegate completion_handler);
+    /// <param name="completion_handler"></param>    
+    public delegate void BallSearchDelayHandler(
+        int completion_wait_time = 0,
+        Delegate completion_handler = null);
+
     /// <summary>
     /// Removes the special mode
     /// </summary>
@@ -27,13 +29,18 @@ namespace NetPinProc.Domain.Mode
     /// </summary>
     public class BallSearch : Mode
     {
+        /// <summary>Delay between ball search coil fires</summary>
+        const double POP_COIL_DELAY = 0.150;
+
         bool _enabled;
         string[] coils;
         int countdown_time;
+        private readonly Delegate completed_Handler;
         string[] enable_switch_names;
         Dictionary<string, string> reset_switches;
         Mode[] special_handler_modes;
         Dictionary<string, string> stop_switches;
+
         /// <summary>
         /// Sets up all coils and switches for ball search <para/>
         /// Adds switch handlers to Reset and Stop
@@ -45,68 +52,85 @@ namespace NetPinProc.Domain.Mode
         /// <param name="stop_switches"></param>
         /// <param name="enable_switch_names"></param>
         /// <param name="special_handler_modes"></param>
-        public BallSearch(IGameController game, int countdown_time,
-            string[] coils = null, Dictionary<string, string> reset_switches = null, Dictionary<string, string> stop_switches = null,
-            string[] enable_switch_names = null, Mode[] special_handler_modes = null)
+        /// <param name="completed_handler"></param>
+        public BallSearch(
+            IGameController game,
+            int countdown_time,
+            string[] coils = null,
+            Dictionary<string, string> reset_switches = null,
+            Dictionary<string, string> stop_switches = null,
+            string[] enable_switch_names = null,
+            Mode[] special_handler_modes = null,
+            Delegate completed_handler = null)
             : base(game, 8)
         {
             if (stop_switches == null) this.stop_switches = new Dictionary<string, string>();
             else this.stop_switches = stop_switches;
+
             if (coils == null) this.coils = new string[] { };
             else this.coils = coils;
+
             if (reset_switches == null) this.reset_switches = new Dictionary<string, string>();
             else this.reset_switches = reset_switches;
+
             if (special_handler_modes == null) this.special_handler_modes = new Mode[] { };
             else this.special_handler_modes = special_handler_modes;
+
             //TODO: Not used
             if (enable_switch_names == null) this.enable_switch_names = new string[] { };
-            else this.enable_switch_names = enable_switch_names;            
+            else this.enable_switch_names = enable_switch_names;
 
             _enabled = false;
             this.countdown_time = countdown_time;
+            completed_Handler = completed_handler;
 
-            foreach (string sw in reset_switches.Keys)
+            if (reset_switches?.Any() ?? false)
             {
-                Enum.TryParse(reset_switches[sw], out SwitchHandleType handleType);
-                AddSwitchHandler(sw, handleType, 0, new SwitchAcceptedHandler(Reset));
+                foreach (string sw in reset_switches.Keys)
+                {
+                    Enum.TryParse(reset_switches[sw], out SwitchHandleType handleType);
+                    AddSwitchHandler(sw, handleType, 0, new SwitchAcceptedHandler(Reset));
+                }
             }
-            foreach (string sw in stop_switches.Keys)
+            else { game.Logger.Log(LogLevel.Warning, " ball search: no reset switches found"); }
+
+            if (stop_switches?.Any() ?? false)
             {
-                Enum.TryParse(stop_switches[sw], out SwitchHandleType handleType);
-                AddSwitchHandler(sw, handleType, 0, new SwitchAcceptedHandler(Stop));
+                foreach (string sw in stop_switches.Keys)
+                {
+                    Enum.TryParse(stop_switches[sw], out SwitchHandleType handleType);
+                    AddSwitchHandler(sw, handleType, 0, new SwitchAcceptedHandler(Stop));
+                }
             }
+            else { game.Logger.Log(LogLevel.Warning, " ball search: no stop switches found"); }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Stops and sets enabled false</summary>
         public void Disable()
         {
             Stop(null);
             _enabled = false;
         }
 
-        /// <summary>
-        /// Enables and resets
-        /// </summary>
+        /// <summary>enables and resets on a timer</summary>
         public void Enable()
         {
             _enabled = true;
             Reset(null);
         }
 
-        /// <summary>
-        /// Runs the ball search through all coils
-        /// </summary>
+        /// <summary>Pops all coils setup for ball search on delay</summary>
         /// <param name="completion_wait_time"></param>
         /// <param name="completion_handler"></param>
-        public void PerformSearch(int completion_wait_time = 0, Delegate completion_handler = null)
+        public void PerformSearch(
+            int completion_wait_time = 0,
+            Delegate completion_handler = null)
         {
-            double delay = 0.150;
+            double delay = POP_COIL_DELAY;
             foreach (string coil in coils)
             {
                 Delay(nameof(PopCoil), EventType.None, delay, new BallSearchCoilDelayHandler(PopCoil), coil);
-                delay += 0.150;
+                delay += POP_COIL_DELAY;
             }
             Delay(nameof(StartSpecialHandlerModes), EventType.None, delay, new AnonDelayedHandler(StartSpecialHandlerModes));
 
@@ -114,15 +138,16 @@ namespace NetPinProc.Domain.Mode
             else
             {
                 CancelDelayed(nameof(PerformSearch));
-                Delay(nameof(PerformSearch), EventType.None, countdown_time, new BallSearchDelayHandler(PerformSearch));
+                Delay(nameof(PerformSearch), EventType.None, countdown_time,
+                    new BallSearchDelayHandler(PerformSearch), completion_wait_time, completion_handler);
             }
+
+            completed_Handler?.DynamicInvoke();
         }
 
-        /// <summary>
-        /// Pulses the coil by name
-        /// </summary>
+        /// <summary>Pulses the coil for pulse time set from configuration</summary>
         /// <param name="coil"></param>
-        public void PopCoil(string coil) => Game.Coils[coil].Pulse();
+        public void PopCoil(string coil) => Game.Coils[coil].Pulse(Game.Coils[coil].PulseTime);
 
         /// <summary>
         /// Removes the special mode handler from the game
@@ -144,7 +169,7 @@ namespace NetPinProc.Domain.Mode
                 CancelDelayed(nameof(PopCoil));
                 CancelDelayed(nameof(StartSpecialHandlerModes));
                 bool schedule_search = true;
-                foreach (string swc in stop_switches.Keys)
+                foreach (string swc in stop_switches?.Keys)
                 {
                     if (sw == null) break;
                     // Don't restart the search countdown if a ball is resting on a stop_switch. First
@@ -158,7 +183,7 @@ namespace NetPinProc.Domain.Mode
                 if (schedule_search)
                 {
                     CancelDelayed(nameof(PerformSearch));
-                    Delay(nameof(PerformSearch), EventType.None, countdown_time, new BallSearchDelayHandler(PerformSearch));
+                    Delay(nameof(PerformSearch), EventType.None, countdown_time, new BallSearchDelayHandler(PerformSearch), 0, completed_Handler);
                 }
             }
             return SWITCH_CONTINUE;
