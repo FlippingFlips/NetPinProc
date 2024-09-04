@@ -24,6 +24,7 @@ Steppers:
  Voltage: Voltage of the Stepper for reference
 SvgTool:
  FileUpload: Select an SVG file exported from Inkscape. The document should have layers that contain machine items.
+  The database machine items are updated after file is selected
  NoLayers: No layers found in file
  WhatFor: This tool is for extracting and updating database positions from an svg document. Elements named by machine item and within layers named by the type. <br><br>
    You can generate an initial document with layers from the generate template, `/machine/tools/playfield/generatesvg`<br>
