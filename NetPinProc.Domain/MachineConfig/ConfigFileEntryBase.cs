@@ -1,10 +1,16 @@
-﻿namespace NetPinProc.Domain.MachineConfig
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace NetPinProc.Domain.MachineConfig
 {
     /// <summary>
     /// Base class for extra fields to display in a UI, wire colours, display name
     /// </summary>
     public abstract class ConfigFileEntryBase
     {
+        /// <summary> The name that you can reference in script </summary>
+        [StringLength(50, MinimumLength = 2)]
+        public string Name { get; set; }
+
         /// <summary> Extra for UI </summary>
         public string DisplayName { get; set; }
 
