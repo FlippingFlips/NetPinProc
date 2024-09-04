@@ -22,6 +22,17 @@ Steppers:
  StopSwitch: A switch to stop the stepper from a mode callback
  Speed: Stepper ticks per half period. Can be changed in game with SetSpeed
  Voltage: Voltage of the Stepper for reference
+SvgTool:
+ FileUpload: Select an SVG file exported from Inkscape. The document should have layers that contain machine items.
+ NoLayers: No layers found in file
+ WhatFor: This tool is for extracting and updating database positions from an svg document. Elements named by machine item and within layers named by the type. <br><br>
+   You can generate an initial document with layers from the generate template, `/machine/tools/playfield/generatesvg`<br>
+   By keeping the database positions updated and correct, other tools and the display can use them. <br><br>
+   eg; Lampshow creators, test views, switch windows <br><br>
+ HowToSetup: Create an new document in Inkscape and make the document size match your playfield. <br> Add groups you want to extract. <br><br> Inside the groups create shapes or paths and name them.
+ Naming: Name the items in the groups with the Name from your configuration, for example, for a SWITCHES group; `coin1` <br><br>
+ Layers: Each panel represents a layer from the svg file with your extracted machine items
+ UpdateMachine: Update positions in the database from items found in the svg
 TagsLamp:
  shootAgain: used in ball saves, extra balls
 TagsSwitch:
@@ -29,3 +40,12 @@ TagsSwitch:
  shooterLane: tag the plunger lane switch with `shooterLane` to interact with the trough and ball saves
  door: handles door switches for service modes and machine monitor
  early: early ball save switches. `outlaneL,outlaneR`
+Playfield:
+ GenerateSvgTitle: Generate SVG from machine items
+ GenerateSvgTemplate: <br> Generating a document from a template with pre made layers will add each machine item you have into the layer<br><br>
+  Grouped layers are named matching the collections in the machine. eg SWITCHES, LEDS <br><br>
+  This template is Stern sized at 514x1066mm | 20.25x42". You can change the template this to match the games playfield.
+  The template file can be found in the public folder <code>`wwwroot/playfield/playfieldtemplate.svg`</code> <br><br>
+  Generating a file will use any position that is already set on the item or it will be set at 0,0. The center point is saved of Circles and rects, rects in Inkscape start at top left of the element.<br><br>
+  The generated export can be downloaded and loaded into Inkscape where you would move your items around the playfield and set positions and save it <br><br>
+  The database positions can then be updated from your edits in <pre>Machine Pos from SVG</pre><br><br>

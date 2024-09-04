@@ -1,0 +1,93 @@
+﻿@using BlazorDownloadFile;
+@using NetPinProc.Domain.Constants;
+@using NetPinProc.Game.Manager.Shared.Dto;
+@using NetPinProc.Game.Manager.Shared.Tools.Playfield
+@page "/machine/tools/playfield/generatesvg"
+@inject ILanguageContainerService lang
+@inject HttpClient Http
+
+<GoBackButton />
+
+<MudContainer MaxWidth="MaxWidth.Large">
+
+    <h3>@lang["Playfield:GenerateSvgTitle"]</h3>
+
+    <MudGrid>
+        <MudItem xs="12" sm="4">
+            <MudText Typo="Typo.caption">
+                @((MarkupString)lang["Playfield:GenerateSvgTemplate"])
+            </MudText>
+
+            <MudStack Row Wrap=Wrap.Wrap>                
+                <MudSwitch T=bool Color="Color.Success" @bind-Value="@(KeyValuePairs["SWITCHES"])" Label="SWITCHES" Style="@($"background-color:{MachineItemColors.COLOR_SWITCHES}")" />
+                <MudSwitch T=bool Color="Color.Success" @bind-Value="@(KeyValuePairs["LEDS"])" Label="LEDS" Style="@($"background-color:{MachineItemColors.COLOR_LEDS}")" />
+                <MudSwitch T=bool Color="Color.Success" @bind-Value="@(KeyValuePairs["LAMPS"])" Label="LAMPS" Style="@($"background-color:{MachineItemColors.COLOR_LAMPS}")" />
+                <MudSwitch T=bool Color="Color.Success" @bind-Value="@(KeyValuePairs["SERVOS"])" Label="SERVOS" Style="@($"background-color:{MachineItemColors.COLOR_SERVOS}")" />
+                <MudSwitch T=bool Color="Color.Success" @bind-Value="@(KeyValuePairs["DRIVERS"])" Label="DRIVERS" Style="@($"background-color:{MachineItemColors.COLOR_DRIVERS}")" />
+                <MudSwitch T=bool Color="Color.Success" @bind-Value="@(KeyValuePairs["STEPPERS"])" Label="STEPPERS" Style="@($"background-color:{MachineItemColors.COLOR_STEPPERS}")" />
+            </MudStack>
+
+            <MudButton Variant="Variant.Filled" OnClick="Generate" Color="Color.Success">
+                Generate
+            </MudButton>
+            </MudItem>
+
+            <MudItem xs="12" md="4">
+            <MudStack>
+                <embed src="playfield/playfieldtemplate.svg" style="max-width:300px">
+                <MudText Typo="Typo.caption">TEMPLATE: playfield/playfieldtemplate.svg</MudText>
+            </MudStack>
+            </MudItem>
+
+            @if (!string.IsNullOrEmpty(exported))
+        {
+            <MudItem xs="12" md="4">
+                <MudStack>
+                    <embed download="custom_filename.svg" src="@($"data:image/svg+xml;base64,{exported}")" style="max-width:300px">
+                    <MudText Typo="Typo.caption">EXPORT</MudText>
+                </MudStack>
+
+                <MudButton OnClick="@(async () => await BlazorDownloadFileService.DownloadFile("export_playfield.svg", exported, "image/scg+xml"))"
+                       Color="Color.Success"
+                       Variant="Variant.Filled">
+                    ⬇️ Download SVG
+                </MudButton>
+            </MudItem>
+        }
+
+        <MudItem xs="12">
+            <MudButton Variant="Variant.Filled" Href="@Navigation.TOOLS_SVG_TO_MACHINE">
+                🔗 Machine Pos from SVG
+            </MudButton>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+@code {
+    string exported;
+
+    [Inject] IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
+
+    Dictionary<string, bool> KeyValuePairs = new Dictionary<string, bool>
+    {
+        {"SWITCHES", true },
+        {"LEDS", true },
+        {"LAMPS", true },
+        {"DRIVERS", true },
+        {"STEPPERS", true },
+        {"SERVOS", true }
+    };
+
+    async Task Generate()
+    {
+        var data = await Http.GetStringAsync("http://localhost:5006/playfield/playfieldtemplate.svg");
+
+        var response = await Http.PostAsJsonAsync("http://localhost:5006/api/tools/GenerateFromSvg", 
+            new SvgDto { Svg = data, Include = KeyValuePairs });
+
+        if (response.IsSuccessStatusCode)
+        {
+            exported = await response.Content.ReadAsStringAsync();
+        }
+    }
+}

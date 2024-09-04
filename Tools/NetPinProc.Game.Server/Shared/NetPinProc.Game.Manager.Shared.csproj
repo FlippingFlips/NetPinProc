@@ -9,6 +9,8 @@
   <ItemGroup>
     <PackageReference Include="AKSoftware.Localization.MultiLanguages" Version="5.9.12" />
     <PackageReference Include="AKSoftware.Localization.MultiLanguages.Blazor" Version="1.5.0" />
+    <PackageReference Include="BlazorDownloadFile" Version="2.4.0.2" />
+    <PackageReference Include="Svg" Version="3.4.7" />
   </ItemGroup>
 
   <ItemGroup>
