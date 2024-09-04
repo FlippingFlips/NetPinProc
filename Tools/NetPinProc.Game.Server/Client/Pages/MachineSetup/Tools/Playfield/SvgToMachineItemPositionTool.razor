@@ -1,0 +1,117 @@
+﻿@page "/machine/tools/playfield/svgtomachine"
+@using NetPinProc.Game.Manager.Shared.Tools.Svg
+@using System.Text;
+@inject ILanguageContainerService lang
+@inject ISnackbar Snackbar
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<PageTitle>Svg Position Extractor | @Names.SITE_NAME</PageTitle>
+
+<GoBackButton/>
+
+<MudPaper Outlined Square=false Class="mt-2">
+    <MudGrid>
+
+        <MudItem sm="4" xs="12">
+            <MudPaper Class="mt-2 mb-2">
+                <MudText Typo="Typo.caption">@((MarkupString)lang["SvgTool:WhatFor"])</MudText>
+                    <MudText Typo="Typo.caption">  - @((MarkupString)lang["SvgTool:HowToSetup"])</MudText>
+                    <MudText Typo="Typo.caption">  - @((MarkupString)lang["SvgTool:Naming"])</MudText>
+
+                    <MudFileUpload Class="mb-3" T="IBrowserFile" FilesChanged="UploadFiles" Accept="@mimeType">
+                        <ActivatorContent>
+                            <MudPaper Outlined="true" Class="mt-1">
+                                <MudStack Row StretchItems="StretchItems.None">
+                                <MudFab Color="Color.Success"
+                                        StartIcon="@Icons.Material.Filled.AttachFile" IconSize="Size.Small" />
+                                <MudText Typo="Typo.caption">@lang.Keys["SvgTool:FileUpload"]</MudText>
+                            </MudStack>
+                            </MudPaper>
+                        </ActivatorContent>
+                        </MudFileUpload>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem sm=4 xs="12">
+            <MudExpansionPanel Text="Machine Item List" Class="mt-2 mb-2" Dense>
+                <div class="pre-wrap">
+                    @machineItemList
+                </div>
+            </MudExpansionPanel>
+        </MudItem>
+
+        <MudItem sm=4 xs="12">
+            <div>
+                @if (!string.IsNullOrEmpty(imgData))
+                {
+                    <MudImage Fluid="true" Src="@imgData" Width="300" Elevation="12" />
+                }
+            </div>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+@code {
+    const string mimeType = "image/svg+xml";
+
+    string? _fileName;
+
+    string? imgData;
+
+    string? machineItemList;
+
+    List<MachineList<SvgElement>>? SvgGroupLayers;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            machineItemList = await Http.GetStringAsync("api/machine/MachineItemListText");
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.ToString(), Severity.Error);
+        }
+    }
+
+    private async Task UploadFiles(IBrowserFile file)
+    {
+        _fileName = string.Empty;
+        imgData = null;
+        try
+        {
+            using (var stream = file.OpenReadStream())
+            {
+                byte[] fileBytes = new byte[stream.Length];
+                await stream.ReadAsync(fileBytes, 0, fileBytes.Length);
+
+                // For text files, convert the byte array to a string
+                string xml = Encoding.UTF8.GetString(fileBytes);
+
+                await Http.PostAsJsonAsync("api/tools/ExtractFromSvg", xml);
+
+                //extract svg elements
+                //SvgGroupLayers = InkscapeMachineItemPositionExtractor.ExtractPositionsFromXml(xml);
+
+                //create image preview
+                imgData = $"data:{mimeType};base64,{Convert.ToBase64String(fileBytes)}";
+            }
+
+            //set name to show the UI
+            _fileName = file.Name;
+
+            Snackbar.Add("Machine items updated!", Severity.Success);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.ToString(), Severity.Error);
+        }
+    }
+}
+
+<style>
+    .pre-wrap {
+        white-space: pre-wrap;
+    }
+</style>

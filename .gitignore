@@ -475,3 +475,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+/NetPinProc.Game.Sqlite/netproc.db-wal
+/NetPinProc.Game.Sqlite/netproc.db-shm
+/NetPinProc.Game.Sqlite/netproc.db

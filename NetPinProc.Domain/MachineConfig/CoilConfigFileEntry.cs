@@ -1,29 +1,23 @@
-﻿namespace NetPinProc.Domain.MachineConfig
+﻿using NetPinProc.Domain.Interface;
+
+namespace NetPinProc.Domain.MachineConfig
 {
-    /// <summary>
-    /// Represents a coil config entry in memory
-    /// </summary>
-    public class CoilConfigFileEntry : ConfigFileEntryBase
+    /// <summary>Represents a coil (driver) config entry in memory</summary>
+    public class CoilConfigFileEntry : ConfigFileEntryBase, IPolarity
     {
-        /// <summary> The name that you can reference in script </summary>
-        public string Name { get; set; }
         /// <summary> The number that you can reference in script </summary>
         public string Number { get; set; }
-        /// <summary>
-        /// Default pulse time
-        /// </summary>
+
+        /// <summary>Default pulse time</summary>
         public int PulseTime { get; set; } = 30;
-        /// <summary>
-        /// Set to AuxPort
-        /// </summary>
+
+        /// <summary>Set to AuxPort</summary>
         public string Bus { get; set; }
-        /// <summary>
-        /// Defaults to true
-        /// </summary>
+
+        /// <summary>Defaults to true</summary>
         public bool Polarity { get; set; } = true;
-        /// <summary>
-        /// Tags for the coil for grouping etc
-        /// </summary>
+
+        /// <summary>Tags for the coil for grouping etc</summary>
         public string Tags { get; set; }
 
         /// <summary> Pulse coil on ball search </summary>

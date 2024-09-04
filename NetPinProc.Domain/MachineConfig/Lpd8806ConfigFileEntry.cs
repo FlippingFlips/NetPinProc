@@ -1,17 +1,14 @@
-﻿namespace NetPinProc.Domain.MachineConfig
+﻿using NetPinProc.Domain.Interface;
+
+namespace NetPinProc.Domain.MachineConfig
 {
     /// <summary> Machine config for Lpd8806 serial LED on PDLEd boards</summary>
-    public class Lpd8806ConfigFileEntry : ConfigFileEntryBase
+    public class Lpd8806ConfigFileEntry : ConfigFileEntryBase, IPdbBoard
     {
-        /// <summary> Reference name </summary>
-        public string Name { get; set; }
-
-        /// <summary> Board Id </summary>
+        ///<inheritdoc/>
         public byte BoardId { get; set; }
 
-        /// <summary>
-        /// 0-2 index
-        /// </summary>
+        /// <summary>0-2 index</summary>
         public int Index { get; set; } = 0;
 
         /// <inheritdoc/>

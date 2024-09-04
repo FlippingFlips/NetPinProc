@@ -1,18 +1,35 @@
 ﻿@page "/"
+@inject NavigationManager Nav
 
 <PageTitle>Dashboard | @Names.SITE_NAME</PageTitle>
 
-<MudContainer MaxWidth="MaxWidth.Large">
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-2">
     <MudGrid>
         <MudItem xs="12" sm="6">
-            <NetPinProc.Game.Manager.Client.Shared.Components.MachineComponent />
+            <MudPaper>
+                <MudCard>
+                    <MudCardHeader>
+                        <MudText><MudIcon Icon="@Icons.Material.Filled.SettingsApplications"/> Pinball Dev Tools</MudText>
+                    </MudCardHeader>
+                    <MudCardContent>
+                        <MudList T="string">
+                            <MudListItem Text="Playfield" Icon="@Icons.Material.Filled.PhotoLibrary">
+                                <NestedList>
+                                    <MudListItem Text="Generate SVG" SecondaryText="Create SVG from machine items and positions"
+                                                 OnClick="@(_ => Nav.NavigateTo(Navigation.TOOLS_SVG_GEN))" />
+
+                                    <MudListItem Text="Update From SVG" SecondaryText="Update machine item positions from SVG"
+                                                 OnClick="@(_ => Nav.NavigateTo(Navigation.TOOLS_SVG_TO_MACHINE))" />
+                                </NestedList>
+                            </MudListItem>
+                        </MudList>
+                    </MudCardContent>
+                </MudCard>
+            </MudPaper>
         </MudItem>
-
-        <MudItem xs="12" sm="6">
+        <MudItem sm="6" xs="12">
+            <NetPinProc.Game.Manager.Client.Shared.Components.MachineComponent />
             <NetPinProc.Game.Manager.Client.Shared.Components.PlayerComponent />
-        </MudItem>        
-
-        <MudItem xs="12" sm="6">
             <NetPinProc.Game.Manager.Client.Shared.Components.AuditComponent />
         </MudItem>
     </MudGrid>

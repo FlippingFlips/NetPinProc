@@ -1,21 +1,17 @@
-﻿namespace NetPinProc.Domain.MachineConfig
+﻿using NetPinProc.Domain.Interface;
+
+namespace NetPinProc.Domain.MachineConfig
 {
-    /// <summary>
-    /// Represents a lamp's configuration in memory
-    /// </summary>
-    public class LampConfigFileEntry : ConfigFileEntryBase
+    /// <summary>Represents a lamp's configuration in memory</summary>
+    public class LampConfigFileEntry : ConfigFileEntryBase, IPolarity
     {
-        ///<inheritdoc/>
-        public string Name { get; set; }
         ///<inheritdoc/>
         public string Number { get; set; }
 
         ///<inheritdoc/>
         public string Bus { get; set; }
 
-        /// <summary>
-        /// Reverse Polarity?
-        /// </summary>
+        ///<inheritdoc/>
         public bool Polarity { get; set; } = false;
 
         ///<inheritdoc/>
