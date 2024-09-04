@@ -77,7 +77,7 @@ namespace NetPinProc.Game.Sqlite.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Audits");
+                    b.ToTable("Audits", (string)null);
                 });
 
             modelBuilder.Entity("NetPinProc.Domain.MachineConfig.CoilConfigFileEntry", b =>
@@ -519,7 +519,7 @@ namespace NetPinProc.Game.Sqlite.Migrations
 
                     b.HasIndex("ScoreId");
 
-                    b.ToTable("BallsPlayed");
+                    b.ToTable("BallsPlayed", (string)null);
                 });
 
             modelBuilder.Entity("NetPinProc.Game.Sqlite.Model.ColorSet", b =>
@@ -536,7 +536,7 @@ namespace NetPinProc.Game.Sqlite.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Colors");
+                    b.ToTable("Colors", (string)null);
 
                     b.HasData(
                         new
@@ -604,7 +604,7 @@ namespace NetPinProc.Game.Sqlite.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("GamesPlayed");
+                    b.ToTable("GamesPlayed", (string)null);
                 });
 
             modelBuilder.Entity("NetPinProc.Game.Sqlite.Model.Machine", b =>
@@ -630,7 +630,7 @@ namespace NetPinProc.Game.Sqlite.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Machine");
+                    b.ToTable("Machine", (string)null);
                 });
 
             modelBuilder.Entity("NetPinProc.Game.Sqlite.Model.Part", b =>
@@ -694,7 +694,7 @@ namespace NetPinProc.Game.Sqlite.Migrations
                     b.HasIndex("Name", "Initials")
                         .IsUnique();
 
-                    b.ToTable("Players");
+                    b.ToTable("Players", (string)null);
                 });
 
             modelBuilder.Entity("NetPinProc.Game.Sqlite.Model.Score", b =>
@@ -721,7 +721,7 @@ namespace NetPinProc.Game.Sqlite.Migrations
 
                     b.HasIndex("PlayerId");
 
-                    b.ToTable("Scores");
+                    b.ToTable("Scores", (string)null);
                 });
 
             modelBuilder.Entity("NetPinProc.Game.Sqlite.Model.BallPlayed", b =>
