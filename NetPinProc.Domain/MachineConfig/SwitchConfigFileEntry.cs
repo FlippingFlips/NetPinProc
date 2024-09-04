@@ -3,15 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NetPinProc.Domain.MachineConfig
 {
-    /// <summary>
-    /// Represents the switch config entry in memory
-    /// </summary>
+    /// <summary>Represents the switch config entry in memory</summary>
     public class SwitchConfigFileEntry : ConfigFileEntryBase
     {
-        /// <inheritdoc/>
-        [StringLength(50, MinimumLength = 2)]
-        public string Name { get; set; }
-
         /// <inheritdoc/>
         public SwitchType Type { get; set; }
 

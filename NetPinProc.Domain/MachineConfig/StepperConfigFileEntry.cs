@@ -1,15 +1,14 @@
-﻿namespace NetPinProc.Domain.MachineConfig
+﻿using NetPinProc.Domain.Interface;
+
+namespace NetPinProc.Domain.MachineConfig
 {
     /// <summary>Machine config for Steppers on PDLEd boards</summary>
-    public class StepperConfigFileEntry : ConfigFileEntryBase
+    public class StepperConfigFileEntry : ConfigFileEntryBase, IPdbBoard
     {
-        /// <summary> Reference name </summary>
-        public string Name { get; set; }
-
         /// <summary> Stepper 0 or 1 </summary>
         public bool IsStepper1 { get; set; }
 
-        /// <summary> Board Id for the servo</summary>
+        ///<inheritdoc/>
         public byte BoardId { get; set; }
 
         /// <summary> Stepper speed </summary>

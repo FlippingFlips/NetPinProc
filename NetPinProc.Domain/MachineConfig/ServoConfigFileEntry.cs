@@ -1,15 +1,14 @@
-﻿namespace NetPinProc.Domain.MachineConfig
+﻿using NetPinProc.Domain.Interface;
+
+namespace NetPinProc.Domain.MachineConfig
 {
     /// <summary> Machine config for Servos on PDLEd boards, 12 per board indexed 0-11</summary>
-    public class ServoConfigFileEntry : ConfigFileEntryBase
+    public class ServoConfigFileEntry : ConfigFileEntryBase, IPdbBoard
     {
-        /// <summary> Reference name </summary>
-        public string Name { get; set; }
-
         /// <summary> Servo index 0 - 11</summary>
         public uint Index { get; set; }
 
-        /// <summary> Board Id for the servo</summary>
+        ///<inheritdoc/>
         public byte BoardId { get; set; }
 
         /// <summary> Minimum servo value</summary>

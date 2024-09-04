@@ -1,12 +1,11 @@
-﻿namespace NetPinProc.Domain.MachineConfig
+﻿using NetPinProc.Domain.Interface;
+
+namespace NetPinProc.Domain.MachineConfig
 {
     /// <summary> Machine config for Ws2811 serial LED on PDLEd boards</summary>
-    public class WS281xConfigFileEntry : ConfigFileEntryBase
+    public class WS281xConfigFileEntry : ConfigFileEntryBase, IPdbBoard
     {
-        /// <summary> Reference name </summary>
-        public string Name { get; set; }
-
-        /// <summary> Board Id</summary>
+        ///<inheritdoc/>
         public byte BoardId { get; set; }
 
         /// <summary> 0-2 index </summary>
