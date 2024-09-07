@@ -1,7 +1,7 @@
 name: netpinproc.nuget.dev
 on:
   push:    
-    tags: [dev*]
+    tags: [dev-v*]
 jobs:
   build:
     runs-on: ubuntu-latest

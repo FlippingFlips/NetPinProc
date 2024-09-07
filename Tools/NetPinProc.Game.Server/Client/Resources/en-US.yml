@@ -16,6 +16,8 @@ SwitchItemTypes:
 Pages:
  Summary: Use this page to add, edit and remove {item} from the database.
  Adjustments: Adjustments with options and default values. These can be read from the game / modes.
+ ExportMachineJson: Export the machine from the database into a `machine.json` file for use in other applications.
+ Export: Export
 Steppers:
  IsStepper1: Sets the PDLEd to stepper 1. 2 steppers per board
  Stepper: Stepper

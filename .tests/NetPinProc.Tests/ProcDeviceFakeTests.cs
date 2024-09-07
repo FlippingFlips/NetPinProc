@@ -21,7 +21,7 @@ namespace NetPinProc.Tests
             try
             {
                 //load machine config.
-                var config = MachineConfiguration.FromFile("machine.json");
+                var config = LoadMachineConfigFile();
 
                 //create a device then reset the board
                 proc = new FakePinProc(config.PRGame.MachineType, new ConsoleLogger());
