@@ -1,0 +1,18 @@
+﻿@page "/machine/tools/export"
+@using BlazorDownloadFile;
+@using System.Text;
+@inject HttpClient Http
+
+<PageTitle>Machine Export | @Names.SITE_NAME</PageTitle>
+
+<MudButton Variant=Variant.Filled
+           Color=Color.Success
+           OnClick="@(async () => {
+var json = await Http.GetStringAsync("api/tools/ExportToJson");
+    await BlazorDownloadFileService.DownloadFile("machine.json", Convert.ToBase64String(Encoding.UTF8.GetBytes(json)), "application/json");})">
+    Export Machine to PROC `machine.json`
+</MudButton>
+@code {
+
+    [Inject] IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
+}

@@ -5,6 +5,7 @@ using NetPinProc.Domain.MachineConfig;
 using NetPinProc.Game.Manager.Shared.Dto;
 using NetPinProc.Game.Manager.Shared.Tools.Playfield;
 using NetPinProc.Game.Sqlite;
+using System.Text.Json;
 
 namespace NetPinProc.Game.Manager.Server.Controllers
 {
@@ -61,6 +62,18 @@ namespace NetPinProc.Game.Manager.Server.Controllers
             //return it
             return Convert.ToBase64String(buffer);
         }
+
+        [HttpGet("ExportToJson")]
+        public async Task<ActionResult<string>> OnGetMachineExportToJsonAsync(
+            [FromServices] INetProcDbContext context)
+        {
+            var machineConfig = context.GetMachineConfiguration();
+            return JsonSerializer.Serialize(machineConfig, options: new JsonSerializerOptions
+            {
+                 WriteIndented = true,
+            });
+        }
+
 
         private static async Task<Dictionary<string, IEnumerable<ConfigFileEntryBase>>> GetMachineItemCollection(INetProcDbContext context)
         {

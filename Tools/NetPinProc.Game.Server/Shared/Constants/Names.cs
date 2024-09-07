@@ -7,6 +7,7 @@
 
     public static class Navigation
     {
+        public const string TOOLS_EXPORT = "machine/tools/export";
         public const string TOOLS_SVG_GEN = "machine/tools/playfield/generatesvg";
         public const string TOOLS_SVG_TO_MACHINE = "machine/tools/playfield/svgtomachine";
     }

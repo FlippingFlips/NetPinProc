@@ -34,7 +34,10 @@ jobs:
 
       - name: Dotnet Publish NetpinProc.Server
         run: |
-            dotnet publish "Tools\NetPinProc.Game.Server\Server\NetPinProc.Game.Manager.Server.csproj" -c Release -o netpinproc.server
+            # Linux
+            # dotnet publish "Tools\NetPinProc.Game.Server\Server\NetPinProc.Game.Manager.Server.csproj" -c Release -o netpinproc.server
+            dotnet publish "Tools\NetPinProc.Game.Server\Server\NetPinProc.Game.Manager.Server.csproj" -r win-x64 -c Release -o netpinproc.server
+
             7z a -tzip "NetPinProc.Server-win-${VERSION}.zip" "netpinproc.server" # add pingod addons
 
       - name: create release
