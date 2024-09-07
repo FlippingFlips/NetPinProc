@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using BlazorDownloadFile;
 @inject NavigationManager Nav
 
 <PageTitle>Dashboard | @Names.SITE_NAME</PageTitle>
@@ -9,14 +10,15 @@
             <MudPaper>
                 <MudCard>
                     <MudCardHeader>
-                        <MudText><MudIcon Icon="@Icons.Material.Filled.SettingsApplications"/> Pinball Dev Tools</MudText>
+                        <MudText><MudIcon Icon="@Icons.Material.Filled.SettingsApplications" /> Pinball Dev Tools</MudText>
                     </MudCardHeader>
                     <MudCardContent>
                         <MudList T="string">
                             <MudListItem Text="Exports" Icon="@Icons.Material.Filled.Exposure">
                                 <NestedList>
-                                    <MudListItem Text="Export Machine" SecondaryText="Export from database"
-                                                 OnClick="@(_ => Nav.NavigateTo(Navigation.TOOLS_EXPORT))" />
+                                    <MudListItem Text="@lang["Pages:Export"]"
+                                                 SecondaryText="@lang["Pages:ExportMachineJson"]"
+                                                 OnClick="@ExportJsonAsync" />
                                 </NestedList>
                             </MudListItem>
                             <MudListItem Text="Playfield" Icon="@Icons.Material.Filled.PhotoLibrary">
@@ -40,3 +42,16 @@
         </MudItem>
     </MudGrid>
 </MudContainer>
+
+@code 
+{
+    [Inject] HttpClient? Http { get; set; }
+    [Inject] IBlazorDownloadFileService? BlazorDownloadFileService { get; set; }
+    [Inject] ILanguageContainerService? lang { get; set; }
+
+    async Task ExportJsonAsync()
+    {
+        var json = await Http.GetStringAsync("api/tools/ExportToJson");
+        await BlazorDownloadFileService.DownloadFile("machine.json", Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(json)), "application/json");
+    }
+}
