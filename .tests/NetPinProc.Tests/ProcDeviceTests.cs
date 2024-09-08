@@ -11,7 +11,9 @@ namespace NetPinProc.Tests
     /// Change values in the machine.json to different machine types, switches etc<para/>
     /// These should be very basic tests to test connection, opening and closing</summary>
     public class ProcDeviceTests : ProcDeviceTestBase
-    {       
+    {
+        readonly AttrCollection<ushort, string, IDriver> _coils = new();
+
         /// <summary>Requires a running PROC board connected to the USB. <para/>
         /// Creates a PROCDevice from the type set in the `machine.json`, close is called on the device when test ends
         /// </summary>
@@ -26,7 +28,7 @@ namespace NetPinProc.Tests
                 //create a device then reset the board
                 InitPRCODeviceAndReset();
 
-                //proc.SetupProcMachine(config);
+                PROC.SetupProcMachine(config, _coils: _coils);
 
                 var boardAddress = 0;
                 uint addr = 0;

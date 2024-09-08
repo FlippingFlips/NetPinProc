@@ -8,6 +8,10 @@ namespace NetPinProc.Domain.MachineConfig
         ///<inheritdoc/>
         public string Number { get; set; }
 
+        /// <summary>A number for reference. The string number is the one decoded by PROC<para/>
+        /// This is just for reference or to use in other applications</summary>
+        public uint NumberPROC { get; set; }
+
         ///<inheritdoc/>
         public string Bus { get; set; }        
 

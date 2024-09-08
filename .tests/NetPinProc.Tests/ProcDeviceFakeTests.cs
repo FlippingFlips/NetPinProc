@@ -12,6 +12,9 @@ namespace NetPinProc.Tests
         /// <summary>The interface for controlling a p-roc board</summary>
         IProcDevice proc = null;
 
+        readonly AttrCollection<ushort, string, LED> _leds = new();
+        readonly AttrCollection<ushort, string, IDriver> _coils = new();
+
         /// <summary>Runs a fake P3-ROC board<para/>
         /// Creates an IProcDevice from a FakePinProc and sets up by machine type from the `machine.json`, close is called when ended
         /// </summary>
@@ -27,8 +30,11 @@ namespace NetPinProc.Tests
                 proc = new FakePinProc(config.PRGame.MachineType, new ConsoleLogger());
                 await Task.Delay(200);
                 proc.Reset(1);
-                
-                proc.SetupProcMachine(config);
+
+                //Coil 0 translated to Number 40 after indexing
+                //proc.SetupProcMachine(config, _coils: _coils, _lamps: _lamps);
+
+                proc.SetupProcMachine(config, _coils: _coils, _leds: _leds);
 
                 var boardAddress = 0;
                 uint addr = 0;
