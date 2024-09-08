@@ -8,6 +8,10 @@ namespace NetPinProc.Domain.MachineConfig
         /// <summary> The number that you can reference in script </summary>
         public string Number { get; set; }
 
+        /// <summary>A number for reference. The string number is the one decoded by PROC<para/>
+        /// This is just for reference or to use in other applications</summary>
+        public uint NumberPROC { get; set; }
+
         /// <summary>Default pulse time</summary>
         public int PulseTime { get; set; } = 30;
 

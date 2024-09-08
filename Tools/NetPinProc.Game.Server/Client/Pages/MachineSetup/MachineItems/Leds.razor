@@ -59,6 +59,8 @@
 
             <PropertyColumn Property="x => x.Name" SortBy="@_sortBy" />
 
+            <PropertyColumn Property="x => x.NumberPROC" />
+
             <PropertyColumn Property="x => x.Tags" SortBy="@_sortBy">
 
             <HeaderTemplate>
@@ -92,7 +94,19 @@
             </EditTemplate>
             </PropertyColumn>
 
-            <PropertyColumn Property="x => x.Bus" SortBy="@_sortBy" />
+            <PropertyColumn Property="x => x.Bus">
+            <HeaderTemplate>
+                <MudTooltip>
+                    <TooltipContent>Unused?</TooltipContent>
+                    <ChildContent>Bus</ChildContent>
+                </MudTooltip>
+            </HeaderTemplate>
+            <EditTemplate>
+                <MudTextField @bind-Value=@context.Item.Bus Label="Bus"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Required=false />
+            </EditTemplate>
+            </PropertyColumn>
 
             <PropertyColumn Property="x => x.Location" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
             <HeaderTemplate>
