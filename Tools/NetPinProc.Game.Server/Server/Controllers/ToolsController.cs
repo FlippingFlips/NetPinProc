@@ -50,8 +50,8 @@ namespace NetPinProc.Game.Manager.Server.Controllers
         {
             var machineDict = await GetMachineItemCollection(context);
             
-            var result = InkscapeSvg.GenerateFromTemplate(
-                svgDto, machineDict);
+            var result = InkscapeSvg
+                .GenerateFromTemplate(svgDto, machineDict);
 
             //convert the stream to string
             result.Position = 0;
@@ -74,6 +74,18 @@ namespace NetPinProc.Game.Manager.Server.Controllers
             });
         }
 
+        [HttpGet("Test")]
+        public async Task<ActionResult> OnTestPaths()
+        {            
+            var path = Directory.GetCurrentDirectory();
+            path = Path.Combine(path, @"../Client/wwwroot/playfield");
+
+            if (Directory.Exists(path))
+                ;
+            
+            return Ok();
+        }
+
 
         private static async Task<Dictionary<string, IEnumerable<ConfigFileEntryBase>>> GetMachineItemCollection(INetProcDbContext context)
         {
@@ -84,6 +96,7 @@ namespace NetPinProc.Game.Manager.Server.Controllers
             var drivers = await context.Coils.AsNoTracking().ToListAsync();
             var steppers = await context.Steppers.AsNoTracking().ToListAsync();
             var servos = await context.Servos.AsNoTracking().ToListAsync();
+            var gi = await context.GI.AsNoTracking().ToListAsync();
 
             var machineDict = new Dictionary<string, IEnumerable<Domain.MachineConfig.ConfigFileEntryBase>>
                 {
@@ -92,7 +105,8 @@ namespace NetPinProc.Game.Manager.Server.Controllers
                     { Names.LEDS, leds },
                     { Names.DRIVERS, drivers },
                     { Names.STEPPERS, steppers },
-                    { Names.SERVOS, servos }
+                    { Names.SERVOS, servos },
+                    { Names.GI, gi }
                 };
             return machineDict;
         }

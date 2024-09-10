@@ -6,10 +6,10 @@ namespace NetPinProc.Game.Manager.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class LampsController : ConfigEntryControllerBase<LampConfigFileEntry>
+    public class GIController : ConfigEntryControllerBase<GIConfigFileEntry>
     {
-        public LampsController(
-            ILogger<ConfigEntryControllerBase<LampConfigFileEntry>> logger) 
+        public GIController(
+            ILogger<ConfigEntryControllerBase<GIConfigFileEntry>> logger) 
             : base(logger)
         {
         }

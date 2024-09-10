@@ -34,6 +34,7 @@ namespace NetPinProc.Game.Manager.Server.Controllers
             var drivers = await _netProcDb.Coils.AsNoTracking().Select(x => x.Name).ToListAsync();
             var steppers = await _netProcDb.Steppers.AsNoTracking().Select(x => x.Name).ToListAsync();
             var servos = await _netProcDb.Servos.AsNoTracking().Select(x => x.Name).ToListAsync();
+            var gi = await _netProcDb.GI.AsNoTracking().Select(x => x.Name).ToListAsync();
 
             var result = string.Empty;
             if(switches != null)
@@ -65,6 +66,11 @@ namespace NetPinProc.Game.Manager.Server.Controllers
             {
                 result += $"\n{Names.SERVOS}\n";
                 foreach (var mi in servos) { result += $"{mi}\n"; }
+            }
+            if (gi != null)
+            {
+                result += $"\n{Names.GI}\n";
+                foreach (var mi in gi) { result += $"{mi}\n"; }
             }
 
             return result;
