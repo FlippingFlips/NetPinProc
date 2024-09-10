@@ -16,19 +16,19 @@ namespace NetPinProc.Domain.Mode
         /// <param name="priority"></param>
         /// <param name="stepperName">the stepper name which should be in the Game.Steppers collection</param>
         /// <param name="homeDirection">Set a positive or negative direction for home</param>
-        /// <exception cref="StepperNotFoundException"></exception>
-        /// <exception cref="SwitchNotFoundException"></exception>
+        /// <exception cref="MachineItemNotFoundException{PdStepper}"></exception>
+        /// <exception cref="MachineItemNotFoundException{Switch}"></exception>
         public LinearPdLedStepperMode(IGameController game,
             int priority,
             string stepperName,
             int homeDirection = 1) : base(game, priority) 
         {
             if (!game.Steppers.ContainsKey(stepperName))
-                throw new StepperNotFoundException(stepperName);
+                throw new MachineItemNotFoundException<PdStepper>(stepperName);
 
             Stepper = game.Steppers[stepperName];
             if (Stepper.StopSwitch == null)
-                throw new SwitchNotFoundException(stepperName);
+                throw new MachineItemNotFoundException<Switch>(stepperName);
 
             this.AddSwitchHandler(Stepper.StopSwitch.Name, SwitchHandleType.closed, 0, StepperHomeSwitchClosed);
             this.homeDirection = homeDirection;
