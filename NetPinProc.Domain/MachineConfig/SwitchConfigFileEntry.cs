@@ -3,7 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NetPinProc.Domain.MachineConfig
 {
-    /// <summary>Represents the switch config entry in memory</summary>
+    /// <summary>Represents the switch config entry in memory<para/>
+    /// TODO: needs a de-bounce option?</summary>
     public class SwitchConfigFileEntry : ConfigFileEntryBase
     {
         /// <inheritdoc/>

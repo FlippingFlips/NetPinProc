@@ -299,11 +299,8 @@
 
 @code {
     private IEnumerable<SwitchConfigFileEntry> Elements = new List<SwitchConfigFileEntry>();
-    private string _searchString;
+    private string? _searchString;
     private bool _sortNameByLength;
-    private List<string> _events = new();
-
-    bool _isHelpExanded = false;
 
     protected override async Task OnInitializedAsync()
     {

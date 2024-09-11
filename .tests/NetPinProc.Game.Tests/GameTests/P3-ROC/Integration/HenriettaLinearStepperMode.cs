@@ -20,7 +20,7 @@ namespace NetPinProc.Game.Tests.GameTests.P3_ROC.Integration
         {
             _spinStepper = game.Steppers["Stepper2"];
             if (_spinStepper == null)
-                throw new StepperNotFoundException("no 2nd spinner found");
+                throw new MachineItemNotFoundException<PdStepper>("no 2nd spinner found");
         }
 
         /// <summary>Moves the toy down to the switch home</summary>        
