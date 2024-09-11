@@ -24,7 +24,10 @@ namespace NetPinProc.Game.Manager.Shared.Tools.Playfield
             //get machine items from the layers
             foreach (var group in groups)
             {
-                //get label name inkscape namespace
+                //get label name inkscape namespace, skip if not one
+                if (!group.ContainsAttribute(inkNs + ":label"))
+                    continue;
+
                 var groupLayerName = group.CustomAttributes[inkNs + ":label"];
 
                 if (!machineItems.ContainsKey(groupLayerName))
