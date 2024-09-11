@@ -1,3 +1,5 @@
+INSERT INTO Machine (Id, machineType, numBalls, title, version, displayMonitor) VALUES (1, 7, 4, 'My NetPinProcGame', '0.0.1', 0);
+
 INSERT INTO Adjustments (Id, Name, MenuName, SubMenuName, Description, ValueDefault, Value, OptionType, Options) VALUES ('ALLOW_RESTART', 'Allow Restart', 'STANDARD_ADJ', 'GENERAL', 'Allow game restart from holding start.', 1, 1, 2, 'NO,YES');
 INSERT INTO Adjustments (Id, Name, MenuName, SubMenuName, Description, ValueDefault, Value, OptionType, Options) VALUES ('ATTRACT_MUSIC', 'Attract Music', 'STANDARD_ADJ', 'GENERAL', 'Allow music to play in attract', 1, 1, 2, 'NO,YES');
 INSERT INTO Adjustments (Id, Name, MenuName, SubMenuName, Description, ValueDefault, Value, OptionType, Options) VALUES ('BALLS_PER_GAME', 'Balls Per Game', 'STANDARD_ADJ', 'GENERAL', 'Number of balls per game 1-10', 3, 4, 0, '1,10');
@@ -18,6 +20,18 @@ INSERT INTO Adjustments (Id, Name, MenuName, SubMenuName, Description, ValueDefa
 INSERT INTO Adjustments (Id, Name, MenuName, SubMenuName, Description, ValueDefault, Value, OptionType, Options) VALUES ('DISP_CONT_SCALE_ASPECT', 'Content Scale Aspect', 'STANDARD_ADJ', 'DISPLAY', '', 0, 4, 2, 'Ignore, Keep, KeepWidth, KeepHeight, Expand');
 INSERT INTO Adjustments (Id, Name, MenuName, SubMenuName, Description, ValueDefault, Value, OptionType, Options) VALUES ('DISP_TOP', 'Display On Top', 'STANDARD_ADJ', 'DISPLAY', '', 1, 1, 2, 'OFF,ON');
 INSERT INTO Adjustments (Id, Name, MenuName, SubMenuName, Description, ValueDefault, Value, OptionType, Options) VALUES ('TILT_WARNINGS', 'Tilt Warnings', 'STANDARD_ADJ', 'GENERAL', 'Number of tilt warnings before tilt', 3, 3, 0, '0,20');
+
+-- AUDITS (STANDARD)
+INSERT INTO Audits (Id, Value, Type, Description) VALUES
+('CREDITS', 0, 0, 'Credits in machine'), 
+('CREDITS_TOTAL', 0, 0, 'Total credits used'), 
+('GAMES_STARTED', 0, 0, 'Games started log'), 
+('GAMES_PLAYED', 0, 0, 'Games completed log'), 
+('XB_AWARDED', 0, 0, 'Total extra balls awarded'),
+('REPLAYS', 0, 0, 'Total replays awarded'), 
+('MATCHES', 0, 0, 'Total Matches Awarded'),
+('POWERED_ON_TIMES', 0, 0, 'Times machine powered on'),
+('TOTAL_BALLS_PLAYED', 0, 0, 'Total balls played');
 
 
 INSERT INTO Coils (Number, DisplayName, Conn, Location, XPos, YPos, ItemType, Name, PulseTime, Bus, Polarity, Tags, Search, ReturnWire, VoltageWire, Voltage, NumberPROC) VALUES ('A0-B0-0', NULL, NULL, NULL, 339.5956115722656, 175.4376983642578, NULL, 'trough', 30, '', 0, 'trough', 0, NULL, NULL, NULL, 0);

@@ -1,9 +1,8 @@
 ﻿BEGIN TRANSACTION;
 
---TODO - untested tables, old
+-- Table: Machine WPC95 - machinetype = 4
+INSERT INTO Machine (Id, machineType, numBalls, title, version, displayMonitor) VALUES (1, 4, 4, 'My NetPinProcGame', '0.0.1', 0);
 
--- Table: Machine
-INSERT INTO Machine (Id, machineType, numOfBalls) VALUES (1, 7, 4);
 -- Table: PRCoils
 INSERT INTO Coils (Id, Name, Number, PulseTime, Bus, Polarity, Search, Tags) VALUES ('flipperLwRMain', NULL, 'C01', 30, '', 0, '');
 INSERT INTO Coils (Id, Name, Number, PulseTime, Bus, Polarity, Search, Tags) VALUES ('flipperLwRHold', NULL, 'C02', 30, '', 0, '');
