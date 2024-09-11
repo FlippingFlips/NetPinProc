@@ -478,3 +478,6 @@ $RECYCLE.BIN/
 /NetPinProc.Game.Sqlite/netproc.db-wal
 /NetPinProc.Game.Sqlite/netproc.db-shm
 /NetPinProc.Game.Sqlite/netproc.db
+/Tools/NetPinProc.Game.Server/Server/netproc.db-wal
+/Tools/NetPinProc.Game.Server/Server/netproc.db-shm
+/Tools/NetPinProc.Game.Server/Server/netproc.db

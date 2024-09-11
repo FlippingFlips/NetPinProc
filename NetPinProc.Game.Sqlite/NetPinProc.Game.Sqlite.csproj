@@ -15,6 +15,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="sql\init_p3roc.sql" />
+	  <None Remove="sql\init_proc.sql" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<None Include="../pinball.png" Pack="true" PackagePath="\" />
 		<None Include="README.md" Pack="true" PackagePath="\" />
 		<None Include="LICENSE.md" Pack="true" PackagePath="\" />
@@ -37,5 +42,12 @@
 		<Content Include="NetPinProc.Game.Sqlite.targets">
 			<Pack>true</Pack>
 		</Content>
+		<Content Include="sql\init_p3roc.sql" />
+		<Content Include="sql\init_proc.sql" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Update="sql\readme.txt">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
 	</ItemGroup>
 </Project>

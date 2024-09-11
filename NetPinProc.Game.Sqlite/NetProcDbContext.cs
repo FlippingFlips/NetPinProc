@@ -286,13 +286,18 @@ namespace NetPinProc.Game.Sqlite
             //ADD SOME DEFAULT MEDIA FILES, SMALL.
 
             //FIRST ONE TEMPLATE SVG WITH GROUPED LAYERS
-            var pfSvgMedia = new Media { Id = 1, MimeType = "application/xml+svg", Name = "playfieldtemplate.svg" };
+            var pfSvgMedia = new Media { Id = 1, MimeType = "image/svg+xml", Name = "playfieldtemplate.svg" };
             pfSvgMedia.Tags = "playfield,svg";
             pfSvgMedia.Data = Encoding.UTF8.GetBytes(StaticMedia.TEMPLATE_SVG);
             pfSvgMedia.Size = pfSvgMedia.Data.Length;
-
-            //ADD THE ENTRY IF NOT FOUND
             modelBuilder.Entity<Media>().HasData(pfSvgMedia);
+
+            //SECOND, TEMP BLUEPRINT
+            var pfSvgMedia2 = new Media { Id = 2, MimeType = "image/png", Name = "playfieldblueprint" };
+            pfSvgMedia2.Tags = "playfield,blueprint";
+            pfSvgMedia2.Data = Convert.FromBase64String(StaticMedia.BLUEPRINT_PNG);
+            pfSvgMedia2.Size = pfSvgMedia2.Data.Length;            
+            modelBuilder.Entity<Media>().HasData(pfSvgMedia2);
         }
 
         /// <summary>

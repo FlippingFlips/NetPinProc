@@ -11,7 +11,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="sql\init_p3roc.sql" />
+	  <None Remove="sql\init_proc.sql" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <Content Include="pinball.ico" />
+	  <Content Include="sql\init_p3roc.sql" />
+	  <Content Include="sql\init_proc.sql" />
 	</ItemGroup>
 
 	<ItemGroup>
