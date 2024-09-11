@@ -2,9 +2,18 @@
 @using NetPinProc.Game.Manager.Client.Pages.Machine_Setup.MachineItems;
 @using NetPinProc.Game.Manager.Client.Shared.DialogComponents;
 @using NetPinProc.Game.Manager.Client.Shared.HelpComponents
-@inherits ConfigFileEntryBaseComponentBase
+@inherits ConfigFileEntryBaseComponentBase<ServoConfigFileEntry>
 
 <PageTitle>Servos | @Names.SITE_NAME</PageTitle>
+
+<MudStack>
+    <MudStack Row>    
+    <MudButton Variant="Variant.Filled" Color="Color.Error"
+               Size="Size.Small"
+               Class="mt-2"
+               OnClick="@ShowAddDialog">ADD Servo</MudButton>
+        <MudSpacer />
+</MudStack>
 
 <MudDataGrid T="ServoConfigFileEntry" MultiSelection="true"
              Class="netpinprocdatagrid"
@@ -64,7 +73,7 @@
             <PropertyColumn Property="x => x.Conn" ShowFilterIcon="false">
             <HeaderTemplate>
                 <MudTooltip>
-                    <TooltipContent><ConnectionHelp /></TooltipContent>
+                        <TooltipContent>@lang["MachineItem:Connection"]</TooltipContent>
                     <ChildContent>Conn</ChildContent>
                 </MudTooltip>
             </HeaderTemplate>
@@ -115,14 +124,7 @@
             </HeaderTemplate>
             </PropertyColumn>
         </Columns>
-        </MudDataGrid>
-
-        <MudStack Row>
-    <MudSpacer />
-    <MudButton Variant="Variant.Filled" Color="Color.Error"
-               Size="Size.Small"
-               Class="mt-2"
-               OnClick="@ShowAddDialog">ADD Servo</MudButton>
+        </MudDataGrid>        
 </MudStack>
 
 @code {

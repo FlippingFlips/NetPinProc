@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\img\pinball.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Resources\en-US.yml" />
   </ItemGroup>
 
@@ -30,6 +34,14 @@
 
   <ItemGroup>
     <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\img\pinball.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\user\" />
   </ItemGroup>
 
 </Project>

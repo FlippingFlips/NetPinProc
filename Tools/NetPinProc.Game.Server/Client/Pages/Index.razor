@@ -1,57 +1,12 @@
 ﻿@page "/"
-@using BlazorDownloadFile;
 @inject NavigationManager Nav
 
 <PageTitle>Dashboard | @Names.SITE_NAME</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="mt-2">
-    <MudGrid>
-        <MudItem xs="12" sm="6">
-            <MudPaper>
-                <MudCard>
-                    <MudCardHeader>
-                        <MudText><MudIcon Icon="@Icons.Material.Filled.SettingsApplications" /> Pinball Dev Tools</MudText>
-                    </MudCardHeader>
-                    <MudCardContent>
-                        <MudList T="string">
-                            <MudListItem Text="Exports" Icon="@Icons.Material.Filled.Exposure">
-                                <NestedList>
-                                    <MudListItem Text="@lang["Pages:Export"]"
-                                                 SecondaryText="@lang["Pages:ExportMachineJson"]"
-                                                 OnClick="@ExportJsonAsync" />
-                                </NestedList>
-                            </MudListItem>
-                            <MudListItem Text="Playfield" Icon="@Icons.Material.Filled.PhotoLibrary">
-                                <NestedList>
-                                    <MudListItem Text="Generate SVG" SecondaryText="Create SVG from machine items and positions"
-                                                 OnClick="@(_ => Nav.NavigateTo(Navigation.TOOLS_SVG_GEN))" />
-
-                                    <MudListItem Text="Update From SVG" SecondaryText="Update machine item positions from SVG"
-                                                 OnClick="@(_ => Nav.NavigateTo(Navigation.TOOLS_SVG_TO_MACHINE))" />
-                                </NestedList>
-                            </MudListItem>
-                        </MudList>
-                    </MudCardContent>
-                </MudCard>
-            </MudPaper>
-        </MudItem>
-        <MudItem sm="6" xs="12">
+    <MudGrid>       
+        <MudItem xs="12">
             <NetPinProc.Game.Manager.Client.Shared.Components.MachineComponent />
-            <NetPinProc.Game.Manager.Client.Shared.Components.PlayerComponent />
-            <NetPinProc.Game.Manager.Client.Shared.Components.AuditComponent />
         </MudItem>
     </MudGrid>
 </MudContainer>
-
-@code 
-{
-    [Inject] HttpClient? Http { get; set; }
-    [Inject] IBlazorDownloadFileService? BlazorDownloadFileService { get; set; }
-    [Inject] ILanguageContainerService? lang { get; set; }
-
-    async Task ExportJsonAsync()
-    {
-        var json = await Http.GetStringAsync("api/tools/ExportToJson");
-        await BlazorDownloadFileService.DownloadFile("machine.json", Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(json)), "application/json");
-    }
-}

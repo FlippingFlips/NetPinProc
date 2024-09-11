@@ -1,0 +1,222 @@
+﻿@page "/machine/audits"
+@using NetPinProc.Domain.Data;
+@using NetPinProc.Domain.Enums;
+@using NetPinProc.Game.Manager.Client.Shared.DialogComponents;
+@inject HttpClient Http
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject ILanguageContainerService lang
+
+<PageTitle>Audits | @Names.SITE_NAME</PageTitle>
+
+@if (Elements?.Any() ?? false)
+{
+    <MudDataGrid T="NetPinProc.Domain.Data.Audit"
+             MultiSelection="false"
+             Class="netpinprocdatagrid"
+             Items="@Elements.Select(x=>x.Value)"
+             QuickFilter="@_quickFilter"
+             SortMode="SortMode.Multiple"
+             Dense=true
+             FixedHeader=true
+             Height="668px"
+             Filterable="true"
+             Hideable="true"
+             Bordered=true
+             ReadOnly=false
+             EditDialogOptions="new DialogOptions{ FullWidth = true, MaxWidth = MaxWidth.Medium}"
+             EditMode=DataGridEditMode.Form
+             EditTrigger="DataGridEditTrigger.OnRowClick"
+             StartedEditingItem="@StartedEditingItem"
+             CanceledEditingItem="@CanceledEditingItem"
+             CommittedItemChanges="@CommittedItemChanges">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Audits</MudText>
+            <MudText Class="pl-2" Typo="Typo.caption">
+                @lang.Keys["Pages:Audits"]
+            </MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString"
+                      Placeholder="Quick filter audits id, name"
+                      Adornment="Adornment.Start" Immediate="true"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+
+        <Columns>
+            @*<SelectColumn T="CoilConfigFileEntry" />*@
+
+            <TemplateColumn Sortable="false" Filterable="false" ShowFilterIcon=false>
+                <CellTemplate>
+                    <MudToolBar Dense Class="netpinproctoolbar">
+                    <MudIconButton Size="Size.Small" Variant="Variant.Filled"
+                                   Icon="@Icons.Material.Filled.Delete" Color="Color.Error"
+                                   OnClick="@(_ => ShowDeleteDialog(context.Item.Id))" />
+                    </MudToolBar>
+                </CellTemplate>
+                </TemplateColumn>
+
+                <PropertyColumn Property="x => x.Id" Title="Id" Sortable="true"
+                        Resizable="false" ShowFilterIcon=false HeaderStyle="white-space:nowrap">
+                <HeaderTemplate>
+                    <MudTooltip>Id</MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudTextField @bind-Value=@context.Item.Id Label="Id"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                                            Required
+                                            RequiredError="Every audit needs a unique id" />
+                </EditTemplate>
+                </PropertyColumn>
+
+                <PropertyColumn Property="x => x.Name" ShowFilterIcon=false>
+                <EditTemplate>
+                    <MudTextField @bind-Value=@context.Item.Name Label="Name"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Required=false />
+                </EditTemplate>
+                </PropertyColumn>
+
+                <PropertyColumn Property="x => x.Description" ShowFilterIcon=false>
+                <EditTemplate>
+                    <MudTextField @bind-Value=@context.Item.Description Label="Description"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Required=false />
+                </EditTemplate>
+                </PropertyColumn>
+
+                <PropertyColumn Property="x => x.Value" ShowFilterIcon=false />                    
+
+                <PropertyColumn Property="x => x.Type" ShowFilterIcon=false>
+                <HeaderTemplate>
+                    <MudTooltip>Type</MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudSelect T="NetPinProc.Domain.Enums.AuditType"
+                           Variant="Variant.Outlined"
+                           @bind-Value=context.Item.Type>
+                        @foreach (AuditType item in Enum.GetValues(typeof(AuditType)))
+                        {
+                            <MudSelectItem Value="@item">@item.ToString()</MudSelectItem>
+                        }
+                    </MudSelect>
+                </EditTemplate>
+            </PropertyColumn>
+
+        </Columns>
+        @*    <PagerContent>
+    <MudDataGridPager T="SwitchConfigFileEntry" />
+    </PagerContent>*@
+    </MudDataGrid>
+
+    <MudStack Row>
+    <MudSpacer />
+    <MudButton Variant="Variant.Filled"
+               Color="Color.Error"
+               Size="Size.Small"
+               Class="mt-2"
+               OnClick="@ShowAddDialog">ADD AUDIT</MudButton>
+</MudStack>
+}
+
+@code
+{
+    private IDictionary<string, NetPinProc.Domain.Data.Audit> Elements;
+
+    private string _searchString;
+
+    private bool _sortNameByLength;
+
+    private List<string> _events = new();
+
+    protected override async Task OnInitializedAsync() => await RefreshViewData();
+
+    protected async Task RefreshViewData()
+    {
+        Elements = await Http.GetFromJsonAsync<IDictionary<string, 
+        NetPinProc.Domain.Data.Audit>>("/api/audits");
+    }
+
+    // events
+    void StartedEditingItem(NetPinProc.Domain.Data.Audit item)
+    {
+        _events.Insert(0, $"Event = StartedEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+    }
+
+    void CanceledEditingItem(NetPinProc.Domain.Data.Audit item)
+    {
+        _events.Insert(0, $"Event = CanceledEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+    }
+
+    async Task CommittedItemChanges(NetPinProc.Domain.Data.Audit item)
+    {
+        _events.Insert(0, $"Event = CommittedItemChanges, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+
+        var response = await Http.PutAsJsonAsync("api/audits", item);
+        if (!response.IsSuccessStatusCode)
+        {
+            Snackbar.Add("failed to update audit", Severity.Error);
+        }
+        else
+        {
+            var result = await response.Content
+            .ReadFromJsonAsync<NetPinProc.Domain.Data.Audit>();
+            if (result != null)
+                Snackbar.Add("driver updated", Severity.Success);
+            else
+                Snackbar.Add("failed to update audit", Severity.Warning);
+        }
+    }
+
+    // quick filter - filter globally across multiple columns with the same input
+    private Func<NetPinProc.Domain.Data.Audit, bool> _quickFilter => x =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (x.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (x.Id.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    };
+
+    async Task ShowDeleteDialog(string auditId)
+    {
+        bool? result = await DialogService.ShowMessageBox(
+            "Warning: Deleting audit: " + auditId,
+            "Deleting can not be undone!",
+            yesText: "Delete!", cancelText: "Cancel", options: new DialogOptions { MaxWidth = MaxWidth.Small });
+        if (result.HasValue && result.Value)
+        {
+            try
+            {
+                var response = await Http.DeleteAsync("api/audits/" + auditId);
+                if (response.IsSuccessStatusCode)
+                {
+                    Snackbar.Add($"audit: {auditId} deleted", Severity.Success);
+                    await RefreshViewData();
+                }
+                else
+                {
+                    Snackbar.Add(await response.Content.ReadAsStringAsync(), Severity.Error);
+                }
+
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Add(ex.Message, Severity.Error);
+            }
+        }
+    }
+
+    async Task ShowAddDialog()
+    {
+        var dialog = await DialogService.ShowAsync<AddAuditDialog>();
+        var result = await dialog.Result;
+        if (!result.Canceled)
+            await RefreshViewData();
+    }
+}

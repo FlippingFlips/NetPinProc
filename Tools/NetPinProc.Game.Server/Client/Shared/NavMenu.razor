@@ -1,20 +1,27 @@
-﻿<MudNavMenu>
+﻿<MudNavMenu Dense>
 
-    <MudNavLink Href="/" Match="NavLinkMatch.All">Dashboard</MudNavLink>    
+    <MudStack Row>
+        <MudImage Height=24 Src="img/pinball.png" />
+        <MudText Typo="Typo.body2" Class="px-4">NetPinProc</MudText>
+    </MudStack>
+    <MudDivider Class="my-2" />
 
-    <MudNavGroup Title="Machine Setup" Expanded="false">
+    @*HOME*@
+    <MudNavLink Href="/" Icon="@Icons.Material.Filled.Dashboard" Match="NavLinkMatch.All">Dashboard</MudNavLink>
 
-        <MudNavLink Href="/machine/adjustments" Match="NavLinkMatch.Prefix">Adjustments</MudNavLink>
+    @*MACHINE MENU*@
+    <MudNavLink Href="/machine/setup" Icon="@Icons.Material.Filled.WifiProtectedSetup" Match="NavLinkMatch.Prefix">Machine Setup</MudNavLink>
 
-        <MudNavGroup Title="Items" Expanded="true">
-            <MudNavLink Href="/machine/items/switches" Match="NavLinkMatch.Prefix">Switches</MudNavLink>
-            <MudNavLink Href="/machine/items/drivers" Match="NavLinkMatch.Prefix">Drivers</MudNavLink>
-            <MudNavLink Href="/machine/items/leds" Match="NavLinkMatch.Prefix">LEDS</MudNavLink>
-            <MudNavLink Href="/machine/items/lamps" Match="NavLinkMatch.Prefix">Lamps</MudNavLink>
-            <MudNavLink Href="/machine/items/steppers" Match="NavLinkMatch.Prefix">Steppers</MudNavLink>
-            <MudNavLink Href="/machine/items/servos" Match="NavLinkMatch.Prefix">Servos</MudNavLink>
-        </MudNavGroup>        
+    @*PLAYFIELD*@
+    <MudNavLink Href="/tools/playfield" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Draw"> Playfield</MudNavLink>
 
-    </MudNavGroup>
+    @*ADJUSTMENTS*@
+    <MudNavLink Href="/machine/adjustments" Icon="@Icons.Material.Filled.Adjust" Match="NavLinkMatch.Prefix">Adjustments</MudNavLink>
+
+    @*AUDITS*@
+    <MudNavLink Href="/machine/audits" Icon="@Icons.Material.Filled.Workspaces" Match="NavLinkMatch.Prefix">Audits</MudNavLink>
+
+    @*GAME*@
+    <MudNavLink Href="/game" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Games">Game</MudNavLink>    
 
 </MudNavMenu>

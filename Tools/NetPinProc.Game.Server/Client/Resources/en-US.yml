@@ -10,30 +10,54 @@ MachineItem:
  Number: The number can be a string as used in older P-ROC boards, see other machine.json's
  Position: The X pos and Y pos of the item on or under the playfield
  Tags: Machine items can be tagged with single names or comma separated.
-SwitchItemTypes:
- Flipper: flipper| set all flippers ItemType to flipper to create switch rules and map any flipper coils with the same name
- Bumper: bumper| set all Bumpers and Slingshots to create switch rules and map any coils with the same name as the switch
+ Type: State of the switch Normally open or Normally closed
 Pages:
  Summary: Use this page to add, edit and remove {item} from the database.
  Adjustments: Adjustments with options and default values. These can be read from the game / modes.
  ExportMachineJson: Export the machine from the database into a `machine.json` file for use in other applications.
  Export: Export
+Playfield:
+ BluePrint: Playfield Blueprint
+ BluePrintHelp: Add a blueprint to the database media. This can be used when exporting the initial SVG for machine positions.
+  Loading a file will replace the image which is stored in the database and not stored as loose files.<br><br>
+  Blueprints should match the aspect ratio of the playfield for when it's exported with layers and items.
+ BluePrintUpdate: Update Blueprint Image
+ BluePrintUpdateTip: Upload an image to replace the existing in the database
+ TemplateUpdate: Update Template
+ TemplateUpdateTip: Replace the database template svg with your own. The template should include the groups needed
+ GenerateSvgTitle: Generate playfield SVG from machine items
+ GenerateSvgTemplate: <br> Generate an Inkscape SVG document from a template stored in the database media table.
+  This template matches a playfield size in mm and contains pre made layers / groups of machine items like SWITCHES, LEDS <br><br>    
+  Generating a file will use any position that is already set on the item or it will be set at 0,0. The center point is saved of Circles and rects, rects in Inkscape start at top left of the element.<br><br>
+  The generated export can be downloaded and then loaded into Inkscape where you would move your items around the playfield and set positions and save it and reimport it to update the machine items.
+ ImportSvgTitle: Import Playfield SVG - Update Machine Item Positions
+ ImportSvg: This will update machine item positions from an SVG.<br>
+  This would usually be after the Generated step and after you have altered the positions with another tool like Inkscape. <br><br>
+  Machine items will be updated from elements inside the layers matching the name of the item.<br><br>
+RequiredError:
+ Name: A name is required
+ Value: A value is required
+ AdjustOption: Select an option type.
+ Adjustment: The options for this adjustment needs an option type
 Steppers:
  IsStepper1: Sets the PDLEd to stepper 1. 2 steppers per board
  Stepper: Stepper
  StopSwitch: A switch to stop the stepper from a mode callback
  Speed: Stepper ticks per half period. Can be changed in game with SetSpeed
  Voltage: Voltage of the Stepper for reference
+SwitchItemTypes:
+ Flipper: flipper| set all flippers ItemType to flipper to create switch rules and map any flipper coils with the same name
+ Bumper: bumper| set all Bumpers and Slingshots to create switch rules and map any coils with the same name as the switch
 SvgTool:
  FileUpload: Select an SVG file exported from Inkscape. The document should have layers that contain machine items.
   The database machine items are updated after file is selected
  NoLayers: No layers found in file
- WhatFor: This tool is for extracting and updating database positions from an svg document. Elements named by machine item and within layers named by the type. <br><br>
+ WhatForOld1: This tool is for extracting and updating database positions from an svg document. Elements named by machine item and within layers named by the type. <br><br>
    You can generate an initial document with layers from the generate template, `/machine/tools/playfield/generatesvg`<br>
    By keeping the database positions updated and correct, other tools and the display can use them. <br><br>
    eg; Lampshow creators, test views, switch windows <br><br>
- HowToSetup: Create an new document in Inkscape and make the document size match your playfield. <br> Add groups you want to extract. <br><br> Inside the groups create shapes or paths and name them.
- Naming: Name the items in the groups with the Name from your configuration, for example, for a SWITCHES group; `coin1` <br><br>
+ HowToSetup1: Create an new document in Inkscape and make the document size match your playfield. <br> Add groups you want to extract. <br><br> Inside the groups create shapes or paths and name them.
+ Naming1: Name the items in the groups with the Name from your configuration, for example, for a SWITCHES group; `coin1` <br><br>
  Layers: Each panel represents a layer from the svg file with your extracted machine items
  UpdateMachine: Update positions in the database from items found in the svg
 TagsLamp:
@@ -43,12 +67,3 @@ TagsSwitch:
  shooterLane: tag the plunger lane switch with `shooterLane` to interact with the trough and ball saves
  door: handles door switches for service modes and machine monitor
  early: early ball save switches. `outlaneL,outlaneR`
-Playfield:
- GenerateSvgTitle: Generate SVG from machine items
- GenerateSvgTemplate: <br> Generating a document from a template with pre made layers will add each machine item you have into the layer<br><br>
-  Grouped layers are named matching the collections in the machine. eg SWITCHES, LEDS <br><br>
-  This template is Stern sized at 514x1066mm | 20.25x42". You can change the template this to match the games playfield.
-  The template file can be found in the public folder <code>`wwwroot/playfield/playfieldtemplate.svg`</code> <br><br>
-  Generating a file will use any position that is already set on the item or it will be set at 0,0. The center point is saved of Circles and rects, rects in Inkscape start at top left of the element.<br><br>
-  The generated export can be downloaded and loaded into Inkscape where you would move your items around the playfield and set positions and save it <br><br>
-  The database positions can then be updated from your edits in <pre>Machine Pos from SVG</pre><br><br>

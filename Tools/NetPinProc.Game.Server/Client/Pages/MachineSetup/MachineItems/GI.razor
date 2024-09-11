@@ -1,26 +1,26 @@
-﻿@using NetPinProc.Game.Manager.Client.Pages.Machine_Setup.MachineItems;
+﻿@page "/machine/items/gi"
+@using NetPinProc.Game.Manager.Client.Pages.Machine_Setup.MachineItems;
 @using NetPinProc.Game.Manager.Client.Shared.DialogComponents;
 @using NetPinProc.Game.Manager.Client.Shared.HelpComponents
-@inherits ConfigFileEntryBaseComponentBase<LampConfigFileEntry>
+@inherits ConfigFileEntryBaseComponentBase<GIConfigFileEntry>
 
-<PageTitle>Lamps | @Names.SITE_NAME</PageTitle>
+<PageTitle>GI | @Names.SITE_NAME</PageTitle>
 
 <MudStack>
-
     <MudStack Row>
         <MudButton Variant="Variant.Filled" Color="Color.Error"
                    Size="Size.Small"
                    Class="mt-2"
-                   OnClick="@ShowAddDialog">ADD LAMP</MudButton>
-        <MudSpacer />
+                   OnClick="@ShowAddDialog">ADD gi</MudButton>
+        <MudSpacer />        
     </MudStack>
 
-    <MudDataGrid T="LampConfigFileEntry" MultiSelection="true"
+    <MudDataGrid T="GIConfigFileEntry" MultiSelection="true"
                  Class="netpinprocdatagrid"
                  Items="@Elements" SortMode="SortMode.Multiple"
                  Dense=true
                  FixedHeader=true
-                 Height="calc(100vh - 280px)"
+                 Height="668px"
                  Filterable="true"
                  QuickFilter="@_quickFilter"
                  Hideable="true"
@@ -31,17 +31,17 @@
                  CanceledEditingItem="@CanceledEditingItem"
                  CommittedItemChanges="@CommittedItemChanges">
         <ToolBarContent>
-            <MudText Typo="Typo.h6">Lamps</MudText>
+            <MudText Typo="Typo.h6">gis</MudText>
             <MudText Class="pl-2" Typo="Typo.caption">
-                @lang.Keys["Pages:Summary", new { Item = "lamps"}]
+                @lang.Keys["Pages:Summary", new { Item = "gis"}]
             </MudText>
             <MudSpacer />
-            <MudTextField @bind-Value="_searchString" Placeholder="Quick filter Lamp Name, Num, Tags"
+            <MudTextField @bind-Value="_searchString" Placeholder="Quick filter gi Name, Num, Tags"
                           Adornment="Adornment.Start" Immediate="true"
                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
         <Columns>
-            @*<SelectColumn T="LampConfigFileEntry" />*@
+            @*<SelectColumn T="giConfigFileEntry" />*@
             <TemplateColumn Sortable="false" Filterable="false">
                 <CellTemplate>
                     <MudToolBar Dense Class="netpinproctoolbar">
@@ -66,20 +66,6 @@
                 </HeaderTemplate>
                 <EditTemplate>
                     <MudTextField @bind-Value=@context.Item.Tags Label="Tags"
-                                  Variant="Variant.Outlined" Margin="Margin.Dense"
-                                  Required=false />
-                </EditTemplate>
-                </PropertyColumn>
-
-                <PropertyColumn Property="x => x.Bus">
-                <HeaderTemplate>
-                    <MudTooltip>
-                        <TooltipContent>Unused?</TooltipContent>
-                        <ChildContent>Bus</ChildContent>
-                    </MudTooltip>
-                </HeaderTemplate>
-                <EditTemplate>
-                    <MudTextField @bind-Value=@context.Item.Bus Label="Bus"
                                   Variant="Variant.Outlined" Margin="Margin.Dense"
                                   Required=false />
                 </EditTemplate>
@@ -144,16 +130,17 @@
             </MudDataGrid>
 </MudStack>
 
-            @code {
-    private IEnumerable<LampConfigFileEntry> Elements = new List<LampConfigFileEntry>();
+
+@code {
+    private IEnumerable<GIConfigFileEntry> Elements = new List<GIConfigFileEntry>();
     private string? _searchString;
     private bool _sortNameByLength;
     private List<string> _events = new();
 
-    protected override void OnInitialized() { ApiUrl = "api/lamps/"; }
+    protected override void OnInitialized() { ApiUrl = "api/gi/";  }
 
     // custom sort by name length
-    private Func<LampConfigFileEntry, object> _sortBy => x =>
+    private Func<GIConfigFileEntry, object> _sortBy => x =>
     {
         if (_sortNameByLength)
             return x.Name.Length;
@@ -161,7 +148,7 @@
             return x.Name;
     };
     // quick filter - filter globally across multiple columns with the same input
-    private Func<LampConfigFileEntry, bool> _quickFilter => x =>
+    private Func<GIConfigFileEntry, bool> _quickFilter => x =>
     {
         if (string.IsNullOrWhiteSpace(_searchString))
             return true;
@@ -178,26 +165,26 @@
     protected override async Task OnInitializedAsync() =>
        await RefreshViewDataAsync();
 
-    protected async Task RefreshViewDataAsync()
+    protected async Task RefreshViewDataAsync() 
     {
-        try { Elements = await Http.GetFromJsonAsync<List<LampConfigFileEntry>>(ApiUrl); }
-        catch (Exception) { }
-    }
+        try { Elements = await Http.GetFromJsonAsync<List<GIConfigFileEntry>>(ApiUrl); }
+        catch (Exception){ }
+    }   
 
-    async Task ShowDeleteDialog(string lampName)
+    async Task ShowDeleteDialog(string giName)
     {
         bool? result = await DialogService.ShowMessageBox(
-            "Warning: Deleting: " + lampName,
+            "Warning: Deleting: " + giName,
             "Deleting can not be undone!",
             yesText: "Delete!", cancelText: "Cancel", options: new DialogOptions { MaxWidth = MaxWidth.Small });
         if (result.HasValue && result.Value)
         {
             try
             {
-                var response = await Http.DeleteAsync(ApiUrl + lampName);
+                var response = await Http.DeleteAsync(ApiUrl + giName);
                 if (response.IsSuccessStatusCode)
                 {
-                    Snackbar.Add($"{lampName} deleted", Severity.Success);
+                    Snackbar.Add($"{giName} deleted", Severity.Success);
                     await RefreshViewDataAsync();
                 }
                 else
@@ -216,7 +203,7 @@
 
     async Task ShowAddDialog()
     {
-        var dialog = await DialogService.ShowAsync<AddLampDialog>();
+        var dialog = await DialogService.ShowAsync<AddGIDialog>();
         var result = await dialog.Result;
         if (!result.Canceled)
             await RefreshViewDataAsync();

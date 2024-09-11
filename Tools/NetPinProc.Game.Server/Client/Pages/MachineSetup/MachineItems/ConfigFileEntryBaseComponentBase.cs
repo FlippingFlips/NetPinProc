@@ -7,7 +7,7 @@ using System.Net.Http.Json;
 namespace NetPinProc.Game.Manager.Client.Pages.Machine_Setup.MachineItems
 {
     /// <summary>Base component for CRUD operations on machine items</summary>
-    public class ConfigFileEntryBaseComponentBase : ComponentBase
+    public class ConfigFileEntryBaseComponentBase<T> : ComponentBase where T : ConfigFileEntryBase
     {
         protected List<string> _events = new();
         [Inject] protected HttpClient Http { get; set; }

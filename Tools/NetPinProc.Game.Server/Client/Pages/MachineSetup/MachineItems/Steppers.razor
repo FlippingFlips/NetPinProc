@@ -2,223 +2,225 @@
 @using NetPinProc.Game.Manager.Client.Pages.Machine_Setup.MachineItems;
 @using NetPinProc.Game.Manager.Client.Shared.DialogComponents;
 @using NetPinProc.Game.Manager.Client.Shared.HelpComponents
-@inherits ConfigFileEntryBaseComponentBase
+@inherits ConfigFileEntryBaseComponentBase<StepperConfigFileEntry>
 
 <PageTitle>Steppers | @Names.SITE_NAME</PageTitle>
 
-<MudDataGrid T="StepperConfigFileEntry" MultiSelection="true"
-             Class="netpinprocdatagrid"
-             Items="@Elements" SortMode="SortMode.Multiple"
-             Dense=true
-             FixedHeader=true
-             Height="668px"
-             Filterable="true"
-             QuickFilter="@_quickFilter"
-             Hideable="true"
-             Bordered=true
-             ReadOnly=false
-             EditTrigger="DataGridEditTrigger.OnRowClick"
-             StartedEditingItem="@StartedEditingItem"
-             CanceledEditingItem="@CanceledEditingItem"
-             CommittedItemChanges="@CommittedItemChanges">
-    <ToolBarContent>
-        <MudText Typo="Typo.h6">Steppers</MudText>
-        <MudText Class="pl-2" Typo="Typo.caption">
-            @lang.Keys["Pages:Summary", new { Item = "steppers"}]
-        </MudText>
+<MudStack>
+    <MudStack Row>
+        <MudButton Variant="Variant.Filled" Color="Color.Error"
+                   Size="Size.Small"
+                   Class="mt-2"
+                   OnClick="@ShowAddDialog">ADD STEPPER</MudButton>
         <MudSpacer />
-        <MudTextField @bind-Value="_searchString"
-                      Placeholder="Quick filter Stepper Name"
-                      Adornment="Adornment.Start"
-                      Immediate="true"
-                      AdornmentIcon="@Icons.Material.Filled.Search"
-                      IconSize="Size.Medium" Class="mt-0"></MudTextField>
-    </ToolBarContent>
-    <Columns>
-        @*<SelectColumn T="StepperConfigFileEntry" />*@
-        <TemplateColumn Sortable="false" Filterable="false">
-            <CellTemplate>
-                <MudToolBar Dense Class="netpinproctoolbar">
-                    <MudIconButton Size="Size.Small" Variant="Variant.Filled"
-                                   Icon="@Icons.Material.Filled.Delete" Color="Color.Error"
-                                   OnClick="@(_ => ShowDeleteDialog(context.Item.Name))" />
-                </MudToolBar>
-            </CellTemplate>
-            </TemplateColumn>
+    </MudStack>
 
-            <PropertyColumn Property="x => x.Name">
-            <HeaderTemplate>
-                <MudTooltip Placement=Placement.End Text="@lang.Keys["MachineItem:Name"]">Name</MudTooltip>
-            </HeaderTemplate>
-            <EditTemplate>
-                <MudTextField @bind-Value=@context.Item.Name
-                                 Label="Name"
-                                 Variant="Variant.Outlined"
-                                 Margin="Margin.Dense"
-                                              Required RequiredError="A name is required" />
-            </EditTemplate>
-            </PropertyColumn>
+    <MudDataGrid T="StepperConfigFileEntry" MultiSelection="true"
+                 Class="netpinprocdatagrid"
+                 Items="@Elements" SortMode="SortMode.Multiple"
+                 Dense=true
+                 FixedHeader=true
+                 Height="100%"
+                 Filterable="true"
+                 QuickFilter="@_quickFilter"
+                 Hideable="true"
+                 Bordered=true
+                 ReadOnly=false
+                 EditTrigger="DataGridEditTrigger.OnRowClick"
+                 StartedEditingItem="@StartedEditingItem"
+                 CanceledEditingItem="@CanceledEditingItem"
+                 CommittedItemChanges="@CommittedItemChanges">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Steppers</MudText>
+            <MudText Class="pl-2" Typo="Typo.caption">
+                @lang.Keys["Pages:Summary", new { Item = "steppers"}]
+            </MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString"
+                          Placeholder="Quick filter Stepper Name"
+                          Adornment="Adornment.Start"
+                          Immediate="true"
+                          AdornmentIcon="@Icons.Material.Filled.Search"
+                          IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <Columns>
+            @*<SelectColumn T="StepperConfigFileEntry" />*@
+            <TemplateColumn Sortable="false" Filterable="false">
+                <CellTemplate>
+                    <MudToolBar Dense Class="netpinproctoolbar">
+                        <MudIconButton Size="Size.Small" Variant="Variant.Filled"
+                                       Icon="@Icons.Material.Filled.Delete" Color="Color.Error"
+                                       OnClick="@(_ => ShowDeleteDialog(context.Item.Name))" />
+                    </MudToolBar>
+                </CellTemplate>
+                </TemplateColumn>
 
-            <PropertyColumn Property="x => x.BoardId">
-            <HeaderTemplate>
-                <MudTooltip Text="@lang.Keys["MachineItem:BoardId"]">BoardId</MudTooltip>
-            </HeaderTemplate>
-            <EditTemplate>
-                <MudNumericField @bind-Value=@context.Item.BoardId
-                                 Label="BoardId"
-                                 T=byte Min=0 Max="64"
-                                 Variant="Variant.Outlined"
-                                 Margin="Margin.Dense"
-                                              Required RequiredError="A board id is required to apply config to the PROC" />
-            </EditTemplate>
-            </PropertyColumn>
-
-
-            <PropertyColumn Property="x => x.IsStepper1">
-            <HeaderTemplate>
-                <MudTooltip Text="@lang.Keys["Steppers:IsStepper1"]">IsStepper1</MudTooltip>
-            </HeaderTemplate>
-            <EditTemplate>
-                <MudSwitch T="bool" @bind-Value=@context.Item.IsStepper1 Label="IsStepper1"
-                           Color=Color.Success
-                           Required=false />
-            </EditTemplate>
-            </PropertyColumn>
-
-            <PropertyColumn Property="x => x.IsEnabled">
-            <EditTemplate>
-                <MudSwitch T="bool" @bind-Value=@context.Item.IsEnabled Label="IsEnabled"
-                           Color=Color.Success
-                           Required=false />
+                <PropertyColumn Property="x => x.Name">
+                <HeaderTemplate>
+                    <MudTooltip Placement=Placement.End Text="@lang.Keys["MachineItem:Name"]">Name</MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudTextField @bind-Value=@context.Item.Name
+                                  Label="Name"
+                                  Variant="Variant.Outlined"
+                                  Margin="Margin.Dense"
+                                            Required RequiredError="A name is required" />
                 </EditTemplate>
-            </PropertyColumn>
+                </PropertyColumn>
 
-            <PropertyColumn Property="x => x.Speed">
-            <HeaderTemplate>
-                <MudTooltip Text="@lang.Keys["Steppers:Speed"]">Speed</MudTooltip>
-            </HeaderTemplate>
-            <EditTemplate>
-                <MudNumericField @bind-Value=@context.Item.Speed
-                                 Label="Speed"
-                                 T=uint Min=0
-                                 Variant="Variant.Outlined"
-                                 Margin="Margin.Dense"
-                                 Required RequiredError="A default speed is required" />
-            </EditTemplate>
-            </PropertyColumn>
+                <PropertyColumn Property="x => x.BoardId">
+                <HeaderTemplate>
+                    <MudTooltip Text="@lang.Keys["MachineItem:BoardId"]">BoardId</MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudNumericField @bind-Value=@context.Item.BoardId
+                                     Label="BoardId"
+                                     T=byte Min=0 Max="64"
+                                     Variant="Variant.Outlined"
+                                     Margin="Margin.Dense"
+                                                  Required RequiredError="A board id is required to apply config to the PROC" />
+                </EditTemplate>
+                </PropertyColumn>
 
-            <PropertyColumn Property="x => x.StopSwitch">
-            <HeaderTemplate>
-                <MudTooltip Text="@lang.Keys["Steppers:StopSwitch"]">StopSwitch</MudTooltip>
-            </HeaderTemplate>
-            <EditTemplate>
-                <MudTextField @bind-Value=@context.Item.StopSwitch
-                              Label="StopSwitch"
-                              Variant="Variant.Outlined"
-                              Margin="Margin.Dense"
-                              Required=false />
-            </EditTemplate>
-            </PropertyColumn>
 
-            <PropertyColumn Property="x => x.Voltage">
-            <HeaderTemplate>
-                <MudTooltip Text="@lang.Keys["Steppers:Voltage"]">Voltage</MudTooltip>
-            </HeaderTemplate>
-            <EditTemplate>
-                <MudNumericField T="byte?" @bind-Value=@context.Item.Voltage
-                                 Label="Voltage" Min=3 Max=220
-                              Variant="Variant.Outlined"
-                              Margin="Margin.Dense"
-                              Required=false />
-            </EditTemplate>
-            </PropertyColumn>
+                <PropertyColumn Property="x => x.IsStepper1">
+                <HeaderTemplate>
+                    <MudTooltip Text="@lang.Keys["Steppers:IsStepper1"]">IsStepper1</MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudSwitch T="bool" @bind-Value=@context.Item.IsStepper1 Label="IsStepper1"
+                               Color=Color.Success
+                               Required=false />
+                </EditTemplate>
+                </PropertyColumn>
 
-            <PropertyColumn Property="x => x.ItemType">
-            <HeaderTemplate>
-                <MudTooltip>
-                    <TooltipContent>
-                        @lang.Keys["MachineItem:ItemType"]
-                    </TooltipContent>
-                    <ChildContent>Item Type</ChildContent>
-                </MudTooltip>
-            </HeaderTemplate>
-            <EditTemplate>
-                <MudTextField @bind-Value=@context.Item.ItemType Label="ItemType"
-                              Variant="Variant.Outlined" Margin="Margin.Dense"
-                              Required=false />
-            </EditTemplate>
-            </PropertyColumn>
+                <PropertyColumn Property="x => x.IsEnabled">
+                <EditTemplate>
+                    <MudSwitch T="bool" @bind-Value=@context.Item.IsEnabled Label="IsEnabled"
+                               Color=Color.Success
+                               Required=false />
+                </EditTemplate>
+                </PropertyColumn>
 
-            <PropertyColumn Property="x => x.DisplayName" Title="DisplayName" Sortable="false" Filterable="false">
-            <EditTemplate>
-                <MudTextField @bind-Value=@context.Item.DisplayName Label="DisplayName"
-                              Variant="Variant.Outlined" Margin="Margin.Dense"
-                              Required=false />
-            </EditTemplate>
-            </PropertyColumn>
+                <PropertyColumn Property="x => x.Speed">
+                <HeaderTemplate>
+                    <MudTooltip Text="@lang.Keys["Steppers:Speed"]">Speed</MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudNumericField @bind-Value=@context.Item.Speed
+                                     Label="Speed"
+                                     T=uint Min=0
+                                     Variant="Variant.Outlined"
+                                     Margin="Margin.Dense"
+                                                  Required RequiredError="A default speed is required" />
+                </EditTemplate>
+                </PropertyColumn>
 
-            <PropertyColumn Property="x => x.Conn" ShowFilterIcon="false">
-            <HeaderTemplate>
-                <MudTooltip>
-                    <TooltipContent>@lang.Keys["MachineItem:Connection"]"</TooltipContent>
-                    <ChildContent>Conn</ChildContent>
-                </MudTooltip>
-            </HeaderTemplate>
-            <EditTemplate>
-                <MudTextField @bind-Value=@context.Item.Conn Label="Conn"
-                              Variant="Variant.Outlined" Margin="Margin.Dense"
-                              Required=false />
-            </EditTemplate>
-            </PropertyColumn>
+                <PropertyColumn Property="x => x.StopSwitch">
+                <HeaderTemplate>
+                    <MudTooltip Text="@lang.Keys["Steppers:StopSwitch"]">StopSwitch</MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudTextField @bind-Value=@context.Item.StopSwitch
+                                  Label="StopSwitch"
+                                  Variant="Variant.Outlined"
+                                  Margin="Margin.Dense"
+                                  Required=false />
+                </EditTemplate>
+                </PropertyColumn>
 
-            <PropertyColumn Property="x => x.Location" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
-            <HeaderTemplate>
-                <MudTooltip>
-                    <TooltipContent>@lang.Keys["MachineItem:Location"]"</TooltipContent>
-                    <ChildContent>Location</ChildContent>
-                </MudTooltip>
-            </HeaderTemplate>
-            <EditTemplate>
-                <MudTextField @bind-Value=@context.Item.Location Label="Location"
-                              Variant="Variant.Outlined" Margin="Margin.Dense"
-                              Required=false />
-            </EditTemplate>
-            </PropertyColumn>
+                <PropertyColumn Property="x => x.Voltage">
+                <HeaderTemplate>
+                    <MudTooltip Text="@lang.Keys["Steppers:Voltage"]">Voltage</MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudNumericField T="byte?" @bind-Value=@context.Item.Voltage
+                                     Label="Voltage" Min=3 Max=220
+                                     Variant="Variant.Outlined"
+                                     Margin="Margin.Dense"
+                                     Required=false />
+                </EditTemplate>
+                </PropertyColumn>
 
-            <PropertyColumn Property="x => x.XPos">
-            <EditTemplate>
-                <MudNumericField @bind-Value=context.Item.XPos Variant="Variant.Outlined"
-                                 Label="XPos" Min="0.00" Max="3600.00" T="double?" />
-            </EditTemplate>
-            <HeaderTemplate>
-                <MudTooltip>
-                    <TooltipContent><MachineItemPositionHelp /></TooltipContent>
-                    <ChildContent>X</ChildContent>
-                </MudTooltip>
-            </HeaderTemplate>
-            </PropertyColumn>
+                <PropertyColumn Property="x => x.ItemType">
+                <HeaderTemplate>
+                    <MudTooltip>
+                        <TooltipContent>
+                            @lang.Keys["MachineItem:ItemType"]
+                        </TooltipContent>
+                        <ChildContent>Item Type</ChildContent>
+                    </MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudTextField @bind-Value=@context.Item.ItemType Label="ItemType"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense"
+                                  Required=false />
+                </EditTemplate>
+                </PropertyColumn>
 
-            <PropertyColumn Property="x => x.YPos">
-            <EditTemplate>
-                <MudNumericField @bind-Value=context.Item.YPos Variant="Variant.Outlined"
-                                 Label="YPos" Min="0.00" Max="3600.00" T="double?" />
-            </EditTemplate>
-            <HeaderTemplate>
-                <MudTooltip>
-                    <TooltipContent><MachineItemPositionHelp /></TooltipContent>
-                    <ChildContent>Y</ChildContent>
-                </MudTooltip>
-            </HeaderTemplate>
-            </PropertyColumn>
-        </Columns>
-        </MudDataGrid>
+                <PropertyColumn Property="x => x.DisplayName" Title="DisplayName" Sortable="false" Filterable="false">
+                <EditTemplate>
+                    <MudTextField @bind-Value=@context.Item.DisplayName Label="DisplayName"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense"
+                                  Required=false />
+                </EditTemplate>
+                </PropertyColumn>
 
-        <MudStack Row>
-    <MudSpacer />
-    <MudButton Variant="Variant.Filled" Color="Color.Error"
-               Size="Size.Small"
-               Class="mt-2"
-               OnClick="@ShowAddDialog">ADD STEPPER</MudButton>
+                <PropertyColumn Property="x => x.Conn" ShowFilterIcon="false">
+                <HeaderTemplate>
+                    <MudTooltip>
+                        <TooltipContent>@lang.Keys["MachineItem:Connection"]"</TooltipContent>
+                        <ChildContent>Conn</ChildContent>
+                    </MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudTextField @bind-Value=@context.Item.Conn Label="Conn"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense"
+                                  Required=false />
+                </EditTemplate>
+                </PropertyColumn>
+
+                <PropertyColumn Property="x => x.Location" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
+                <HeaderTemplate>
+                    <MudTooltip>
+                        <TooltipContent>@lang.Keys["MachineItem:Location"]"</TooltipContent>
+                        <ChildContent>Location</ChildContent>
+                    </MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudTextField @bind-Value=@context.Item.Location Label="Location"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense"
+                                  Required=false />
+                </EditTemplate>
+                </PropertyColumn>
+
+                <PropertyColumn Property="x => x.XPos">
+                <EditTemplate>
+                    <MudNumericField @bind-Value=context.Item.XPos Variant="Variant.Outlined"
+                                     Label="XPos" Min="0.00" Max="3600.00" T="double?" />
+                </EditTemplate>
+                <HeaderTemplate>
+                    <MudTooltip>
+                        <TooltipContent><MachineItemPositionHelp /></TooltipContent>
+                        <ChildContent>X</ChildContent>
+                    </MudTooltip>
+                </HeaderTemplate>
+                </PropertyColumn>
+
+                <PropertyColumn Property="x => x.YPos">
+                <EditTemplate>
+                    <MudNumericField @bind-Value=context.Item.YPos Variant="Variant.Outlined"
+                                     Label="YPos" Min="0.00" Max="3600.00" T="double?" />
+                </EditTemplate>
+                <HeaderTemplate>
+                    <MudTooltip>
+                        <TooltipContent><MachineItemPositionHelp /></TooltipContent>
+                        <ChildContent>Y</ChildContent>
+                    </MudTooltip>
+                </HeaderTemplate>
+                </PropertyColumn>
+            </Columns>
+            </MudDataGrid>
 </MudStack>
 
 @code {

@@ -90,7 +90,7 @@ namespace NetPinProc.Game.Manager.Shared.Tools.Playfield
 
             //get all the group layers
             var groups = svg.Children
-                .Where(x => x.GetType() == typeof(SvgGroup));
+                .Where(x => x.GetType() == typeof(SvgGroup));            
 
             //add machine items to the layers
             foreach (var group in groups)
@@ -116,6 +116,7 @@ namespace NetPinProc.Game.Manager.Shared.Tools.Playfield
                     switch (groupLayerName)
                     {
                         case Names.LEDS:
+                        case Names.GI:
                         case Names.LAMPS:
                             foreach (var item in machineItems[groupLayerName])
                             {
@@ -157,14 +158,47 @@ namespace NetPinProc.Game.Manager.Shared.Tools.Playfield
                 }
             }
 
-            //write the file
-            //svg.Write(outputFile);
+            //add an image under the layers? blueprints
+            if (!string.IsNullOrWhiteSpace(svgDto.Image))
+            {
+                //create a new group and image
+                var g = new SvgGroup() { ID = "blueprints" };
+                var img = new SvgImage
+                {
+                    ID = "playfieldblueprint",
+                    Width = svg.ViewBox.Width,
+                    Height = svg.ViewBox.Height,
+                    X = 0,
+                    Y = 0,
+                    AspectRatio = new SvgAspectRatio(SvgPreserveAspectRatio.none),
+                    Href = svgDto.Image
+                };
+
+                //have to add to the group child and nodes
+                g.Children.Add(img);
+                g.Nodes.Add(img);
+
+                //have to add to the document child and nodes
+                svg.Children.Add(g);
+                svg.Nodes.Add(g);
+
+                //do some jiggery pokery to put the image under the layers
+                var child = svg.Nodes[0];
+                var first = svg.Nodes[svg.Nodes.Count - 1];
+                svg.Nodes[0] = first;
+                svg.Nodes[svg.Nodes.Count - 1] = child;
+            }            
 
             var ms = new MemoryStream();
             svg.Write(ms);
             return ms;
         }
 
+        /// <summary>Create circle no offset</summary>
+        /// <param name="inkNs"></param>
+        /// <param name="item"></param>
+        /// <param name="colorHtml"></param>
+        /// <returns></returns>
         private static SvgCircle CreateCircle(string inkNs, ConfigFileEntryBase item, string colorHtml)
         {
             var circle = new SvgCircle()
@@ -185,6 +219,11 @@ namespace NetPinProc.Game.Manager.Shared.Tools.Playfield
             return circle;
         }
 
+        /// <summary>Create rect with offsets</summary>
+        /// <param name="inkNs"></param>
+        /// <param name="item"></param>
+        /// <param name="colorHtml"></param>
+        /// <returns></returns>
         private static SvgRectangle CreateRect(string inkNs, ConfigFileEntryBase item, string colorHtml)
         {
             var rect = new SvgRectangle()

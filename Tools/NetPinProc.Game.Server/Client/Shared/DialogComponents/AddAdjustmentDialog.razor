@@ -1,6 +1,7 @@
 ﻿@using NetPinProc.Domain.Data;
 @inject HttpClient Http
 @inject ISnackbar Snackbar
+@inject ILanguageContainerService lang
 
 <MudDialog>
     <TitleContent>Add a new adjustment</TitleContent>
@@ -15,26 +16,36 @@
 
                         <MudTextField T="string" @bind-Value=Adjustment.MenuName
                                       Label="MenuName" Required="true"
+                                      RequiredError="@lang["RequiredError:Name"]"
                                       Variant="Variant.Outlined" />
 
                         <MudTextField T="string" @bind-Value=Adjustment.SubMenuName
                                       Label="SubMenuName" Required="true"
+                                      RequiredError="@lang["RequiredError:Name"]"
                                       Variant="Variant.Outlined" />
 
-                        <MudTextField T="string" @bind-Value=Adjustment.Name Label="Name" Required="true" RequiredError="A name is required"
+                        <MudTextField T="string" @bind-Value=Adjustment.Name
+                                      Label="Name" Required="true"
+                                      RequiredError="@lang["RequiredError:Name"]"
                                       Variant="Variant.Outlined" />
 
-                        <MudTextField T="string" @bind-Value=Adjustment.Description Lines="2" Label="Description" Required="false"
+                        <MudTextField T="string" @bind-Value=Adjustment.Description Lines="2" Label="Description"
+                                      Required="false"
                                       Variant="Variant.Outlined" />
 
-                        <MudTextField T="int" @bind-Value=Adjustment.Value Label="Value" Required="true"
+                        <MudTextField T="int" @bind-Value=Adjustment.Value Label="Value"
+                                      Required="true"
+                                      RequiredError="@lang["RequiredError:Value"]"
                                       Variant="Variant.Outlined" />
 
-                        <MudTextField T="int" @bind-Value=Adjustment.ValueDefault Label="DefaultValue" Required="true"
+                        <MudTextField T="int" @bind-Value=Adjustment.ValueDefault
+                                      Label="DefaultValue" Required="true"
+                                      RequiredError="@lang["RequiredError:Value"]"
                                       Variant="Variant.Outlined" />
 
                         <MudSelect T="OptionType" @bind-Value=Adjustment.OptionType
-                            Variant="Variant.Outlined" Required RequiredError="The options for this adjustment needs a type">
+                            Variant="Variant.Outlined" Required
+                                   RequiredError="@lang["RequiredError:Adjustment"]">
                             @foreach (OptionType item in Enum.GetValues(typeof(OptionType)))
                             {
                                 <MudSelectItem Value="@item">@item.ToString()</MudSelectItem>

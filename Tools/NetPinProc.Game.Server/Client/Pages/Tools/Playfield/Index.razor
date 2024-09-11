@@ -1,0 +1,31 @@
+﻿@page "/tools/playfield"
+@inject ILanguageContainerService lang
+@inject NavigationManager Nav
+
+<PageTitle>Tools: PLayfield | @Names.SITE_NAME</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge">
+    <MudGrid>
+        <MudItem xs="12">
+            <MudTabs Outlined="true" Position="Position.Start" Rounded="true" Border="true"
+                     ApplyEffectsToContainer="true" Class="mt-8" PanelClass="pa-6">
+
+                <MudTabPanel Text="Blueprint">
+                    <Blueprint/>
+                </MudTabPanel>
+
+                <MudTabPanel Text="Generate">
+                    <FromSvgTemplate/>
+                </MudTabPanel>
+
+                <MudTabPanel Text="Import">
+                    <UpdateFromSvg/>
+                </MudTabPanel>                
+            </MudTabs>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+@code {
+
+}

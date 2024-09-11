@@ -1,0 +1,13 @@
+﻿@page "/machine/docs"
+@inject HttpClient Http
+
+<PageTitle>PROC Docs | @Names.SITE_NAME</PageTitle>
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine(await Http.GetStringAsync("wwwroot/docs"));
+        Console.WriteLine(System.IO.Directory.GetDirectories("."));
+    }     
+}

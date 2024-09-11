@@ -1,0 +1,175 @@
+﻿@using BlazorDownloadFile;
+@using NetPinProc.Domain.Constants;
+@using NetPinProc.Game.Manager.Shared.Dto;
+@using NetPinProc.Game.Manager.Shared.Responses;
+@using NetPinProc.Game.Manager.Shared.Tools.Playfield
+@using System.Text;
+@using System.Net.Http.Headers;
+@inject ILanguageContainerService lang
+@inject HttpClient Http
+@inject ISnackbar Snackbar
+
+<MudContainer MaxWidth="MaxWidth.Large">
+
+    <h3>@lang["Playfield:GenerateSvgTitle"]</h3>
+
+    <MudGrid>
+        <MudItem xs="12" sm="4">
+            <MudText Typo="Typo.caption">
+                @((MarkupString)lang["Playfield:GenerateSvgTemplate"])
+            </MudText>
+
+            <MudStack Row Wrap=Wrap.Wrap>
+                <MudSwitch T=bool Size=Size.Small Color="Color.Success" @bind-Value="@(KeyValuePairs["SWITCHES"])" Label="SWITCHES" Style="@($"background-color:{MachineItemColors.COLOR_SWITCHES}")" />
+                <MudSwitch T=bool Size=Size.Small Color="Color.Success" @bind-Value="@(KeyValuePairs["LEDS"])" Label="LEDS" Style="@($"background-color:{MachineItemColors.COLOR_LEDS}")" />
+                <MudSwitch T=bool Size=Size.Small Color="Color.Success" @bind-Value="@(KeyValuePairs["LAMPS"])" Label="LAMPS" Style="@($"background-color:{MachineItemColors.COLOR_LAMPS}")" />
+                <MudSwitch T=bool Size=Size.Small Color="Color.Success" @bind-Value="@(KeyValuePairs["SERVOS"])" Label="SERVOS" Style="@($"background-color:{MachineItemColors.COLOR_SERVOS}")" />
+                <MudSwitch T=bool Size=Size.Small Color="Color.Success" @bind-Value="@(KeyValuePairs["DRIVERS"])" Label="DRIVERS" Style="@($"background-color:{MachineItemColors.COLOR_DRIVERS}")" />
+                <MudSwitch T=bool Size=Size.Small Color="Color.Success" @bind-Value="@(KeyValuePairs["STEPPERS"])" Label="STEPPERS" Style="@($"background-color:{MachineItemColors.COLOR_STEPPERS}")" />
+                <MudSwitch T=bool Size=Size.Small Color="Color.Success" @bind-Value="@(KeyValuePairs["GI"])" Label="GI" Style="@($"background-color:{MachineItemColors.COLOR_SERVOS}")" />
+            </MudStack>
+
+            <MudSpacer />
+            <MudCheckBox Color="Color.Success" Dense Label="Include Blueprint?" @bind-Value=@_addBlueprint />
+            <MudButton Variant="Variant.Filled" OnClick="Generate" Color="Color.Success">
+                Generate
+            </MudButton>
+            </MudItem>
+
+            <MudItem xs="12" md="4">
+            <MudStack>
+
+                @if (_templateSvgMedia != null)
+                {
+                    <embed class="playfield-outline" src="@_templateSvgMedia.Base64Url()">
+                }
+
+                <MudText Typo="Typo.caption">DATABASE TEMPLATE: playfieldtemplate.svg</MudText>
+
+                <MudTooltip Text="@lang["Playfield:TemplateUpdateTip"]">
+                    <MudFileUpload T="IBrowserFile" Accept=".svg"
+                                   FilesChanged="OnSvgTemplateFileUploaded"
+                                   MaximumFileCount="1">
+                        <ActivatorContent>
+                            <MudButton Variant="Variant.Filled"
+                                       Color="Color.Primary"
+                                       StartIcon="@Icons.Material.Filled.CloudUpload">
+                                @lang["Playfield:TemplateUpdate"]
+                            </MudButton>
+                        </ActivatorContent>
+                    </MudFileUpload>
+                </MudTooltip>
+            </MudStack>
+        </MudItem>
+
+        @if (!string.IsNullOrEmpty(exported))
+        {
+            <MudItem xs="12" md="4">
+                <MudStack>
+                    <embed download="custom_filename.svg"
+                           src="@($"data:image/svg+xml;base64,{exported}")"
+                           class="playfield-outline">
+                    <MudText Typo="Typo.caption">EXPORT</MudText>
+                </MudStack>
+
+                <MudButton OnClick="@(async () => await BlazorDownloadFileService.DownloadFile("export_playfield.svg", exported, "image/svg+xml"))"
+                       Color="Color.Success"
+                       Variant="Variant.Filled">
+                    ⬇️ Download SVG
+                </MudButton>
+            </MudItem>
+        }
+    </MudGrid>
+</MudContainer>
+
+@code {
+
+    [Inject] IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
+
+    /// <summary>Switches for the view to include exporting machine item types</summary>
+    Dictionary<string, bool> KeyValuePairs = new Dictionary<string, bool>
+    {
+        {"SWITCHES", true },
+        {"LEDS", true },
+        {"LAMPS", true },
+        {"DRIVERS", true },
+        {"STEPPERS", true },
+        {"SERVOS", true },
+        {"GI", true }
+    };
+
+    Media? _templateSvgMedia;
+    Media? _blueprintMedia;
+    bool _addBlueprint = true;
+
+    /// <summary>Base 64 string after creating</summary>
+    string? exported;
+
+    protected override async Task OnInitializedAsync() => await GetMediaAsync();
+
+    async Task GetMediaAsync()
+    {
+        try
+        {
+            _templateSvgMedia = await Http.GetFromJsonAsync<Media>("api/media/playfieldtemplate.svg");
+            _blueprintMedia = await Http.GetFromJsonAsync<Media>("api/media/playfieldblueprint");
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+    async Task Generate()
+    {
+        exported = null;
+        await InvokeAsync(StateHasChanged);
+
+        var data = string.Empty;
+
+        data = Encoding.UTF8.GetString(_templateSvgMedia.Data);
+
+        //returns base64 string
+        var response = await Http.PostAsJsonAsync("/api/tools/GenerateFromSvg",
+            new SvgDto
+                {
+                    Svg = data,
+                    Include = KeyValuePairs,
+                    Image = _addBlueprint ? _blueprintMedia.Base64Url() : null
+                });
+
+        if (response.IsSuccessStatusCode)
+        {
+            exported = await response.Content.ReadAsStringAsync();
+        }
+    }
+
+    async Task OnSvgTemplateFileUploaded(IBrowserFile file)
+    {
+        try
+        {
+            var streamCnt = new StreamContent(file.OpenReadStream());
+            streamCnt.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+
+            using var content = new MultipartFormDataContent();
+
+            content.Add(
+                content: streamCnt,
+                name: "\"files\"",
+                fileName: file.Name);
+
+            //replace the template in the database
+            var response = await Http.PostAsync("api/media/playfieldtemplate.svg", content);
+            if (response.IsSuccessStatusCode)
+            {
+                _templateSvgMedia = await response.Content.ReadFromJsonAsync<Media>();
+            }
+
+            Snackbar.Add("Database template updated", Severity.Success);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+}

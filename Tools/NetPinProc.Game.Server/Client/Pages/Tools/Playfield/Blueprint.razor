@@ -1,0 +1,98 @@
+﻿@using BlazorDownloadFile;
+@using NetPinProc.Domain.Constants;
+@using NetPinProc.Game.Manager.Shared.Dto;
+@using NetPinProc.Game.Manager.Shared.Responses;
+@using NetPinProc.Game.Manager.Shared.Tools.Playfield
+@using System.Text;
+@using System.Net.Http.Headers;
+@inject ILanguageContainerService lang
+@inject HttpClient Http
+@inject ISnackbar Snackbar
+
+<MudContainer MaxWidth="MaxWidth.Large">
+
+    <h3>@lang["Playfield:BluePrint"]</h3>
+
+    <MudGrid>
+        <MudItem xs="12" sm="4">
+            <MudText Typo="Typo.caption">
+                @((MarkupString)lang["Playfield:BluePrintHelp"])
+            </MudText>
+        </MudItem>
+
+        <MudItem xs="12" md="4">
+            <MudStack>
+
+                @if(_blueprintMediaFile != null)
+                {
+                    <MudImage class="playfield-outline" Src="@(_blueprintMediaFile.Base64Url())" />
+                }                
+
+                <MudText Typo="Typo.caption">Db Media File: `playfieldblueprint`</MudText>
+
+                <MudTooltip Text="@lang["Playfield:BluePrintUpdateTip"]">
+
+                    <MudFileUpload T="IBrowserFile" Accept=".png, .jpg"
+                                   FilesChanged="UploadBluePrintAsync"
+                                   MaximumFileCount="1">
+                        <ActivatorContent>
+                            <MudButton Variant="Variant.Filled"
+                                       Color="Color.Primary"
+                                       StartIcon="@Icons.Material.Filled.CloudUpload">
+                                @lang["Playfield:BluePrintUpdate"]
+                            </MudButton>
+                        </ActivatorContent>
+                    </MudFileUpload>
+                </MudTooltip>
+
+            </MudStack>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+@code {
+
+    [Inject] IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
+
+    Media? _blueprintMediaFile;
+
+    /// <summary>Loads the blueprint from the database</summary>
+    /// <returns></returns>
+    protected override async Task OnInitializedAsync()
+    {
+        try { await LoadDatabaseBlueprintAsync(); }
+        catch (Exception ex) { Snackbar.Add("no blueprint found. " + ex.Message, Severity.Warning); }
+    }
+
+    private async Task LoadDatabaseBlueprintAsync()
+    {
+        _blueprintMediaFile = await Http
+            .GetFromJsonAsync<Media>("api/media/playfieldblueprint");
+    }
+
+    /// <summary>Uploads the blueprint to the Media under the name `playfieldblueprint`</summary>
+    /// <param name="file"></param>
+    /// <returns></returns>
+    private async Task UploadBluePrintAsync(IBrowserFile file)
+    {
+        try
+        {
+            var streamCnt = new StreamContent(file.OpenReadStream());
+            using var content = new MultipartFormDataContent();
+
+            streamCnt.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+
+            content.Add(
+                content: streamCnt,
+                name: "\"files\"",
+                fileName: "playfieldblueprint");
+
+            //replace the template in the database
+            await Http.PostAsync("api/media/playfieldblueprint", content);
+
+            //reload from database
+            await LoadDatabaseBlueprintAsync();
+        }
+        catch (Exception ex) { Snackbar.Add(ex.Message, Severity.Error); }
+    }
+}

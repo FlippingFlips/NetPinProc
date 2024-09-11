@@ -1,0 +1,20 @@
+﻿@inject HttpClient Http
+
+<MudPaper>
+    
+</MudPaper>
+
+@code 
+{
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+           var games = await Http.GetFromJsonAsync<object[]>("api/gamesplayed");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
+    }
+}
