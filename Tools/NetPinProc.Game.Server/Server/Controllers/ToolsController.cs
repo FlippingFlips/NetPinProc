@@ -33,6 +33,7 @@ namespace NetPinProc.Game.Manager.Server.Controllers
             context.Leds.UpdateRange(machineDict[Names.LEDS].Cast<LedConfigFileEntry>());
             context.Servos.UpdateRange(machineDict[Names.SERVOS].Cast<ServoConfigFileEntry>());
             context.Steppers.UpdateRange(machineDict[Names.STEPPERS].Cast<StepperConfigFileEntry>());
+            context.GI.UpdateRange(machineDict[Names.GI].Cast<GIConfigFileEntry>());
 
             await context.SaveChangesAsync();
 
