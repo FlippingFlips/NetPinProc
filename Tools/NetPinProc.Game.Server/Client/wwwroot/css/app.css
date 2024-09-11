@@ -70,3 +70,8 @@ a, .btn-link {
 .netpinproctoolbar.mud-toolbar-dense {
     --mud-internal-toolbar-height: 0;
 }
+
+.playfield-outline{
+    max-width: 300px;
+    border-width: thin;
+}

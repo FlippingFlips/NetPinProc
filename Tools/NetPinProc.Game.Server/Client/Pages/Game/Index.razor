@@ -1,0 +1,40 @@
+﻿@page "/game"
+@using BlazorDownloadFile;
+@using NetPinProc.Game.Manager.Client.Pages.MachineSetup.MachineItems
+@inject NavigationManager Nav
+
+<PageTitle>Game | @Names.SITE_NAME</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-2">
+    <MudGrid Spacing="0">
+        <MudItem xs="12">
+            <MudTabs Outlined="true" Position="Position.Start" Rounded="true" Border="true"
+                     MinimumTabWidth="20px"
+                     ApplyEffectsToContainer="true" Class="mt-0" PanelClass="pa-1">
+
+                <MudTabPanel Icon="@Icons.Material.Filled.Person">
+                    <PlayerComponent />
+                </MudTabPanel>
+
+                <MudTabPanel Icon="@Icons.Material.Filled.Gamepad">
+                    <GamesPlayedComponent/>
+                </MudTabPanel>
+
+                <MudTabPanel Icon="@Icons.Material.Filled.Scoreboard"></MudTabPanel>
+            </MudTabs>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+
+
+            @code {
+    [Inject] HttpClient? Http { get; set; }
+    [Inject] IBlazorDownloadFileService? BlazorDownloadFileService { get; set; }
+    [Inject] ILanguageContainerService? lang { get; set; }
+    async Task ExportJsonAsync()
+    {
+        var json = await Http.GetStringAsync("api/tools/ExportToJson");
+        await BlazorDownloadFileService.DownloadFile("machine.json", Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(json)), "application/json");
+    }
+}

@@ -42,7 +42,7 @@ namespace NetPinProc.Game.Manager.Server.Controllers
         /// <summary>generates svg from a given template with machine collections</summary>
         /// <param name="context"></param>
         /// <param name="svgDto"></param>
-        /// <returns></returns>
+        /// <returns>Base64 string</returns>
         [HttpPost("GenerateFromSvg")]
         public async Task<ActionResult<string>> OnGenerateFromSvgAsync(
             [FromServices] INetProcDbContext context,

@@ -2,164 +2,168 @@
 @using NetPinProc.Game.Manager.Client.Pages.Machine_Setup.MachineItems;
 @using NetPinProc.Game.Manager.Client.Shared.DialogComponents;
 @using NetPinProc.Game.Manager.Client.Shared.HelpComponents
-@inherits ConfigFileEntryBaseComponentBase
+@inherits ConfigFileEntryBaseComponentBase<LedConfigFileEntry>
 
 <PageTitle>Leds | @Names.SITE_NAME</PageTitle>
 
-<MudDataGrid T="LedConfigFileEntry"
-             MultiSelection="false"
-             Class="netpinprocdatagrid"
-             Items="@Elements"
-             SortMode="SortMode.Multiple"
-             Dense=true
-             FixedHeader=true
-             Height="668px"
-             Filterable="true"
-             QuickFilter="@_quickFilter"
-             Hideable="true"
-             Bordered=true
-             ReadOnly=false
-             EditDialogOptions="new DialogOptions{ FullWidth = true, MaxWidth = MaxWidth.Medium}"
-             EditMode=DataGridEditMode.Form
-             EditTrigger="DataGridEditTrigger.OnRowClick"
-             StartedEditingItem="@StartedEditingItem"
-             CanceledEditingItem="@CanceledEditingItem"
-             CommittedItemChanges="@CommittedItemChanges">
-    <ToolBarContent>
-        <MudText Typo="Typo.h6">LEDS</MudText>
-        <MudText Class="pl-2" Typo="Typo.caption">
-            @lang.Keys["Pages:Summary", new { Item = "leds"}]
-        </MudText>
-        <MudSpacer />
-        <MudTextField @bind-Value="_searchString" Placeholder="Quick filter Led Name, Num, Tags" Adornment="Adornment.Start" Immediate="true"
-                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-    </ToolBarContent>
-    <Columns>
-        @*<SelectColumn T="LedConfigFileEntry" />*@
-        <TemplateColumn Sortable="false" Filterable="false">
-            <CellTemplate>
-                <MudToolBar Dense Class="netpinproctoolbar">
-                    <MudIconButton Size="Size.Small" Variant="Variant.Filled"
-                                   Icon="@Icons.Material.Filled.Delete" Color="Color.Error"
-                                   OnClick="@(_ => ShowDeleteDialog(context.Item.Number))" />
-                </MudToolBar>
-            </CellTemplate>
-            </TemplateColumn>
 
-            <PropertyColumn Property="x => x.Number" ShowFilterIcon="false">
-            <HeaderTemplate>
-                <MudTooltip Text="RGB Leds should be written like `A0-R0-G1-B1`. TODO: test single color leds">Number</MudTooltip>
-            </HeaderTemplate>
-            <EditTemplate>
-                <MudTextField @bind-Value=@context.Item.Number Label="Number"
-                              Variant="Variant.Outlined" Margin="Margin.Dense"
-                                        Required RequiredError="This machine item needs a number to apply config to the PROC" />
-            </EditTemplate>
-            </PropertyColumn>
+<MudStack>
+    <MudStack Row>
+        <MudButton Variant="Variant.Filled" Color="Color.Error"
+                   Size="Size.Small"
+                   Class="mt-2"
+                   OnClick="@ShowAddDialog">ADD LED</MudButton>
+        <MudSpacer />        
+    </MudStack>
 
-            <PropertyColumn Property="x => x.Name" SortBy="@_sortBy" />
 
-            <PropertyColumn Property="x => x.NumberPROC" />
+    <MudDataGrid T="LedConfigFileEntry"
+                 MultiSelection="false"
+                 Class="netpinprocdatagrid"
+                 Items="@Elements"
+                 SortMode="SortMode.Multiple"
+                 Dense=true
+                 FixedHeader=true
+                 Height="668px"
+                 Filterable="true"
+                 QuickFilter="@_quickFilter"
+                 Hideable="true"
+                 Bordered=true
+                 ReadOnly=false
+                 EditDialogOptions="new DialogOptions{ FullWidth = true, MaxWidth = MaxWidth.Medium}"
+                 EditMode=DataGridEditMode.Form
+                 EditTrigger="DataGridEditTrigger.OnRowClick"
+                 StartedEditingItem="@StartedEditingItem"
+                 CanceledEditingItem="@CanceledEditingItem"
+                 CommittedItemChanges="@CommittedItemChanges">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">LEDS</MudText>
+            <MudText Class="pl-2" Typo="Typo.caption">
+                @lang.Keys["Pages:Summary", new { Item = "leds"}]
+            </MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString" Placeholder="Quick filter Led Name, Num, Tags" Adornment="Adornment.Start" Immediate="true"
+                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <Columns>
+            @*<SelectColumn T="LedConfigFileEntry" />*@
+            <TemplateColumn Sortable="false" Filterable="false">
+                <CellTemplate>
+                    <MudToolBar Dense Class="netpinproctoolbar">
+                        <MudIconButton Size="Size.Small" Variant="Variant.Filled"
+                                       Icon="@Icons.Material.Filled.Delete" Color="Color.Error"
+                                       OnClick="@(_ => ShowDeleteDialog(context.Item.Number))" />
+                    </MudToolBar>
+                </CellTemplate>
+                </TemplateColumn>
 
-            <PropertyColumn Property="x => x.Tags" SortBy="@_sortBy">
+                <PropertyColumn Property="x => x.Number" ShowFilterIcon="false">
+                <HeaderTemplate>
+                    <MudTooltip Text="RGB Leds should be written like `A0-R0-G1-B1`. TODO: test single color leds">Number</MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudTextField @bind-Value=@context.Item.Number Label="Number"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense"
+                                            Required RequiredError="This machine item needs a number to apply config to the PROC" />
+                </EditTemplate>
+                </PropertyColumn>
 
-            <HeaderTemplate>
-                <MudTooltip>
-                    <TooltipContent><LedsTagsHelp /></TooltipContent>
-                    <ChildContent>Tags</ChildContent>
-                </MudTooltip>
-            </HeaderTemplate>
-            <EditTemplate>
-                <MudTextField @bind-Value=@context.Item.Tags Label="Tags"
-                              Variant="Variant.Outlined" Margin="Margin.Dense"
-                              Required=false />
-            </EditTemplate>
-            </PropertyColumn>
+                <PropertyColumn Property="x => x.Name" SortBy="@_sortBy" />
 
-            <PropertyColumn Property="x => x.Polarity" SortBy="@_sortBy" />
+                <PropertyColumn Property="x => x.NumberPROC" />
 
-            <PropertyColumn Property="x => x.Conn" ShowFilterIcon="false">
-            <HeaderTemplate>
-                <MudTooltip>
-                    <TooltipContent>
-                        @lang.Keys["MachineItem:Connection"]
-                    </TooltipContent>
-                    <ChildContent>Conn</ChildContent>
-                </MudTooltip>
-            </HeaderTemplate>
-            <EditTemplate>
-                <MudTextField @bind-Value=@context.Item.Conn Label="Conn"
-                              Variant="Variant.Outlined" Margin="Margin.Dense"
-                              Required=false />
-            </EditTemplate>
-            </PropertyColumn>
+                <PropertyColumn Property="x => x.Tags" SortBy="@_sortBy">
 
-            <PropertyColumn Property="x => x.Bus">
-            <HeaderTemplate>
-                <MudTooltip>
-                    <TooltipContent>Unused?</TooltipContent>
-                    <ChildContent>Bus</ChildContent>
-                </MudTooltip>
-            </HeaderTemplate>
-            <EditTemplate>
-                <MudTextField @bind-Value=@context.Item.Bus Label="Bus"
-                              Variant="Variant.Outlined" Margin="Margin.Dense"
-                              Required=false />
-            </EditTemplate>
-            </PropertyColumn>
+                <HeaderTemplate>
+                    <MudTooltip>
+                        <TooltipContent><LedsTagsHelp /></TooltipContent>
+                        <ChildContent>Tags</ChildContent>
+                    </MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudTextField @bind-Value=@context.Item.Tags Label="Tags"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense"
+                                  Required=false />
+                </EditTemplate>
+                </PropertyColumn>
 
-            <PropertyColumn Property="x => x.Location" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
-            <HeaderTemplate>
-                <MudTooltip>
-                    <TooltipContent>
-                        @lang.Keys["MachineItem:Location"]
-                    </TooltipContent>
-                    <ChildContent>Location</ChildContent>
-                </MudTooltip>
-            </HeaderTemplate>
-            <EditTemplate>
-                <MudTextField @bind-Value=@context.Item.Location Label="Location"
-                              Variant="Variant.Outlined" Margin="Margin.Dense"
-                              Required=false />
-            </EditTemplate>
-            </PropertyColumn>
+                <PropertyColumn Property="x => x.Polarity" SortBy="@_sortBy" />
 
-            <PropertyColumn Property="x => x.XPos" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
-            <EditTemplate>
-                <MudNumericField @bind-Value=context.Item.XPos Variant="Variant.Outlined"
-                                 Label="XPos" Min="0.00" Max="3600.00" T="double?" />
-            </EditTemplate>
-            <HeaderTemplate>
-                <MudTooltip>
-                    <TooltipContent><MachineItemPositionHelp /></TooltipContent>
-                    <ChildContent>XPos</ChildContent>
-                </MudTooltip>
-            </HeaderTemplate>
-            </PropertyColumn>
-            <PropertyColumn Property="x => x.YPos" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
-            <EditTemplate>
-                <MudNumericField @bind-Value=context.Item.YPos Variant="Variant.Outlined"
-                                 Label="YPos" Min="0.00" Max="3600.00" T="double?" />
-            </EditTemplate>
-            <HeaderTemplate>
-                <MudTooltip>
-                    <TooltipContent><MachineItemPositionHelp /></TooltipContent>
-                    <ChildContent>YPos</ChildContent>
-                </MudTooltip>
-            </HeaderTemplate>
-            </PropertyColumn>
-        </Columns>
-        @*    <PagerContent>
-    <MudDataGridPager T="LedConfigFileEntry" />
-    </PagerContent>*@
-        </MudDataGrid>
+                <PropertyColumn Property="x => x.Conn" ShowFilterIcon="false">
+                <HeaderTemplate>
+                    <MudTooltip>
+                        <TooltipContent>
+                            @lang.Keys["MachineItem:Connection"]
+                        </TooltipContent>
+                        <ChildContent>Conn</ChildContent>
+                    </MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudTextField @bind-Value=@context.Item.Conn Label="Conn"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense"
+                                  Required=false />
+                </EditTemplate>
+                </PropertyColumn>
 
-        <MudStack Row>
-    <MudSpacer />
-    <MudButton Variant="Variant.Filled" Color="Color.Error"
-               Size="Size.Small"
-               Class="mt-2"
-               OnClick="@ShowAddDialog">ADD LED</MudButton>
+                <PropertyColumn Property="x => x.Bus">
+                <HeaderTemplate>
+                    <MudTooltip>
+                        <TooltipContent>Unused?</TooltipContent>
+                        <ChildContent>Bus</ChildContent>
+                    </MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudTextField @bind-Value=@context.Item.Bus Label="Bus"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense"
+                                  Required=false />
+                </EditTemplate>
+                </PropertyColumn>
+
+                <PropertyColumn Property="x => x.Location" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
+                <HeaderTemplate>
+                    <MudTooltip>
+                        <TooltipContent>
+                            @lang.Keys["MachineItem:Location"]
+                        </TooltipContent>
+                        <ChildContent>Location</ChildContent>
+                    </MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudTextField @bind-Value=@context.Item.Location Label="Location"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense"
+                                  Required=false />
+                </EditTemplate>
+                </PropertyColumn>
+
+                <PropertyColumn Property="x => x.XPos" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
+                <EditTemplate>
+                    <MudNumericField @bind-Value=context.Item.XPos Variant="Variant.Outlined"
+                                     Label="XPos" Min="0.00" Max="3600.00" T="double?" />
+                </EditTemplate>
+                <HeaderTemplate>
+                    <MudTooltip>
+                        <TooltipContent><MachineItemPositionHelp /></TooltipContent>
+                        <ChildContent>XPos</ChildContent>
+                    </MudTooltip>
+                </HeaderTemplate>
+                </PropertyColumn>
+                <PropertyColumn Property="x => x.YPos" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
+                <EditTemplate>
+                    <MudNumericField @bind-Value=context.Item.YPos Variant="Variant.Outlined"
+                                     Label="YPos" Min="0.00" Max="3600.00" T="double?" />
+                </EditTemplate>
+                <HeaderTemplate>
+                    <MudTooltip>
+                        <TooltipContent><MachineItemPositionHelp /></TooltipContent>
+                        <ChildContent>YPos</ChildContent>
+                    </MudTooltip>
+                </HeaderTemplate>
+                </PropertyColumn>
+            </Columns>
+            @*    <PagerContent>
+        <MudDataGridPager T="LedConfigFileEntry" />
+        </PagerContent>*@
+            </MudDataGrid>
 </MudStack>
 
 @code {

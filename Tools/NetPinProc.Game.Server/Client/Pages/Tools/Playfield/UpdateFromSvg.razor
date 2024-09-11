@@ -1,44 +1,36 @@
-﻿@page "/machine/tools/playfield/svgtomachine"
-@using NetPinProc.Game.Manager.Shared.Tools.Playfield
+﻿@using NetPinProc.Game.Manager.Shared.Tools.Playfield
 @using System.Text;
 @inject ILanguageContainerService lang
 @inject ISnackbar Snackbar
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 
-<PageTitle>Svg Position Extractor | @Names.SITE_NAME</PageTitle>
+<MudContainer MaxWidth="MaxWidth.Large">
 
-<GoBackButton/>
+    <MudPaper Outlined Square=false>
 
-<MudPaper Outlined Square=false Class="mt-2">
-    <MudGrid>
+    <h3>@lang["Playfield:ImportSvgTitle"]</h3>
 
-        <MudItem sm="4" xs="12">
+    <MudGrid Spacing="0">
+
+        <MudItem xs="12">
             <MudPaper Class="mt-2 mb-2">
-                <MudText Typo="Typo.caption">@((MarkupString)lang["SvgTool:WhatFor"])</MudText>
-                    <MudText Typo="Typo.caption">  - @((MarkupString)lang["SvgTool:HowToSetup"])</MudText>
-                    <MudText Typo="Typo.caption">  - @((MarkupString)lang["SvgTool:Naming"])</MudText>
-
-                    <MudFileUpload Class="mb-3" T="IBrowserFile" FilesChanged="UploadFiles" Accept="@mimeType">
-                        <ActivatorContent>
-                            <MudPaper Outlined="true" Class="mt-1">
-                                <MudStack Row StretchItems="StretchItems.None">
-                                <MudFab Color="Color.Success"
-                                        StartIcon="@Icons.Material.Filled.AttachFile" IconSize="Size.Small" />
-                                <MudText Typo="Typo.caption">@lang.Keys["SvgTool:FileUpload"]</MudText>
-                            </MudStack>
-                            </MudPaper>
-                        </ActivatorContent>
-                        </MudFileUpload>
+                <MudText Typo="Typo.caption">@((MarkupString)lang["Playfield:ImportSvg"])</MudText>                    
             </MudPaper>
         </MudItem>
 
-        <MudItem sm=4 xs="12">
-            <MudExpansionPanel Text="Machine Item List" Class="mt-2 mb-2" Dense>
-                <div class="pre-wrap">
-                    @machineItemList
-                </div>
-            </MudExpansionPanel>
+        <MudItem xs="12">
+                <MudFileUpload Class="mb-3" T="IBrowserFile" FilesChanged="UploadFiles" Accept="@mimeType">
+                    <ActivatorContent>
+                        <MudPaper Outlined="true" Class="mt-1">
+                            <MudStack Row StretchItems="StretchItems.None">
+                            <MudFab Color="Color.Success"
+                                    StartIcon="@Icons.Material.Filled.Draw" IconSize="Size.Small" />
+                            <MudText Typo="Typo.caption"></MudText>
+                        </MudStack>
+                        </MudPaper>
+                    </ActivatorContent>
+                    </MudFileUpload>
         </MudItem>
 
         <MudItem sm=4 xs="12">
@@ -52,6 +44,8 @@
     </MudGrid>
 </MudPaper>
 
+</MudContainer>
+
 @code {
     const string mimeType = "image/svg+xml";
 
@@ -62,18 +56,6 @@
     string? machineItemList;
 
     List<MachineList<SvgElement>>? SvgGroupLayers;
-
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            machineItemList = await Http.GetStringAsync("api/machine/MachineItemListText");
-        }
-        catch (Exception ex)
-        {
-            Snackbar.Add(ex.ToString(), Severity.Error);
-        }
-    }
 
     private async Task UploadFiles(IBrowserFile file)
     {

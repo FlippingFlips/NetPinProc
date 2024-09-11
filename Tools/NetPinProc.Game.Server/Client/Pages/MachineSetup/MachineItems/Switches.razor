@@ -1,268 +1,300 @@
-﻿@page "/machine/items/switches"
-@using NetPinProc.Game.Manager.Client.Pages.Machine_Setup.MachineItems;
+﻿@using NetPinProc.Game.Manager.Client.Pages.Machine_Setup.MachineItems;
 @using NetPinProc.Game.Manager.Client.Shared.DialogComponents;
 @using NetPinProc.Game.Manager.Client.Shared.HelpComponents
-@inherits ConfigFileEntryBaseComponentBase
+@inherits ConfigFileEntryBaseComponentBase<SwitchConfigFileEntry>
 
 <PageTitle>Switches | @Names.SITE_NAME</PageTitle>
 
-<MudDataGrid T="SwitchConfigFileEntry"
-             Class="netpinprocdatagrid"
-             MultiSelection="false"
-             Items="@Elements"
-             SortMode="SortMode.Multiple"
-             Dense=true
-             FixedHeader=true
-             Height="668px"
-             Filterable="true"
-             QuickFilter="@_quickFilter"
-             Hideable="true"
-             Bordered=true
-             ReadOnly=false
-             EditDialogOptions="new DialogOptions{ FullWidth = true, MaxWidth = MaxWidth.Medium}"
-             EditMode=DataGridEditMode.Form
-             EditTrigger="DataGridEditTrigger.OnRowClick"
-             StartedEditingItem="@StartedEditingItem"
-             CanceledEditingItem="@CanceledEditingItem"
-             CommittedItemChanges="@CommittedItemChanges">
-    <ToolBarContent>
-        <MudText Typo="Typo.h6">Switches</MudText>
-        <MudText Class="pl-2" Typo="Typo.caption">
-            @lang.Keys["Pages:Summary", new { Item = "switches"}]
-        </MudText>
+<MudStack>
+
+    <MudStack Row>
+        <MudButton Variant="Variant.Filled" Color="Color.Error"
+                   Size="Size.Small"
+                   Class="mt-2"
+                   OnClick="@ShowAddDialog">ADD SWITCH</MudButton>
         <MudSpacer />
-        <MudTextField @bind-Value="_searchString" Placeholder="Quick filter Switch Name, Num, Tags" Adornment="Adornment.Start" Immediate="true"
-                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-    </ToolBarContent>
+    </MudStack>
 
-    <Columns>
-        <TemplateColumn Sortable="false" Filterable="false">
-            <CellTemplate>
-                <MudToolBar Dense Class="netpinproctoolbar">
-                    <MudIconButton Size="Size.Small" Variant="Variant.Filled"
-                                   Icon="@Icons.Material.Filled.Delete" Color="Color.Error"
-                                   OnClick="@(_ => ShowDeleteDialog(context.Item.Number))" />
-                </MudToolBar>
-            </CellTemplate>
-            </TemplateColumn>
+    <MudDataGrid T="SwitchConfigFileEntry"
+                 Class="netpinprocdatagrid"
+                 MultiSelection="false"
+                 Items="@Elements"
+                 SortMode="SortMode.Multiple"
+                 Dense=true                 
+                 FixedHeader=true
+                 Height="calc(100vh - 280px)"
+                 Filterable="true"                 
+                 QuickFilter="@_quickFilter"
+                 Hideable="true"
+                 Bordered=true
+                 ReadOnly=false
+                 EditDialogOptions="new DialogOptions{ FullWidth = true, MaxWidth = MaxWidth.Medium}"
+                 EditMode=DataGridEditMode.Form
+                 EditTrigger="DataGridEditTrigger.OnRowClick"
+                 StartedEditingItem="@StartedEditingItem"
+                 CanceledEditingItem="@CanceledEditingItem"
+                 CommittedItemChanges="@CommittedItemChanges">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Switches</MudText>
+            <MudText Class="pl-2" Typo="Typo.caption">
+                @lang.Keys["Pages:Summary", new { Item = "switches"}]
+            </MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString" Placeholder="Quick filter Switch Name, Num, Tags" Adornment="Adornment.Start" Immediate="true"
+                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
 
-            <PropertyColumn Property="x => x.Number" Sortable="true" Filterable="true" ShowFilterIcon="false">
-            <HeaderTemplate>
-                <MudTooltip>
-                    <TooltipContent>
-                        <MudText Typo="Typo.caption" Color="Color.Warning" Align="Align.Left">
-                            @lang.Keys["MachineItem:Number"]
-                        </MudText>
-                    </TooltipContent>
-                </MudTooltip>                
-            </HeaderTemplate>
-            <EditTemplate>
-                <MudTextField @bind-Value=@context.Item.Number Label="Number"
-                              Variant="Variant.Outlined" Margin="Margin.Dense"
-                                        Required RequiredError="A switch needs a number to apply config to the PROC" />
-            </EditTemplate>
-            </PropertyColumn>
-            <PropertyColumn Property="x => x.Name" ShowFilterIcon="false">
-            <HeaderTemplate>
-                <MudTooltip>
-                    <TooltipContent>
-                        <MudText Typo="Typo.caption" Color="Color.Warning" Align="Align.Left">
-                            @lang.Keys["MachineItem:Name"]
-                        </MudText>
-                    </TooltipContent>
-                    <ChildContent>Name</ChildContent>
-                </MudTooltip>
-            </HeaderTemplate>
-            <EditTemplate>
-                <MudTextField @bind-Value=@context.Item.Name Label="Name"
-                              Variant="Variant.Outlined" Margin="Margin.Dense"
-                              Required=true RequiredError="A switch needs a name to reference from software and interfaces" />
-            </EditTemplate>
-            </PropertyColumn>
-            <PropertyColumn Property="x => x.DisplayName" ShowFilterIcon="false">
-            <EditTemplate>
-                <MudTextField @bind-Value=@context.Item.DisplayName Label="DisplayName"
-                              Variant="Variant.Outlined" Margin="Margin.Dense"
-                              Required=false />
-            </EditTemplate>
-            </PropertyColumn>
-            <PropertyColumn Property="x => x.ItemType" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
-            <HeaderTemplate>
-                <MudTooltip>
-                    <TooltipContent>
-                        <MudStack>
+        <Columns>
+            <TemplateColumn Sortable="false" Filterable="false">
+                <CellTemplate>
+                    <MudToolBar Dense Class="netpinproctoolbar">
+                        <MudIconButton Size="Size.Small" Variant="Variant.Filled"
+                                       Icon="@Icons.Material.Filled.Delete" Color="Color.Error"
+                                       OnClick="@(_ => ShowDeleteDialog(context.Item.Number))" />
+                    </MudToolBar>
+                </CellTemplate>
+                </TemplateColumn>
+
+                <PropertyColumn Property="x => x.Number" Sortable="true" Filterable="true" ShowFilterIcon="false">
+                <HeaderTemplate>
+                    <MudTooltip>
+                        <TooltipContent>
                             <MudText Typo="Typo.caption" Color="Color.Warning" Align="Align.Left">
-                                @lang.Keys["MachineItem:ItemType"]
+                                @lang.Keys["MachineItem:Number"]
                             </MudText>
+                        </TooltipContent>
+                    </MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudTextField @bind-Value=@context.Item.Number Label="Number"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense"
+                                            Required RequiredError="A switch needs a number to apply config to the PROC" />
+                </EditTemplate>
+                </PropertyColumn>
+
+                @*NAME*@
+                <PropertyColumn Property="x => x.Name" ShowFilterIcon="false">
+                <HeaderTemplate>
+                    <MudTooltip>
+                        <TooltipContent>
                             <MudText Typo="Typo.caption" Color="Color.Warning" Align="Align.Left">
-                                @lang.Keys["SwitchItemTypes:Flipper"]
+                                @lang.Keys["MachineItem:Name"]
                             </MudText>
+                        </TooltipContent>
+                        <ChildContent>Name</ChildContent>
+                    </MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudTextField @bind-Value=@context.Item.Name Label="Name"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense"
+                                  Required=true RequiredError="A switch needs a name to reference from software and interfaces" />
+                </EditTemplate>
+                </PropertyColumn>
+
+                <PropertyColumn Property="x => x.DisplayName" ShowFilterIcon="false">
+                <EditTemplate>
+                    <MudTextField @bind-Value=@context.Item.DisplayName Label="DisplayName"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense"
+                                  Required=false />
+                </EditTemplate>
+                </PropertyColumn>
+
+                <PropertyColumn Property="x => x.Type" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
+                <HeaderTemplate>
+                    <MudTooltip>
+                        <TooltipContent>
+                            <MudStack>
+                                <MudText Typo="Typo.caption" Color="Color.Warning" Align="Align.Left">
+                                    @lang.Keys["MachineItem:Type"]
+                                </MudText>
+                            </MudStack>
+                        </TooltipContent>
+                        <ChildContent>Type</ChildContent>
+                    </MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudTextField @bind-Value=@context.Item.Type Label="Type"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense"
+                                  Required=false />
+                </EditTemplate>
+                </PropertyColumn>
+
+                <PropertyColumn Property="x => x.ItemType" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
+                <HeaderTemplate>
+                    <MudTooltip>
+                        <TooltipContent>
+                            <MudStack>
+                                <MudText Typo="Typo.caption" Color="Color.Warning" Align="Align.Left">
+                                    @lang.Keys["MachineItem:ItemType"]
+                                </MudText>
+                                <MudText Typo="Typo.caption" Color="Color.Warning" Align="Align.Left">
+                                    @lang.Keys["SwitchItemTypes:Flipper"]
+                                </MudText>
+                                <MudText Typo="Typo.caption" Color="Color.Warning" Align="Align.Left">
+                                    @lang.Keys["SwitchItemTypes:Bumper"]
+                                </MudText>
+                            </MudStack>
+                        </TooltipContent>
+                        <ChildContent>Item Type</ChildContent>
+                    </MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudTextField @bind-Value=@context.Item.ItemType Label="ItemType"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense"
+                                  Required=false />
+                </EditTemplate>
+                </PropertyColumn>
+
+                <PropertyColumn Property="x => x.Tags" ShowFilterIcon="false">
+                <HeaderTemplate>
+                    <MudTooltip>
+                        <TooltipContent><SwitchTagsHelp /></TooltipContent>
+                        <ChildContent>Tags</ChildContent>
+                    </MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudTextField @bind-Value=@context.Item.Tags Label="Tags"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense"
+                                  Required=false />
+                </EditTemplate>
+                </PropertyColumn>
+
+                @*SearchReset*@
+                <PropertyColumn Property="x => x.SearchReset" Filterable=true CellStyleFunc=_ballSearchResetCellStyleFunc
+                            ShowFilterIcon="false" Resizable="true" Sortable="true">
+                <HeaderTemplate>
+                    <MudTooltip>
+                        <TooltipContent>
                             <MudText Typo="Typo.caption" Color="Color.Warning" Align="Align.Left">
-                                @lang.Keys["SwitchItemTypes:Bumper"]
+                                @lang.Keys["BallSearch:SwitchReset"]
                             </MudText>
-                        </MudStack>
-                    </TooltipContent>
-                    <ChildContent>Item Type</ChildContent>
-                </MudTooltip>
-            </HeaderTemplate>
-            <EditTemplate>
-                <MudTextField @bind-Value=@context.Item.ItemType Label="ItemType"
-                              Variant="Variant.Outlined" Margin="Margin.Dense"
-                              Required=false />
-            </EditTemplate>
-            </PropertyColumn>
+                        </TooltipContent>
+                        <ChildContent>Search Reset</ChildContent>
+                    </MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudSelect T="string" @bind-Value="context.Item.SearchReset" Margin="@Margin.Dense"
+                               Label="Search Reset"
+                               Required=false
+                               Variant="Variant.Outlined">
+                        <MudSelectItem Value="null" T="string">none</MudSelectItem>
+                        <MudSelectItem Value="@("open")" T="string">open</MudSelectItem>
+                        <MudSelectItem Value="@("closed")" T="string">closed</MudSelectItem>
+                    </MudSelect>
+                </EditTemplate>
+                </PropertyColumn>
 
-            <PropertyColumn Property="x => x.Tags" ShowFilterIcon="false">
-            <HeaderTemplate>
-                <MudTooltip>
-                    <TooltipContent><SwitchTagsHelp /></TooltipContent>
-                    <ChildContent>Tags</ChildContent>
-                </MudTooltip>
-            </HeaderTemplate>
-            <EditTemplate>
-                <MudTextField @bind-Value=@context.Item.Tags Label="Tags"
-                              Variant="Variant.Outlined" Margin="Margin.Dense"
-                              Required=false />
-            </EditTemplate>
-            </PropertyColumn>
+                @*SearchStop*@
+                <PropertyColumn Property="x => x.SearchStop" Filterable=true
+                            CellStyleFunc=_ballSearchStopCellStyleFunc
+                            ShowFilterIcon="false" Resizable="true" Sortable="true">
+                <HeaderTemplate>
+                    <MudTooltip>
+                        <TooltipContent>
+                            <MudText Typo="Typo.caption" Color="Color.Warning" Align="Align.Left">
+                                @lang.Keys["BallSearch:SwitchStop"]
+                            </MudText>
+                        </TooltipContent>
+                        <ChildContent>Search Stop</ChildContent>
+                    </MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudSelect T="string" @bind-Value="context.Item.SearchStop" Margin="@Margin.Dense"
+                               Label="Search Stop"
+                               Required=false
+                               Variant="Variant.Outlined">
+                        <MudSelectItem Value="null" T="string">none</MudSelectItem>
+                        <MudSelectItem Value="@("open")" T="string">open</MudSelectItem>
+                        <MudSelectItem Value="@("closed")" T="string">closed</MudSelectItem>
+                    </MudSelect>
+                </EditTemplate>
+                </PropertyColumn>
 
-            <PropertyColumn Property="x => x.SearchReset" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
-            <HeaderTemplate>
-                <MudTooltip>
-                    <TooltipContent>
-                        <MudText Typo="Typo.caption" Color="Color.Warning" Align="Align.Left">
-                            @lang.Keys["BallSearch:SwitchReset"]
-                        </MudText>
-                    </TooltipContent>
-                    <ChildContent>Search Reset</ChildContent>
-                </MudTooltip>
-            </HeaderTemplate>
-            <EditTemplate>
-                <MudSelect T="string" @bind-Value="context.Item.SearchReset" Margin="@Margin.Dense"
-                           Label="Search Reset"
-                           Required=false
-                           Variant="Variant.Outlined">
-                    <MudSelectItem Value="null" T="string">none</MudSelectItem>
-                    <MudSelectItem Value="@("open")" T="string">open</MudSelectItem>
-                    <MudSelectItem Value="@("closed")" T="string">closed</MudSelectItem>
-                </MudSelect>
-            </EditTemplate>
-            </PropertyColumn>
-            <PropertyColumn Property="x => x.SearchStop" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
-            <HeaderTemplate>
-                <MudTooltip>
-                    <TooltipContent>
-                        <MudText Typo="Typo.caption" Color="Color.Warning" Align="Align.Left">
-                            @lang.Keys["BallSearch:SwitchStop"]
-                        </MudText>
-                    </TooltipContent>
-                    <ChildContent>Search Stop</ChildContent>
-                </MudTooltip>
-            </HeaderTemplate>
-            <EditTemplate>
-                <MudSelect T="string" @bind-Value="context.Item.SearchStop" Margin="@Margin.Dense"
-                           Label="Search Stop"
-                           Required=false
-                           Variant="Variant.Outlined">
-                    <MudSelectItem Value="null" T="string">none</MudSelectItem>
-                    <MudSelectItem Value="@("open")" T="string">open</MudSelectItem>
-                    <MudSelectItem Value="@("closed")" T="string">closed</MudSelectItem>
-                </MudSelect>
-            </EditTemplate>
-            </PropertyColumn>
+                <PropertyColumn Property="x => x.Conn" ShowFilterIcon="false">
+                <HeaderTemplate>
+                    <MudTooltip>
+                        <TooltipContent>
+                            <MudText Typo="Typo.caption" Color="Color.Warning" Align="Align.Left">
+                                @lang.Keys["MachineItem:Connection"]
+                            </MudText>
+                        </TooltipContent>
+                        <ChildContent>Conn</ChildContent>
+                    </MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudTextField @bind-Value=@context.Item.Conn Label="Conn"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense"
+                                  Required=false />
+                </EditTemplate>
+                </PropertyColumn>
 
-            <PropertyColumn Property="x => x.Conn" ShowFilterIcon="false">
-            <HeaderTemplate>
-                <MudTooltip>
-                    <TooltipContent>
-                        <MudText Typo="Typo.caption" Color="Color.Warning" Align="Align.Left">
-                            @lang.Keys["MachineItem:Connection"]
-                        </MudText>
-                    </TooltipContent>
-                    <ChildContent>Conn</ChildContent>
-                </MudTooltip>
-            </HeaderTemplate>
-            <EditTemplate>
-                <MudTextField @bind-Value=@context.Item.Conn Label="Conn"
-                              Variant="Variant.Outlined" Margin="Margin.Dense"
-                              Required=false />
-            </EditTemplate>
-            </PropertyColumn>
+                <PropertyColumn Property="x => x.InputWire" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
+                <HeaderTemplate>
+                    <MudTooltip>
+                        <TooltipContent><WireColorHelp /></TooltipContent>
+                        <ChildContent>InputWire</ChildContent>
+                    </MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudTextField @bind-Value=@context.Item.InputWire Label="InputWire"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense"
+                                  Required=false />
+                </EditTemplate>
+                </PropertyColumn>
+                <PropertyColumn Property="x => x.GroundWire" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
+                <HeaderTemplate>
+                    <MudTooltip>
+                        <TooltipContent><WireColorHelp /></TooltipContent>
+                        <ChildContent>Gnd</ChildContent>
+                    </MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudTextField @bind-Value=@context.Item.GroundWire Label="GroundWire"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense"
+                                  Required=false />
+                </EditTemplate>
+                </PropertyColumn>
 
-            <PropertyColumn Property="x => x.InputWire" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
-            <HeaderTemplate>
-                <MudTooltip>
-                    <TooltipContent><WireColorHelp /></TooltipContent>
-                    <ChildContent>InputWire</ChildContent>
-                </MudTooltip>
-            </HeaderTemplate>
-            <EditTemplate>
-                <MudTextField @bind-Value=@context.Item.InputWire Label="InputWire"
-                              Variant="Variant.Outlined" Margin="Margin.Dense"
-                              Required=false />
-            </EditTemplate>
-            </PropertyColumn>
-            <PropertyColumn Property="x => x.GroundWire" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
-            <HeaderTemplate>
-                <MudTooltip>
-                    <TooltipContent><WireColorHelp /></TooltipContent>
-                    <ChildContent>Gnd</ChildContent>
-                </MudTooltip>
-            </HeaderTemplate>
-            <EditTemplate>
-                <MudTextField @bind-Value=@context.Item.GroundWire Label="GroundWire"
-                              Variant="Variant.Outlined" Margin="Margin.Dense"
-                              Required=false />
-            </EditTemplate>
-            </PropertyColumn>
+                <PropertyColumn Property="x => x.Location" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
+                <HeaderTemplate>
+                    <MudTooltip>
+                        <TooltipContent>Location string name. Could be a location like cabinet, playfield, under playfield, apron, etc...</TooltipContent>
+                        <ChildContent>Location</ChildContent>
+                    </MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudTextField @bind-Value=@context.Item.Location Label="Location"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense"
+                                  Required=false />
+                </EditTemplate>
+                </PropertyColumn>
 
-            <PropertyColumn Property="x => x.Location" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
-            <HeaderTemplate>
-                <MudTooltip>
-                    <TooltipContent>Location string name. Could be a location like cabinet, playfield, under playfield, apron, etc...</TooltipContent>
-                    <ChildContent>Location</ChildContent>
-                </MudTooltip>
-            </HeaderTemplate>
-            <EditTemplate>
-                <MudTextField @bind-Value=@context.Item.Location Label="Location"
-                              Variant="Variant.Outlined" Margin="Margin.Dense"
-                              Required=false />
-            </EditTemplate>
-            </PropertyColumn>
-
-            <PropertyColumn Property="x => x.XPos" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
-            <EditTemplate>
-                <MudNumericField @bind-Value=context.Item.XPos Variant="Variant.Outlined"
-                                 Label="XPos" Min="0.00" Max="3600.00" T="double?" />
-            </EditTemplate>
-            <HeaderTemplate>
-                <MudTooltip>
-                    <TooltipContent><MachineItemPositionHelp /></TooltipContent>
-                    <ChildContent>XPos</ChildContent>
-                </MudTooltip>
-            </HeaderTemplate>
-            </PropertyColumn>
-            <PropertyColumn Property="x => x.YPos" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
-            <EditTemplate>
-                <MudNumericField @bind-Value=context.Item.YPos Variant="Variant.Outlined"
-                                 Label="YPos" Min="0.00" Max="3600.00" T="double?" />
-            </EditTemplate>
-            <HeaderTemplate>
-                <MudTooltip>
-                    <TooltipContent><MachineItemPositionHelp /></TooltipContent>
-                    <ChildContent>YPos</ChildContent>
-                </MudTooltip>
-            </HeaderTemplate>
-            </PropertyColumn>
-        </Columns>
-        </MudDataGrid>
-
-        <MudStack Row>
-    <MudSpacer />
-    <MudButton Variant="Variant.Filled" Color="Color.Error"
-               Size="Size.Small"
-               Class="mt-2"
-               OnClick="@ShowAddDialog">ADD SWITCH</MudButton>
+                <PropertyColumn Property="x => x.XPos" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
+                <EditTemplate>
+                    <MudNumericField @bind-Value=context.Item.XPos Variant="Variant.Outlined"
+                                     Label="XPos" Min="0.00" Max="3600.00" T="double?" />
+                </EditTemplate>
+                <HeaderTemplate>
+                    <MudTooltip>
+                        <TooltipContent><MachineItemPositionHelp /></TooltipContent>
+                        <ChildContent>XPos</ChildContent>
+                    </MudTooltip>
+                </HeaderTemplate>
+                </PropertyColumn>
+                <PropertyColumn Property="x => x.YPos" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
+                <EditTemplate>
+                    <MudNumericField @bind-Value=context.Item.YPos Variant="Variant.Outlined"
+                                     Label="YPos" Min="0.00" Max="3600.00" T="double?" />
+                </EditTemplate>
+                <HeaderTemplate>
+                    <MudTooltip>
+                        <TooltipContent><MachineItemPositionHelp /></TooltipContent>
+                        <ChildContent>YPos</ChildContent>
+                    </MudTooltip>
+                </HeaderTemplate>
+                </PropertyColumn>
+            </Columns>
+            </MudDataGrid>    
 </MudStack>
 
 @code {
@@ -278,6 +310,28 @@
         ApiUrl = "api/switches/";
         await GetSwitchesFromDatabaseAsync();
     }
+
+    /// <summary>Set style based on the switches ball search reset</summary>
+    private Func<SwitchConfigFileEntry, string> _ballSearchResetCellStyleFunc => x =>
+    {
+        string style = "";
+        if (x.SearchReset == "open")
+            style += "background-color:#8CED8C;color:black";
+        else if (x.SearchReset == "closed")
+            style += "background-color:#EACE5D;color:black";
+        return style;
+    };
+
+    /// <summary>Set style based on the switches ball search reset</summary>
+    private Func<SwitchConfigFileEntry, string> _ballSearchStopCellStyleFunc => x =>
+    {
+        string style = "";
+        if (x.SearchStop == "open")
+            style += "background-color:#8CED8C;color:black";
+        else if (x.SearchStop == "closed")
+            style += "background-color:#EACE5D;color:black";
+        return style;
+    };
 
     // custom sort by name length
     private Func<SwitchConfigFileEntry, object> _sortBy => x =>

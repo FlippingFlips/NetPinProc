@@ -1,0 +1,84 @@
+﻿@page "/machine/setup"
+@using BlazorDownloadFile;
+@using NetPinProc.Game.Manager.Client.Pages.MachineSetup.MachineItems
+@inject NavigationManager Nav
+
+<PageTitle>Machine Setup | @Names.SITE_NAME</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge">
+    <MudGrid Spacing="-20">
+
+        <MudItem xs="12" Class="mb-0">
+            <MudToolBar Dense Class="mb-0 mud-theme-primary">
+                <MudTooltip Text="@lang["Pages:ExportMachineJson"]">
+                    <MudIconButton Color="Color.Secondary"
+                            Class="mud-theme-error"
+                            OnClick="@ExportJsonAsync"
+                            Icon="@Icons.Material.Filled.ImportExport"
+                            Size="Size.Small" />
+                </MudTooltip>                
+            </MudToolBar>
+            </MudItem>
+
+            <MudItem xs="12">
+            <MudTabs Outlined="true" Position="Position.Start" Rounded="true" Border="true"
+                     MinimumTabWidth="20px"
+                     ApplyEffectsToContainer="true" Class="mt-0" PanelClass="pa-1">
+
+                <MudTabPanel Icon="@Icons.Material.Filled.SwitchAccessShortcut">
+                    <Switches />
+                </MudTabPanel>
+
+                <MudTabPanel Icon="@Icons.Material.Filled.DriveEta">
+                    <Drivers />
+                </MudTabPanel>
+
+                <MudTabPanel Icon="@Icons.Material.Filled.Lightbulb" ToolTip="Lamps">
+                    <Lamps />
+                </MudTabPanel>
+
+                <MudTabPanel Icon="@Icons.Material.Filled.LightMode" ToolTip="GI">
+                    <GI />
+                </MudTabPanel>
+
+                <MudTabPanel Icon="@Icons.Material.Filled.LightbulbCircle" ToolTip="LEDS">
+                    <Leds />
+                </MudTabPanel>
+
+                <MudTabPanel Icon="@Icons.Material.Filled.Security">
+                    <Servos />
+                </MudTabPanel>
+
+                <MudTabPanel Icon="@Icons.Material.Filled.DoNotStep">
+                    <Steppers />
+                </MudTabPanel>
+            </MudTabs>
+            </MudItem>
+            @*<MudItem xs="12" sm="4">
+        <MudList T="string" Dense>
+        <MudListItem Text="Playfield" Icon="@Icons.Material.Filled.PhotoLibrary">
+        <NestedList>
+        <MudListItem Text="Generate SVG" SecondaryText="Create SVG from machine items and positions"
+        OnClick="@(_ => Nav.NavigateTo(Navigation.TOOLS_SVG_GEN))" />
+
+        <MudListItem Text="Update From SVG" SecondaryText="Update machine item positions from SVG"
+        OnClick="@(_ => Nav.NavigateTo(Navigation.TOOLS_SVG_TO_MACHINE))" />
+        </NestedList>
+        </MudListItem>
+        </MudList>
+        </MudItem>*@
+            </MudGrid>
+            </MudContainer>
+
+
+
+@code {
+    [Inject] HttpClient? Http { get; set; }
+    [Inject] IBlazorDownloadFileService? BlazorDownloadFileService { get; set; }
+    [Inject] ILanguageContainerService? lang { get; set; }
+    async Task ExportJsonAsync()
+    {
+        var json = await Http.GetStringAsync("api/tools/ExportToJson");
+        await BlazorDownloadFileService.DownloadFile("machine.json", Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(json)), "application/json");
+    }
+}
