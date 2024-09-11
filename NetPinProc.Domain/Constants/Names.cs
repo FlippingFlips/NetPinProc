@@ -8,6 +8,7 @@
         public const string DRIVERS = nameof(DRIVERS);
         public const string STEPPERS = nameof(STEPPERS);
         public const string SERVOS = nameof(SERVOS);
+        public const string GI = nameof(GI);
 
     }
 }

@@ -1,0 +1,70 @@
+﻿namespace NetPinProc.Game.Sqlite.Data
+{
+    internal static class StaticMedia
+    {
+        /// <summary>20.25x42 inkscape template with grouped layers for all machine items</summary>
+        public const string TEMPLATE_SVG = @"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""no""?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width=""514.34998mm""
+   height=""1066.8mm""
+   viewBox=""0 0 514.34998 1066.8001""
+   version=""1.1""
+   id=""svg3338""
+   inkscape:version=""1.2.2 (732a01da63, 2022-12-09)""
+   sodipodi:docname=""playfieldtemplate.svg""
+   xml:space=""preserve""
+   xmlns:inkscape=""http://www.inkscape.org/namespaces/inkscape""
+   xmlns:sodipodi=""http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd""
+   xmlns=""http://www.w3.org/2000/svg""
+   xmlns:svg=""http://www.w3.org/2000/svg"">
+	<sodipodi:namedview
+   id=""namedview3340""
+   pagecolor=""#ffffff""
+   bordercolor=""#000000""
+   borderopacity=""0.25""
+   inkscape:showpageshadow=""2""
+   inkscape:pageopacity=""0.0""
+   inkscape:pagecheckerboard=""0""
+   inkscape:deskcolor=""#d1d1d1""
+   inkscape:document-units=""mm""
+   showgrid=""false""
+   inkscape:zoom=""0.13055262""
+   inkscape:cx=""509.37317""
+   inkscape:cy=""1470.6714""
+   inkscape:window-width=""1920""
+   inkscape:window-height=""1009""
+   inkscape:window-x=""-8""
+   inkscape:window-y=""-8""
+   inkscape:window-maximized=""1""
+   inkscape:current-layer=""layer7"" /><defs
+   id=""defs3335"" />
+	<g
+   inkscape:groupmode=""layer""
+   id=""layer7""
+   inkscape:label=""GI"" /><g
+   inkscape:groupmode=""layer""
+   id=""layer4""
+   inkscape:label=""SWITCHES"" /><g
+   inkscape:groupmode=""layer""
+   id=""layer5""
+   inkscape:label=""STEPPERS"" /><g
+   inkscape:groupmode=""layer""
+   id=""layer6""
+   inkscape:label=""SERVOS"" /><g
+   inkscape:label=""LEDS""
+   inkscape:groupmode=""layer""
+   id=""layer1""
+   transform=""translate(0,-6.3832695e-5)"" /><g
+   inkscape:groupmode=""layer""
+   id=""layer2""
+   inkscape:label=""LAMPS""
+   transform=""translate(0,-6.3832695e-5)"" /><g
+   inkscape:groupmode=""layer""
+   id=""layer3""
+   inkscape:label=""DRIVERS""
+   transform=""translate(0,-6.3832695e-5)"" /></svg>
+";
+    }
+}

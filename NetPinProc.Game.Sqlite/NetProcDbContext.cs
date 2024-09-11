@@ -3,10 +3,13 @@ using NetPinProc.Domain;
 using NetPinProc.Domain.Data;
 using NetPinProc.Domain.MachineConfig;
 using NetPinProc.Game.Sqlite.Config;
+using NetPinProc.Game.Sqlite.Data;
 using NetPinProc.Game.Sqlite.Model;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace NetPinProc.Game.Sqlite
 {
@@ -40,11 +43,15 @@ namespace NetPinProc.Game.Sqlite
         /// <inheritdoc/>
         public DbSet<GamePlayed> GamesPlayed { get; set; }
         /// <inheritdoc/>
+        public DbSet<GIConfigFileEntry> GI { get; set; }
+        /// <inheritdoc/>
         public DbSet<LampConfigFileEntry> Lamps { get; set; }
         /// <inheritdoc/>
         public DbSet<LedConfigFileEntry> Leds { get; set; }
         /// <inheritdoc/>
         public DbSet<Machine> Machine { get; set; }
+        /// <inheritdoc/>
+        public DbSet<Media> Media { get; set; }
         /// <inheritdoc/>
         public DbSet<Part> Parts { get; set; }
         /// <inheritdoc/>
@@ -149,7 +156,9 @@ namespace NetPinProc.Game.Sqlite
                 PRLpd8806 = Lpd8806Leds.AsNoTracking()
                 .Select(x => x)
                 .ToList(),
-
+                PRGI = GI.AsNoTracking()
+                .Select(x => x)
+                .ToList(),
                 //all flipper switches.
                 PRFlippers = Switches.AsNoTracking()
                 .Where(x => x.ItemType == "flipper")
@@ -168,13 +177,10 @@ namespace NetPinProc.Game.Sqlite
                     .Where(x => x.ItemType == "bumper")
                     .Select(x => x.Name)
                     .ToList(),
-
-                //PRBallSearch - Created below
-                //PRDriverAliases
-                //PRGI
+                //TODO? = PRDriverAliases
             };
 
-            //ball search Reset switches
+            //PR Ball Search - Reset switches
             Dictionary<string, string> resets = new Dictionary<string, string>();
             foreach (var item in mc.PRSwitches.Where(x => !string.IsNullOrWhiteSpace(x.SearchReset))
                 .Select(x => new { x.Name, x.SearchReset }))
@@ -182,7 +188,7 @@ namespace NetPinProc.Game.Sqlite
                 resets.Add(item.Name, item.SearchReset);
             }
 
-            //ball search Stop switches
+            //PR Ball Search - Stop switches
             Dictionary<string, string> stops = new Dictionary<string, string>();
             foreach (var item in mc.PRSwitches.Where(x => !string.IsNullOrWhiteSpace(x.SearchStop))
                 .Select(x => new { x.Name, x.SearchStop }))
@@ -190,11 +196,12 @@ namespace NetPinProc.Game.Sqlite
                 stops.Add(item.Name, item.SearchStop);
             }
 
-            //init ball search config
+            //PR Ball Search with coils
             mc.PRBallSearch = new BallSearchConfigFileEntry()
             {
                 PulseCoils = mc.PRCoils
-                    .Where(x => x.Search > 0)?.Select(x => x.Name).ToList(),
+                    .Where(x => x.Search > 0)?
+                    .Select(x => x.Name).ToList(),
                 StopSwitches = stops,
                 ResetSwitches = resets,
             };
@@ -275,6 +282,17 @@ namespace NetPinProc.Game.Sqlite
                 new ColorSet(){ Name = "GRN", HtmlCode = "3CDF13"},
                 new ColorSet(){ Name = "VIO", HtmlCode = "A913DF"}
             });
+
+            //ADD SOME DEFAULT MEDIA FILES, SMALL.
+
+            //FIRST ONE TEMPLATE SVG WITH GROUPED LAYERS
+            var pfSvgMedia = new Media { Id = 1, MimeType = "application/xml+svg", Name = "playfieldtemplate.svg" };
+            pfSvgMedia.Tags = "playfield,svg";
+            pfSvgMedia.Data = Encoding.UTF8.GetBytes(StaticMedia.TEMPLATE_SVG);
+            pfSvgMedia.Size = pfSvgMedia.Data.Length;
+
+            //ADD THE ENTRY IF NOT FOUND
+            modelBuilder.Entity<Media>().HasData(pfSvgMedia);
         }
 
         /// <summary>

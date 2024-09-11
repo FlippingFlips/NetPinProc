@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetPinProc.Game.Sqlite;
 
@@ -10,9 +11,11 @@ using NetPinProc.Game.Sqlite;
 namespace NetPinProc.Game.Sqlite.Migrations
 {
     [DbContext(typeof(NetProcDbContext))]
-    partial class NetProcDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240910232539_AddedMediaTable")]
+    partial class AddedMediaTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.12");
@@ -779,9 +782,6 @@ namespace NetPinProc.Game.Sqlite.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("Data")
-                        .HasColumnType("TEXT");
 
                     b.Property<bool>("Default")
                         .HasColumnType("INTEGER");

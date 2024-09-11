@@ -39,6 +39,9 @@ namespace NetPinProc.Game.Sqlite
         /// <summary>Games played log with scores and players</summary>
         DbSet<GamePlayed> GamesPlayed { get; set; }
 
+        /// <summary>Stored database GI</summary>
+        DbSet<GIConfigFileEntry> GI { get; set; }
+
         /// <summary>Stored database lamps</summary>
         DbSet<LampConfigFileEntry> Lamps { get; set; }
 
@@ -50,6 +53,9 @@ namespace NetPinProc.Game.Sqlite
 
         /// <summary>Machine config</summary>
         DbSet<Machine> Machine { get; set; }
+
+        /// <summary>Media file storage for user, not game, although could be accessed by game</summary>
+        DbSet<Media> Media { get; set; }        
 
         /// <summary>Parts on the machine, admin use</summary>
         DbSet<Part> Parts { get; set; }
