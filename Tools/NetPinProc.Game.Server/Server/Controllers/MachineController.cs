@@ -3,28 +3,49 @@ using Microsoft.EntityFrameworkCore;
 using NetPinProc.Domain.Constants;
 using NetPinProc.Game.Sqlite;
 using NetPinProc.Game.Sqlite.Model;
+using System.Text.Json;
 
 namespace NetPinProc.Game.Manager.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class MachineController : NetProcBaseController
+    public class MachineController : ControllerBase
     {
         public MachineController(
-            ILogger<MachineController> logger,
-            INetProcDbContext netProcDb) :
-            base(logger, netProcDb)
-        { }
+            ILogger<MachineController> logger){ }
 
         /// <summary>Gets the first machine row</summary>
         /// <returns></returns>
-        public async Task<Machine> OnGetAsync() =>
-            await _netProcDb.Machine.FirstAsync();
+        public async Task<Machine> OnGetAsync(
+            [FromServices] INetProcDbContext context) =>
+            await context.Machine.FirstAsync();
+
+        [HttpGet("ExportToJson")]
+        public async Task<ActionResult<string>> OnGetMachineExportToJsonAsync(
+            [FromServices] INetProcDbContext context)
+        {
+            try
+            {
+                var machineConfig = context.GetMachineConfiguration();
+
+                var machineJson = JsonSerializer.Serialize(machineConfig, options: new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                });
+
+                return await Task.FromResult(machineJson);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }            
+        }
 
         /// <summary>Just a quick bog standard text print of all items in the machine</summary>
         /// <returns></returns>
         [HttpGet("MachineItemListText")]
-        public async Task<string> GetMachineItemListsAsync()
+        public async Task<string> GetMachineItemListsAsync(
+            [FromServices] INetProcDbContext _netProcDb)
         {
             var switches = await _netProcDb.Switches.AsNoTracking()
                 .OrderBy(x => x.Number)

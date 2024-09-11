@@ -2,6 +2,7 @@
 @using BlazorDownloadFile;
 @using NetPinProc.Game.Manager.Client.Pages.MachineSetup.MachineItems
 @inject NavigationManager Nav
+@inject ISnackbar Snack
 
 <PageTitle>Machine Setup | @Names.SITE_NAME</PageTitle>
 
@@ -53,32 +54,31 @@
                     <Steppers />
                 </MudTabPanel>
             </MudTabs>
-            </MudItem>
-            @*<MudItem xs="12" sm="4">
-        <MudList T="string" Dense>
-        <MudListItem Text="Playfield" Icon="@Icons.Material.Filled.PhotoLibrary">
-        <NestedList>
-        <MudListItem Text="Generate SVG" SecondaryText="Create SVG from machine items and positions"
-        OnClick="@(_ => Nav.NavigateTo(Navigation.TOOLS_SVG_GEN))" />
-
-        <MudListItem Text="Update From SVG" SecondaryText="Update machine item positions from SVG"
-        OnClick="@(_ => Nav.NavigateTo(Navigation.TOOLS_SVG_TO_MACHINE))" />
-        </NestedList>
-        </MudListItem>
-        </MudList>
-        </MudItem>*@
-            </MudGrid>
-            </MudContainer>
+            </MudItem>            
+    </MudGrid>
+</MudContainer>
 
 
 
-@code {
+@code 
+{
     [Inject] HttpClient? Http { get; set; }
+
     [Inject] IBlazorDownloadFileService? BlazorDownloadFileService { get; set; }
+
     [Inject] ILanguageContainerService? lang { get; set; }
+
     async Task ExportJsonAsync()
     {
-        var json = await Http.GetStringAsync("api/tools/ExportToJson");
-        await BlazorDownloadFileService.DownloadFile("machine.json", Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(json)), "application/json");
+        try
+        {
+            var json = await Http.GetStringAsync("api/machine/ExportToJson");
+
+            await BlazorDownloadFileService
+                .DownloadFile("machine.json",
+                    Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(json)),
+                    "application/json");
+        }
+        catch (Exception ex) { Snack.Add(ex.Message, Severity.Warning); }
     }
 }

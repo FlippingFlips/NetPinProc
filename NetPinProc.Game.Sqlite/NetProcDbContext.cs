@@ -118,67 +118,60 @@ namespace NetPinProc.Game.Sqlite
         {
             var machine = Machine.Find(1);
 
-            var coils = Coils.AsNoTracking().ToList();
+            var mc = new MachineConfiguration();
 
-            var mc = new MachineConfiguration()
-            {
-                //all switches
-                PRSwitches = Switches.AsNoTracking()
-                 .Select(x => x).ToList(),
+            mc.PRSwitches = Switches
+                 .AsNoTracking()
+                 .Select(x => x)?.ToList();
 
-                //all coils
-                PRCoils = coils
-                 .Select(x => x).ToList(),
+            mc.PRCoils = Coils.AsNoTracking()
+                 .Select(x => x)?.ToList();
 
-                //all lamps
-                PRLamps = Lamps.AsNoTracking()
-                .Select(x => x).ToList(),
+            mc.PRLamps = Lamps.AsNoTracking()
+                .Select(x => x)?.ToList();
 
-                //all leds
-                PRLeds = Leds.AsNoTracking()
+            mc.PRLeds = Leds.AsNoTracking()
                 .Select(x => x)
-                .ToList(),
+                .ToList();
+           
+            mc.PRSteppers = Steppers.AsNoTracking()
+            .Select(x => x)?.ToList();
 
-                //pd led steppers
-                PRSteppers = Steppers.AsNoTracking()
-                .Select(x => x)
-                .ToList(),
+            mc.PRServos = Servos.AsNoTracking()
+                .Select(x => x)?.ToList();
+            
+            mc.PRWs281x = WS281xLeds.AsNoTracking()
+            .Select(x => x)
+            .ToList();
 
-                //pd led servos
-                PRServos = Servos.AsNoTracking()
-                .Select(x => x)
-                .ToList(),
+            mc.PRLpd8806 = Lpd8806Leds.AsNoTracking()
+             .Select(x => x)
+             .ToList();
 
-                //pd serial leds
-                PRWs281x = WS281xLeds.AsNoTracking()
+            mc.PRGI = GI.AsNoTracking()
                 .Select(x => x)
-                .ToList(),
-                PRLpd8806 = Lpd8806Leds.AsNoTracking()
-                .Select(x => x)
-                .ToList(),
-                PRGI = GI.AsNoTracking()
-                .Select(x => x)
-                .ToList(),
-                //all flipper switches.
-                PRFlippers = Switches.AsNoTracking()
+                .ToList();
+
+            //all flipper switches.
+            mc.PRFlippers = Switches.AsNoTracking()
                 .Where(x => x.ItemType == "flipper")
                 .Select(x => x.Name)
-                .ToList(),
+                .ToList();
 
-                PRGame = new GameConfigFileEntry()
-                {
-                    DisplayMonitor = machine.DisplayMonitor,
-                    MachineType = machine.MachineType,
-                    NumBalls = machine.NumBalls
-                },
+            mc.PRGame = new GameConfigFileEntry()
+            {
+                DisplayMonitor = machine.DisplayMonitor,
+                MachineType = machine.MachineType,
+                NumBalls = machine.NumBalls
+            };
 
-                //all bumpers / slings for auto fire without code
-                PRBumpers = Switches.AsNoTracking()
+            //all bumpers / slings for auto fire without code
+            mc.PRBumpers = Switches.AsNoTracking()
                     .Where(x => x.ItemType == "bumper")
                     .Select(x => x.Name)
-                    .ToList(),
-                //TODO? = PRDriverAliases
-            };
+                    .ToList();
+
+            //TODO? = PRDriverAliases
 
             //PR Ball Search - Reset switches
             Dictionary<string, string> resets = new Dictionary<string, string>();
@@ -236,7 +229,7 @@ namespace NetPinProc.Game.Sqlite
                 if (File.Exists(initFile))
                 {
                     var sql = File.ReadAllText(initFile);
-                    Database.ExecuteSqlRaw(sql);                    
+                    Database.ExecuteSqlRaw(sql);
                 }
                 else
                     throw new FileNotFoundException($"{initFile} sql file not found");
@@ -256,7 +249,7 @@ namespace NetPinProc.Game.Sqlite
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
-            {                
+            {
                 System.Console.WriteLine($"{nameof(NetProcDbContext)} isn't configured, creating sqlite configuration for local netproc.db");
                 optionsBuilder.UseSqlite(CONNECTION_STRING);
             }
@@ -296,7 +289,7 @@ namespace NetPinProc.Game.Sqlite
             var pfSvgMedia2 = new Media { Id = 2, MimeType = "image/png", Name = "playfieldblueprint" };
             pfSvgMedia2.Tags = "playfield,blueprint";
             pfSvgMedia2.Data = Convert.FromBase64String(StaticMedia.BLUEPRINT_PNG);
-            pfSvgMedia2.Size = pfSvgMedia2.Data.Length;            
+            pfSvgMedia2.Size = pfSvgMedia2.Data.Length;
             modelBuilder.Entity<Media>().HasData(pfSvgMedia2);
         }
 

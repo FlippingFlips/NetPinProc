@@ -64,30 +64,6 @@ namespace NetPinProc.Game.Manager.Server.Controllers
             return Convert.ToBase64String(buffer);
         }
 
-        [HttpGet("ExportToJson")]
-        public async Task<ActionResult<string>> OnGetMachineExportToJsonAsync(
-            [FromServices] INetProcDbContext context)
-        {
-            var machineConfig = context.GetMachineConfiguration();
-            return JsonSerializer.Serialize(machineConfig, options: new JsonSerializerOptions
-            {
-                 WriteIndented = true,
-            });
-        }
-
-        [HttpGet("Test")]
-        public async Task<ActionResult> OnTestPaths()
-        {            
-            var path = Directory.GetCurrentDirectory();
-            path = Path.Combine(path, @"../Client/wwwroot/playfield");
-
-            if (Directory.Exists(path))
-                ;
-            
-            return Ok();
-        }
-
-
         private static async Task<Dictionary<string, IEnumerable<ConfigFileEntryBase>>> GetMachineItemCollection(INetProcDbContext context)
         {
             //get all machine items

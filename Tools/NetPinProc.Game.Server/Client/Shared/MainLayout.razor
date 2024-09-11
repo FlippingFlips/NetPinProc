@@ -27,6 +27,7 @@
     {
         string languageCode = "en-US";
         language.SetLanguage(System.Globalization.CultureInfo.GetCultureInfo(languageCode));
+        await Task.CompletedTask;
     }
 
     void DrawerToggle()
