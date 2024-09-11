@@ -1,13 +1,11 @@
 # NetPinProc.Game.Server
 ## ❓ What is it?
-Managing NetPinProc game and data through a web server hosted on pinball machine.
-Client pages written in Blazor using MudBlazor material design controls library.
-
-## ⚡ Getting Started
-Setup a path to local game database `netproc.db` file in the `Server/appsettings.json`, defaults to `C:\netproc.db`
-
-## 🔧 Building and Running
-- Run the server project any machine with `dotnet`
-- Host as service with `dotnet` on linux (todo)
+For managing the NetPinProc.Sqlite.Game database. Machine items, adjustments, audits and tools.
+## ⚡ Quick Start / Test
+1. Download server release build
+2. Run the server and visit the URL
 
 ![](screen1.jpg)
+
+## Database path
+Change the path to the games database `netproc.db` file in the `appsettings.json`

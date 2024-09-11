@@ -10,7 +10,7 @@
 These projects are also on nuget as packages, see `Using these NetPinProc Nuget Packages` below.
 
 ## Tools
-- [NetPinProc.Game.Server](Tools\NetPinProc.Game.Server) - Manages the database & pinball machine with a client web application.
+- [NetPinProc.Game.Server](Tools/NetPinProc.Game.Server) - Manages the database & pinball machine with a client web application.
 You can run this locally while developing or serve from your pinball machine. Builds can be found in releases.
 
 ![image](Tools/NetPinProc.Game.Server/screen1.jpg)
