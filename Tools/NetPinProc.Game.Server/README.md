@@ -4,16 +4,18 @@ For managing a NetPinProc.Sqlite.Game database. Machine items, adjustments, audi
 
 ### ⚡ Quick Start / Test
 1. Download a server release build, linux or windows [NetPinProc.Server*.zip](https://github.com/FlippingFlips/NetPinProc/releases)
-2. Run the server and visit the URL 
+2. Run the server `NetPinProc.Game.Manager.Server.exe` and visit the URL 
+1. 
+**If you have issues, run in a cmd / terminal window so it doesn't automatically close without showing you a log**
 ![](screen1.jpg)
 ## 💾 Database
 1. A `P3-ROC \ PDB` database will be generated in the directory named `netproc.db` from the
-[init_p3roc.sql](NetPinProc.Game.Manager.Server/sql/init_proc.sql) file
+[init_p3roc.sql](Server/sql/init_proc.sql) file
 You can safely remove `netproc.db` and the cache files `-shm` and `-wal` and it will be created on load again if you need to reset.
 **Delete when the server isn't running**.
 **DeleteOnInit can also be set from the appsettings.json**.
 2. The path to the database can be changed inside the [appsettings.json](appsettings.json) file.
-3. Setting `P3Roc` to `false` in the `appsettings.json` will use the [init_proc.sql](NetPinProc.Game.Manager.Server/sql/init_proc.sql) file
+3. Setting `P3Roc` to `false` in the `appsettings.json` will use the [init_proc.sql](Server/sql/init_proc.sql) file
 to generate rows from the items in the file.
 ## ❓Client: How To...
 ## Dashboard
