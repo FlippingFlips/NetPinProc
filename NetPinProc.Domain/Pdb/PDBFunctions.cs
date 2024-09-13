@@ -9,6 +9,9 @@ namespace NetPinProc.Domain.Pdb
     /// </summary>
     public class PDBFunctions
     {
+        /// <summary>max output index on pdled boards</summary>
+        const uint PDLED_OUTPUTS = 84;
+
         /// <summary>
         /// Returns True if the given address is a valid PDB address.
         /// </summary>
@@ -132,6 +135,71 @@ namespace NetPinProc.Domain.Pdb
                 }
             }
             return addrs_out.ToArray();
+        }
+
+        /// <summary>convert string address with board id<para/>
+        /// A0-R0-G1-B2</summary>
+        /// <param name="address"></param>
+        /// <returns>the board id and each id for 3 colors</returns>
+        public static List<uint> PdLedRGBAddress(string address)
+        {
+            var addrs = new List<uint>();
+
+            //take the first number in the array to get the board id
+            var crList = address.Split('-');
+            addrs.Add(uint.Parse(crList[0].Substring(1)));
+
+            //add the colors            
+            foreach (var item in crList.Skip(1))
+            {
+                addrs.Add(uint.Parse(item.Substring(1)));
+            }
+
+            return addrs;
+        }
+
+        /// <summary>get addresses from single num<para/></summary>
+        /// <param name="ledNumber"></param>
+        /// <param name="singleColor"></param>
+        /// <returns>the board id and each id for 3 colors</returns>
+        public static List<uint> PdLedRGBAddress(uint ledNumber, bool singleColor = false)
+        {
+            //return colour address with board id at start
+            List<uint> addrs = new List<uint>();
+
+            //get the max, for 3 color is 28 or 84
+            var maxLedPerBoard = PDLED_OUTPUTS;
+            if (!singleColor)
+                maxLedPerBoard = maxLedPerBoard / 3;
+
+            //get the start index, eg: 0 = A0-R0 or 28 = A1-R0
+            uint startIndex = 0;
+
+            //0-27 limit
+            if(ledNumber > (maxLedPerBoard - 1))
+            {
+                startIndex = ledNumber % maxLedPerBoard;
+                if (startIndex > 0)
+                    startIndex = startIndex * 3;
+            }                
+            else if (ledNumber > 0) //add on 3 to the led number
+                startIndex = ledNumber * 3;
+
+            //get board id from number
+            uint boardId = (uint)Math.Abs(ledNumber / maxLedPerBoard);
+            addrs.Add(boardId);
+
+            //add the first address
+            addrs.Add(startIndex);
+
+            //add the rest for 3 color
+            if(!singleColor)
+            {
+                addrs.Add(startIndex + 1);
+                addrs.Add(startIndex + 2);
+            }            
+
+            return addrs;
         }
     }
 }
