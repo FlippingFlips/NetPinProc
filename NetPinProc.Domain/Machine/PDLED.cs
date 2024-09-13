@@ -2,10 +2,9 @@
 
 namespace NetPinProc.Domain
 {
-    /// <summary>
-    /// Represents a PD-LED board
-    /// TODO: collection of servos. Can be 12 servos that start on LED Pin 72
-    /// </summary>
+    /// <summary>Represents a PD-LED board<para/>
+    /// 84 individual or 28 RGB. 84/3 <para/>
+    /// These boards also do servos and steppers, serial leds</summary>
     public class PDLED : IPDLED
     {
         const byte PROC_OUTPUT_MODULE = 3;

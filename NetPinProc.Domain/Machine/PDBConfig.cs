@@ -268,13 +268,15 @@ namespace NetPinProc.Domain
             return -1;
         }
 
-        /// <summary>
-        /// Sets up driverstates and calls <see cref="IProcDevice.DriverUpdateState(ref DriverState)"/>. This call is ignored if the device is a <see cref="IFakeProcDevice"/>
+        /// <summary>Sets up driver states and calls <see cref="IProcDevice.DriverUpdateState(ref DriverState)"/>.<para/>
+        /// This will be skipped if the device is a <see cref="IFakeProcDevice"/>
         /// </summary>
         /// <param name="proc"></param>
         public void InitializeDrivers(IProcDevice proc)
         {
-            // Loop through all of the drivers, initializing them with the polarity
+            if (proc as IFakeProcDevice != null) return;
+
+            // create new driver states and update, initializing them with the polarity
             for (ushort i = 0; i < 208; i++)
             {
                 DriverState state = new DriverState();
@@ -287,9 +289,7 @@ namespace NetPinProc.Domain
                 state.PatterOnTime = 0;
                 state.PatterOffTime = 0;
                 state.PatterEnable = false;
-                state.futureEnable = false;
-
-                if (proc as IFakeProcDevice != null) continue;
+                state.futureEnable = false;                
 
                 proc.DriverUpdateState(ref state);
             }
