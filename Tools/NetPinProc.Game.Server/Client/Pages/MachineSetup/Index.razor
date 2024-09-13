@@ -11,13 +11,20 @@
 
         <MudItem xs="12" Class="mb-0">
             <MudToolBar Dense Class="mb-0 mud-theme-primary">
-                <MudTooltip Text="@lang["Pages:ExportMachineJson"]">
+                <MudTooltip Text="@lang["MachineTools:ExportMachineJson"]">
                     <MudIconButton Color="Color.Secondary"
                             Class="mud-theme-error"
                             OnClick="@ExportJsonAsync"
                             Icon="@Icons.Material.Filled.ImportExport"
                             Size="Size.Small" />
                 </MudTooltip>                
+                <MudTooltip Text="@lang["MachineTools:CheckCompatible"]">
+                    <MudIconButton Color="Color.Secondary"
+                                   Class="mud-theme-error"
+                                   OnClick="@TestMachineConfig"
+                                   Icon="@Icons.Material.Filled.AcUnit"
+                                   Size="Size.Small" />
+                </MudTooltip>
             </MudToolBar>
             </MudItem>
 
@@ -81,4 +88,23 @@
         }
         catch (Exception ex) { Snack.Add(ex.Message, Severity.Warning); }
     }
+
+    async Task TestMachineConfig()
+    {
+        try
+        {
+            var res = await Http.GetAsync("api/machine/IsCompatible");
+            if(res.IsSuccessStatusCode)
+                Snack.Add($"PROC machine setup passed", Severity.Success);
+            else
+                Snack.Add($"{await res.Content.ReadAsStringAsync()}", Severity.Warning);
+            
+        }
+        catch (Exception ex) 
+        { 
+            Snack.Add($"{ex.InnerException?.Message}", Severity.Warning);
+        }
+    }
+
+    
 }

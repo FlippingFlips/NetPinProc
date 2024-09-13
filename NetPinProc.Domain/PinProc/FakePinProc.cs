@@ -300,7 +300,6 @@ namespace NetPinProc.Domain
         /// <param name="mapping"></param>
         public void SetDmdColorMapping(byte[] mapping) { }
         /// <summary>
-        /// This can be used fake but the project should be x86 to be in-line with the library. <para/>
         /// Only method to use the PinProc.PRDecode. TODO: This method could be added from the PRDecode and this class moved away from this project, so that it's not dependent on x86
         /// </summary>
         /// <param name="config"></param>

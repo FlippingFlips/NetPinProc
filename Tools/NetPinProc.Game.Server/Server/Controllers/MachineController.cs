@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NetPinProc.Domain;
 using NetPinProc.Domain.Constants;
 using NetPinProc.Game.Sqlite;
 using NetPinProc.Game.Sqlite.Model;
@@ -49,6 +50,33 @@ namespace NetPinProc.Game.Manager.Server.Controllers
             {
                 throw;
             }            
+        }
+
+        /// <summary>Checks compatibility of the machine config with a <see cref="FakePinProc"/></summary>
+        /// <param name="netProcDbContext"></param>
+        /// <returns></returns>
+        [HttpGet("IsCompatible")]
+        public async Task<IActionResult> GetIsCompatible(
+            [FromServices] INetProcDbContext netProcDbContext)
+        {
+            try
+            {
+                var mc = netProcDbContext.GetMachineConfiguration();
+                var proc = new FakePinProc(mc.PRGame.MachineType, new ConsoleLogger());
+                proc.SetupProcMachine(mc,
+                    new AttrCollection<ushort, string, IDriver>(),
+                     new AttrCollection<ushort, string, Switch>(),
+                     new AttrCollection<ushort, string, IDriver>(),
+                     new AttrCollection<ushort, string, LED>(),
+                     new AttrCollection<ushort, string, IDriver>(),
+                     new AttrCollection<ushort, string, Domain.Pdb.PdStepper>(),
+                     new AttrCollection<ushort, string, Domain.Pdb.PdServo>(),
+                     new AttrCollection<ushort, string, Domain.Pdb.PdSerialLed>()
+                );
+
+                return Ok();
+            }
+            catch (Exception ex) { return BadRequest($"{ex.Message}\n{ex.StackTrace}"); }
         }
 
         /// <summary>Just a quick bog standard text print of all items in the machine</summary>
