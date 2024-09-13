@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NetPinProc.Domain.Exceptions;
+using NetPinProc.Domain.Interface;
 using NetPinProc.Domain.MachineConfig;
 using NetPinProc.Game.Sqlite;
 
@@ -23,8 +24,9 @@ namespace NetPinProc.Game.Manager.Server.Controllers.Base
         {
             try
             {
-                return Ok(await netProcDbContext.Set<T>().ToListAsync());
-            }
+                return Ok(await netProcDbContext.Set<T>()
+                    .ToListAsync());
+            }            
             catch (Exception ex)
             {
                 logger.LogError(ex.ToString());
@@ -61,7 +63,7 @@ namespace NetPinProc.Game.Manager.Server.Controllers.Base
         }
 
         [HttpPut]
-        public async Task<ActionResult<T>> OnPutAsync(
+        public async virtual Task<ActionResult<T>> OnPutAsync(
             [FromServices] NetProcDbContext netProcDbContext,
             [FromBody] T entity)
         {
@@ -77,7 +79,6 @@ namespace NetPinProc.Game.Manager.Server.Controllers.Base
                 return BadRequest($"{ex.Message} - {ex.InnerException?.Message}");
             }
         }
-
 
         [HttpDelete("{name}")]
         public async Task<ActionResult<int>> OnDeleteAsync(

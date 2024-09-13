@@ -20,6 +20,16 @@ namespace NetPinProc.Game.Manager.Server.Controllers
             [FromServices] INetProcDbContext context) =>
             await context.Machine.FirstAsync();
 
+        [HttpPut]
+        public async Task<Machine> OnPutAsync(
+            [FromServices] NetProcDbContext context,
+            Machine machine)
+        {
+            context.Update(machine);
+            await context.SaveChangesAsync();
+            return machine;
+        }
+            
         [HttpGet("ExportToJson")]
         public async Task<ActionResult<string>> OnGetMachineExportToJsonAsync(
             [FromServices] INetProcDbContext context)
