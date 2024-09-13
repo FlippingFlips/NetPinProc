@@ -1,3 +1,5 @@
+INSERT INTO Machine (Id, machineType, numBalls, title, version, displayMonitor) VALUES (1, 7, 4, 'My NetPinProcGame', '0.0.1', 0);
+
 INSERT INTO Adjustments (Id, Name, MenuName, SubMenuName, Description, ValueDefault, Value, OptionType, Options) VALUES ('ALLOW_RESTART', 'Allow Restart', 'STANDARD_ADJ', 'GENERAL', 'Allow game restart from holding start.', 1, 1, 2, 'NO,YES');
 INSERT INTO Adjustments (Id, Name, MenuName, SubMenuName, Description, ValueDefault, Value, OptionType, Options) VALUES ('ATTRACT_MUSIC', 'Attract Music', 'STANDARD_ADJ', 'GENERAL', 'Allow music to play in attract', 1, 1, 2, 'NO,YES');
 INSERT INTO Adjustments (Id, Name, MenuName, SubMenuName, Description, ValueDefault, Value, OptionType, Options) VALUES ('BALLS_PER_GAME', 'Balls Per Game', 'STANDARD_ADJ', 'GENERAL', 'Number of balls per game 1-10', 3, 4, 0, '1,10');
@@ -19,6 +21,18 @@ INSERT INTO Adjustments (Id, Name, MenuName, SubMenuName, Description, ValueDefa
 INSERT INTO Adjustments (Id, Name, MenuName, SubMenuName, Description, ValueDefault, Value, OptionType, Options) VALUES ('DISP_TOP', 'Display On Top', 'STANDARD_ADJ', 'DISPLAY', '', 1, 1, 2, 'OFF,ON');
 INSERT INTO Adjustments (Id, Name, MenuName, SubMenuName, Description, ValueDefault, Value, OptionType, Options) VALUES ('TILT_WARNINGS', 'Tilt Warnings', 'STANDARD_ADJ', 'GENERAL', 'Number of tilt warnings before tilt', 3, 3, 0, '0,20');
 
+-- AUDITS (STANDARD)
+INSERT INTO Audits (Id, Value, Type, Description) VALUES
+('CREDITS', 0, 0, 'Credits in machine'), 
+('CREDITS_TOTAL', 0, 0, 'Total credits used'), 
+('GAMES_STARTED', 0, 0, 'Games started log'), 
+('GAMES_PLAYED', 0, 0, 'Games completed log'), 
+('XB_AWARDED', 0, 0, 'Total extra balls awarded'),
+('REPLAYS', 0, 0, 'Total replays awarded'), 
+('MATCHES', 0, 0, 'Total Matches Awarded'),
+('POWERED_ON_TIMES', 0, 0, 'Times machine powered on'),
+('TOTAL_BALLS_PLAYED', 0, 0, 'Total balls played');
+
 
 INSERT INTO Coils (Number, DisplayName, Conn, Location, XPos, YPos, ItemType, Name, PulseTime, Bus, Polarity, Tags, Search, ReturnWire, VoltageWire, Voltage, NumberPROC) VALUES ('A0-B0-0', NULL, NULL, NULL, 339.5956115722656, 175.4376983642578, NULL, 'trough', 30, '', 0, 'trough', 0, NULL, NULL, NULL, 0);
 INSERT INTO Coils (Number, DisplayName, Conn, Location, XPos, YPos, ItemType, Name, PulseTime, Bus, Polarity, Tags, Search, ReturnWire, VoltageWire, Voltage, NumberPROC) VALUES ('A0-B0-1', NULL, NULL, NULL, 366.9552917480469, 324.39581298828125, 'flipper', 'flipperLwRMain', 30, '', 0, '', 0, NULL, NULL, NULL, 1);
@@ -35,13 +49,13 @@ INSERT INTO Coils (Number, DisplayName, Conn, Location, XPos, YPos, ItemType, Na
 INSERT INTO Coils (Number, DisplayName, Conn, Location, XPos, YPos, ItemType, Name, PulseTime, Bus, Polarity, Tags, Search, ReturnWire, VoltageWire, Voltage, NumberPROC) VALUES ('A0-B0-10', NULL, NULL, NULL, 61.61039733886719, 175.99630737304688, NULL, 'flippersRelay', 30, '', 0, '', 0, NULL, NULL, NULL, 12);
 
 -- Table: Leds
-INSERT INTO Leds (Number, Bus, Conn, DisplayName, ItemType, Location, Name, Polarity, Tags, UiShapeId, XPos, YPos, NumberPROC) VALUES ('A0-R0-G1-B2', '0', NULL, NULL, NULL, NULL, 'start', 1, 'start', 'square19mm', 245.0, 677.0, 0);
-INSERT INTO Leds (Number, Bus, Conn, DisplayName, ItemType, Location, Name, Polarity, Tags, UiShapeId, XPos, YPos, NumberPROC) VALUES ('A0-R3-G4-B5', '0', NULL, NULL, NULL, NULL, 'LED22', 1, '', 'square19mm', 224.9571990966797, 577.5927734375, 1);
-INSERT INTO Leds (Number, Bus, Conn, DisplayName, ItemType, Location, Name, Polarity, Tags, UiShapeId, XPos, YPos, NumberPROC) VALUES ('A0-R6-G7-B8', '0', NULL, NULL, NULL, NULL, 'shootAgain', 1, 'shootAgain', 'square19mm', 243.38009643554688, 930.8206787109375, 2);
-INSERT INTO Leds (Number, Bus, Conn, DisplayName, ItemType, Location, Name, Polarity, Tags, UiShapeId, XPos, YPos, NumberPROC) VALUES ('A0-R9-G10-B11', '0', NULL, NULL, NULL, NULL, 'LED4', 1, 'targetBank', 'square19mm', 225.93719482421875, 856.7293090820312, 3);
-INSERT INTO Leds (Number, Bus, Conn, DisplayName, ItemType, Location, Name, Polarity, Tags, UiShapeId, XPos, YPos, NumberPROC) VALUES ('A0-R12-G13-B14', '0', NULL, NULL, NULL, NULL, 'LED5', 1, 'targetBank', 'square19mm', 379.99530029296875, 571.5128784179688, 4);
-INSERT INTO Leds (Number, Bus, Conn, DisplayName, ItemType, Location, Name, Polarity, Tags, UiShapeId, XPos, YPos, NumberPROC) VALUES ('A0-R15-G16-B17', '0', NULL, NULL, NULL, NULL, 'LED6', 1, 'targetBank', 'square19mm', 252.31680297851562, 243.19700622558594, 5);
-INSERT INTO Leds (Number, Bus, Conn, DisplayName, ItemType, Location, Name, Polarity, Tags, UiShapeId, XPos, YPos, NumberPROC) VALUES ('A0-R18-G19-B20', '0', NULL, NULL, NULL, NULL, 'LED7', 1, 'targetBank', 'square19mm', 260.0, 310.0000915527344, 6);
+INSERT INTO Leds (Number, Bus, Conn, DisplayName, ItemType, Location, Name, Polarity, Tags, XPos, YPos, NumberPROC) VALUES ('A0-R0-G1-B2', '0', NULL, NULL, NULL, NULL, 'start', 'start', 'square19mm', 245.0, 677.0, 0);
+INSERT INTO Leds (Number, Bus, Conn, DisplayName, ItemType, Location, Name, Polarity, Tags, XPos, YPos, NumberPROC) VALUES ('A0-R3-G4-B5', '0', NULL, NULL, NULL, NULL, 'LED22', '', 'square19mm', 224.9571990966797, 577.5927734375, 1);
+INSERT INTO Leds (Number, Bus, Conn, DisplayName, ItemType, Location, Name, Polarity, Tags, XPos, YPos, NumberPROC) VALUES ('A0-R6-G7-B8', '0', NULL, NULL, NULL, NULL, 'shootAgain', 'shootAgain', 'square19mm', 243.38009643554688, 930.8206787109375, 2);
+INSERT INTO Leds (Number, Bus, Conn, DisplayName, ItemType, Location, Name, Polarity, Tags, XPos, YPos, NumberPROC) VALUES ('A0-R9-G10-B11', '0', NULL, NULL, NULL, NULL, 'LED4', 'targetBank', 'square19mm', 225.93719482421875, 856.7293090820312, 3);
+INSERT INTO Leds (Number, Bus, Conn, DisplayName, ItemType, Location, Name, Polarity, Tags, XPos, YPos, NumberPROC) VALUES ('A0-R12-G13-B14', '0', NULL, NULL, NULL, NULL, 'LED5', 'targetBank', 'square19mm', 379.99530029296875, 571.5128784179688, 4);
+INSERT INTO Leds (Number, Bus, Conn, DisplayName, ItemType, Location, Name, Polarity, Tags, XPos, YPos, NumberPROC) VALUES ('A0-R15-G16-B17', '0', NULL, NULL, NULL, NULL, 'LED6', 'targetBank', 'square19mm', 252.31680297851562, 243.19700622558594, 5);
+INSERT INTO Leds (Number, Bus, Conn, DisplayName, ItemType, Location, Name, Polarity, Tags, XPos, YPos, NumberPROC) VALUES ('A0-R18-G19-B20', '0', NULL, NULL, NULL, NULL, 'LED7', 'targetBank', 'square19mm', 260.0, 310.0000915527344, 6);
 
 -- Table: Servos
 INSERT INTO Servos (Name, DisplayName, Conn, Location, XPos, YPos, ItemType, "Index", BoardId, MinValue, IsEnabled, Voltage) VALUES ('test', NULL, NULL, NULL, -10.0, -10.0, NULL, 0, 0, 0, 1, NULL);
