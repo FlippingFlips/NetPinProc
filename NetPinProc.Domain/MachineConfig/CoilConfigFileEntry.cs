@@ -2,8 +2,9 @@
 
 namespace NetPinProc.Domain.MachineConfig
 {
+
     /// <summary>Represents a coil (driver) config entry in memory</summary>
-    public class CoilConfigFileEntry : ConfigFileEntryBase, IPolarity
+    public class CoilConfigFileEntry : ConfigFileEntryBase, IPolarity, IProcNumber
     {
         /// <summary> The number that you can reference in script </summary>
         public string Number { get; set; }

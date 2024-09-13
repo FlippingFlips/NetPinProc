@@ -1,14 +1,10 @@
 ﻿using NetPinProc.Domain.Pdb;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Xml.Linq;
 
 namespace NetPinProc.Domain
 {
-    /// <summary>
-    /// Represents an LED LED in a pinball machine
-    /// </summary>
+    /// <summary>Represents an LED LED in a pinball machine</summary>
     public class LED : GameItem
     {
         private readonly List<uint> addrs;
@@ -25,52 +21,52 @@ namespace NetPinProc.Domain
         private string function = "none";
         private double lastTimeChanged;
 
-        /// <summary>
-        /// Creates an LED from the given strNumber <para/>
-        /// Board address then colors A0-R0-G1-B2
-        /// </summary>
+        /// <summary>Creates an LED from the given strNumber <para/>
+        /// Board address then colors A0-R0-G1-B2 <para/>
+        /// Single number addresses can be used for 3 color like 0, or 45 etc <para/></summary>
         /// <param name="proc"></param>
         /// <param name="name"></param>
         /// <param name="number"></param>
         /// <param name="strNumber"></param>
-        public LED(IProcDevice proc, string name, ushort number, string strNumber = "") : base(proc, name, number, strNumber)
+        /// <param name="singleColor">currently only used if supplying a single number string</param>
+        public LED(IProcDevice proc,
+            string name,
+            ushort number,
+            string strNumber = "",
+            bool singleColor = false) : 
+            base(proc, name, number, strNumber)
         {
-            //take the first number in the array to get address. A0-R0-G1-B2
-            var crList = strNumber.Split('-');
-            boardAddress = uint.Parse(crList[0].Substring(1));
-
-            //get the colors
-            addrs = new List<uint>();
-            foreach (var item in crList.Skip(1))
-            {
-                addrs.Add(uint.Parse(item.Substring(1)));
-            }
+            //get the board index and color addresses
+            //single number address
+            if (uint.TryParse(strNumber, out var _ledNumber))
+                addrs = PDBFunctions.PdLedRGBAddress(_ledNumber, singleColor);
+            //get board index and colors from the string A0-R0-G1-B2
+            else
+                addrs = PDBFunctions.PdLedRGBAddress(strNumber);
 
             //get the board this led address uses
+            boardAddress = addrs[0];
             var pdLedBoard = PdLeds.GetPdLedBoard(boardAddress);
 
             //assign the board to the led if not create one under this address
-            if(pdLedBoard != null) { board = pdLedBoard; }
+            if (pdLedBoard != null) { board = pdLedBoard; }
             else
             {
                 this.board = new PDLED(proc, boardAddress);
                 PdLeds.PDLEDS.Add(board);
             }
+
+            //remove the board address from addr
+            addrs.Remove(0);
         }
 
-        /// <summary>
-        /// The last color set from this class before sending to board
-        /// </summary>
+        /// <summary>The last color set from this class before sending to board</summary>
         public uint[] CurrentColor { get; private set; } = new uint[] { 0x00, 0x00, 0x00 };
 
-        /// <summary>
-        /// Reverse color polarity?
-        /// </summary>
-        public bool Polarity { get; set; } = true;
+        /// <summary>Reverse color polarity?</summary>
+        public bool Polarity { get; set; } = false;
 
-        /// <summary>
-        /// Writes a new color using the <see cref="PDLED.WriteColor(uint, uint)"/>
-        /// </summary>
+        /// <summary>Writes a new color using the <see cref="PDLED.WriteColor(uint, uint)"/></summary>
         /// <param name="color"></param>
         public void ChangeColor(uint[] color)
         {
@@ -82,9 +78,9 @@ namespace NetPinProc.Domain
             }
         }
 
-        /// <summary>
-        /// Change color and clear any scripts. You need to use 0xFF for 255, not sure why, to test 255,255,0 for yellow it will be red, so you would need to do 0xFF,0xFF,0xFF
-        /// </summary>
+        /// <summary>Change color and clear any scripts. <para/>
+        /// You need to use 0xFF for 255, not sure why...<para/>
+        /// To test 255,255,0 for yellow it will be red, so you would need to do 0xFF,0xFF,0xFF<para/></summary>
         /// <param name="color"></param>
         public void Color(uint[] color)
         {
@@ -92,9 +88,7 @@ namespace NetPinProc.Domain
             ChangeColor(color);
         }
 
-        /// <summary>
-        /// Turns off the LED
-        /// </summary>
+        /// <summary>Turns off the LED and functions</summary>
         public void Disable()
         {
             function = "none";
@@ -107,9 +101,7 @@ namespace NetPinProc.Domain
             lastTimeChanged = Time.GetTime();
         }
 
-        /// <summary>
-        /// Fades the LED disabling any scripts
-        /// </summary>
+        /// <summary>Fades the LED disabling any scripts</summary>
         /// <param name="color"></param>
         /// <param name="time"></param>
         public void Fade(uint[] color, uint time)
@@ -118,16 +110,12 @@ namespace NetPinProc.Domain
             ChangeFade(color, time);
         }
 
-        /// <summary>
-        /// The sum of all durations in the script
-        /// </summary>
+        /// <summary>The sum of all durations in the script</summary>
         /// <param name="ledScript"></param>
         /// <returns></returns>
         public long GetScriptDuration(LEDScript[] ledScript) => ledScript.Sum(x => x.Duration);
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary></summary>
         public void Script(LEDScript[] newScript, int runtime = 0, bool repeat = true)
         {
             _scriptIndex = -1;
@@ -140,9 +128,7 @@ namespace NetPinProc.Domain
             IterateScript();
         }
 
-        /// <summary>
-        /// Processes any script function, if script ready then <see cref="IterateScript"/>
-        /// </summary>
+        /// <summary>Processes any script function, if script ready then <see cref="IterateScript"/></summary>
         public void Tick()
         {
             if (function == "script")
@@ -158,10 +144,8 @@ namespace NetPinProc.Domain
             }
         }
 
-        /// <summary>
-        /// Displays Name, Address and color_addresses
-        /// </summary>
-        /// <returns></returns>
+        /// <summary>Displays Name, Address and color_addresses</summary>
+        /// <returns>led name, board address, color indexes</returns>
         public override string ToString() => $"LED: {Name}, board_addr: {boardAddress}, color_addrs: {string.Join(",", addrs)}";
 
         private void ChangeFade(uint[] color, uint time)

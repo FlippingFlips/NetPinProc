@@ -15,14 +15,10 @@
         /// </summary>
         protected string _name = "";
 
-        /// <summary>
-        /// Integer value for this item that provides a mapping to the hardware
-        /// </summary>
+        /// <summary>ushort value for this item that provides a mapping to the hardware</summary>
         protected ushort _number = 0;
 
-        /// <summary>
-        /// LED string number
-        /// </summary>
+        /// <summary>LED string number or just number</summary>
 
         protected string _strNumber;
 

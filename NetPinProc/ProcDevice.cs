@@ -693,13 +693,15 @@ namespace NetPinProc
 
                     s.Number = number;
                     SwitchUpdateRule(number,
-                        EventType.SwitchClosedDebounced,
+                        se.NonDebounce.HasValue && se.NonDebounce.Value ?
+                            EventType.SwitchClosedNondebounced : EventType.SwitchClosedDebounced,
                         new SwitchRule { NotifyHost = true, ReloadActive = false },
                         null,
                         false
                     );
                     SwitchUpdateRule(number,
-                        EventType.SwitchOpenDebounced,
+                        se.NonDebounce.HasValue && se.NonDebounce.Value ?
+                        EventType.SwitchOpenNondebounced : EventType.SwitchOpenDebounced,
                         new SwitchRule { NotifyHost = true, ReloadActive = false },
                         null,
                         false

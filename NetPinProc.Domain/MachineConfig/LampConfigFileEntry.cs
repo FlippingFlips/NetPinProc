@@ -3,7 +3,7 @@
 namespace NetPinProc.Domain.MachineConfig
 {
     /// <summary>Represents a lamp's configuration in memory</summary>
-    public class LampConfigFileEntry : ConfigFileEntryBase, IPolarity
+    public class LampConfigFileEntry : ConfigFileEntryBase, IPolarity, IProcNumber
     {
         ///<inheritdoc/>
         public string Number { get; set; }

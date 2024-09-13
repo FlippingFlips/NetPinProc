@@ -6,9 +6,13 @@ MachineItem:
  BoardId: Id number of connected board, starting at index 0
  Connection: Connection fitting name (not required, for your reference only)
  ItemType: Set item types on switches to program switch rules to a coil. Some coils like `bumpers, slings, flippers` you will want the hardware to fire the coil automatically, to be faster than software.
+ LedNum: You can use a single number 0, 64, 86 or they can be written like `A0-R0-G1-B1`
  Name: Names should be unique. Switch names should start lower cased and using "_" instead of spaces. Leave switch names to `not_used*` if not using them.
+ NonDebounce: By default switches are set to debounced, set this to non debounced
  Number: The number can be a string as used in older P-ROC boards, see other machine.json's
  Position: The X pos and Y pos of the item on or under the playfield
+ RequiredNum: This machine item needs a number to apply the config to the PROC board
+ SingleColor: By default LEDs are 3 color, 28 RGB per board, 84 single color
  Tags: Machine items can be tagged with single names or comma separated.
  Type: State of the switch Normally open or Normally closed
 Pages:

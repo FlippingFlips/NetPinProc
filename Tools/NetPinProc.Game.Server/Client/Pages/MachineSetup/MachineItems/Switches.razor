@@ -119,6 +119,26 @@
                 </EditTemplate>
                 </PropertyColumn>
 
+            <PropertyColumn Property="x => x.NonDebounce" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
+                <HeaderTemplate>
+                    <MudTooltip>
+                        <TooltipContent>
+                            <MudStack>
+                                <MudText Typo="Typo.caption" Color="Color.Warning" Align="Align.Left">
+                                    @lang.Keys["MachineItem:NonDebounce"]
+                                </MudText>
+                            </MudStack>
+                        </TooltipContent>
+                        <ChildContent>NonDebounce</ChildContent>
+                    </MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudCheckBox T="bool?" @bind-Value=@context.Item.NonDebounce Label="NonDebounce"
+                                  Dense
+                                  Required=false />
+                </EditTemplate>
+            </PropertyColumn>
+
                 <PropertyColumn Property="x => x.ItemType" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
                 <HeaderTemplate>
                     <MudTooltip>
@@ -351,7 +371,7 @@
         if (x.Number.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
             return true;
 
-        if (x.Tags.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+        if (x.Tags?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false)
             return true;
 
         return false;

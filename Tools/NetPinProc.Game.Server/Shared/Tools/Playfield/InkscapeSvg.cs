@@ -98,6 +98,10 @@ namespace NetPinProc.Game.Manager.Shared.Tools.Playfield
             //add machine items to the layers
             foreach (var group in groups)
             {
+                //get label name inkscape namespace, skip if not one
+                if (!group.ContainsAttribute(inkNs + ":label"))
+                    continue;
+
                 //get label name inkscape namespace
                 var groupLayerName = group.CustomAttributes[inkNs + ":label"];
 

@@ -1,58 +1,114 @@
-﻿@using NetPinProc.Domain.Players;
-@using NetPinProc.Game.Manager.Shared;
-@inject HttpClient Http
+﻿@using NetPinProc.Domain.PinProc
+@using NetPinProc.Game.Manager.Client.Pages.Machine_Setup.MachineItems;
+@using NetPinProc.Game.Manager.Client.Shared.DialogComponents;
+@using NetPinProc.Game.Manager.Client.Shared.HelpComponents
+@using NetPinProc.Game.Manager.Shared
 
-<MudPaper>
-    @if (Machine != null)
-    {
-        <MudCard>
+<PageTitle>Drivers / Coils | @Names.SITE_NAME</PageTitle>
 
-            <MudCardHeader>
-                <MudStack Row=true>
-                    <MudBadge Icon="@Icons.Material.Filled.DesktopMac" Color="Color.Secondary" />
-                    <MudText>MACHINE</MudText>
-                </MudStack>
-            </MudCardHeader>
+<MudStack>
+    <MudDataGrid T="Machine" MultiSelection="false"
+                 Class="netpinprocdatagrid"
+                 Items="@Elements"
+                 SortMode="SortMode.Multiple"
+                 Dense=true
+                 FixedHeader=true
+                 Height="100px"
+                 Filterable="false"
+                 Hideable="true"
+                 Bordered=true
+                 ReadOnly=false
+                 EditDialogOptions="new DialogOptions{ FullWidth = true, MaxWidth = MaxWidth.Medium}"
+                 EditMode=DataGridEditMode.Form
+                 EditTrigger="DataGridEditTrigger.OnRowClick"
+                 StartedEditingItem="@StartedEditingItem"
+                 CanceledEditingItem="@CanceledEditingItem"
+                 CommittedItemChanges="@CommittedItemChanges">
+        <Columns>
 
-            <MudCardContent>
-                <MudSimpleTable Style="overflow-x: auto;">
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Version</th>
-                            <th>Type</th>
-                            <th>Balls</th>
-                            <th>Display</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>@Machine.Title</td>
-                            <td>@Machine.Version</td>
-                            <td>@Machine.MachineType</td>
-                            <td>@Machine.NumBalls</td>
-                            <td>@Machine.DisplayMonitor</td>                            
-                        </tr>
-                    </tbody>
-                </MudSimpleTable>
-            </MudCardContent>
-        </MudCard>        
-    }
-</MudPaper>
+            <PropertyColumn Property="x => x.MachineType">
+                <EditTemplate>
+                    <MudSelect T="MachineType"
+                               Variant="Variant.Outlined"
+                               @bind-Value=context.Item.MachineType>
+                        @foreach (MachineType item in Enum.GetValues(typeof(MachineType)))
+                        {
+                            <MudSelectItem Value="@item">@item</MudSelectItem>
+                        }
+                    </MudSelect>
+                </EditTemplate>
+            </PropertyColumn>
 
-@code 
-{
-    Machine Machine;
+            <PropertyColumn Property="x => x.NumBalls" />
+
+            <PropertyColumn Property="x => x.Title" Filterable=false Resizable="true" Sortable="false" />
+
+            <PropertyColumn Property="x => x.Version" Filterable=false Resizable="true" Sortable="false">
+                <HeaderTemplate>
+                    <MudTooltip>
+                        <TooltipContent>
+                            @lang.Keys["MachineItem:ItemType"]
+                        </TooltipContent>
+                        <ChildContent>Item Type</ChildContent>
+                    </MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudTextField @bind-Value=@context.Item.Version Label="Version"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense"
+                                  Required=false />
+                </EditTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="x => x.DisplayMonitor"  />
+        </Columns>
+    </MudDataGrid>
+</MudStack>
+
+@code {
+    private List<Machine> Elements = new List<Machine>();
+    private string? _searchString;
+    private bool _sortNameByLength;
+    [Inject] protected HttpClient? Http { get; set; }
+    [Inject] protected ISnackbar? Snackbar { get; set; }
+    public string? ApiUrl { get; set; }
+    protected List<string> _events = new();
+    [Inject] protected ILanguageContainerService lang { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        try
+        ApiUrl = "api/machine/";
+        await RefreshViewData();
+    }
+
+    protected async Task RefreshViewData() => Elements.Add(await Http.GetFromJsonAsync<Machine>(ApiUrl));
+
+    protected void StartedEditingItem(Machine item)
+    {
+        _events.Insert(0, $"Event = StartedEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+    }
+
+    protected void CanceledEditingItem(Machine item)
+    {
+        _events.Insert(0, $"Event = CanceledEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+    }
+
+    protected async Task CommittedItemChanges(object item)
+    {
+        _events.Insert(0, $"Event = CommittedItemChanges, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+
+        var response = await Http.PutAsJsonAsync(ApiUrl, item);
+        if (!response.IsSuccessStatusCode)
         {
-            Machine = await Http.GetFromJsonAsync<Machine>("api/machine");
+            Snackbar.Add("failed to update", Severity.Error);
         }
-        catch (Exception ex)
+        else
         {
-            Console.WriteLine(ex.ToString());
+            var result = await response.Content.ReadFromJsonAsync<object>();
+            if (result != null)
+                Snackbar.Add("updated", Severity.Success);
+            else
+                Snackbar.Add("failed to update", Severity.Warning);
         }
     }
+
 }

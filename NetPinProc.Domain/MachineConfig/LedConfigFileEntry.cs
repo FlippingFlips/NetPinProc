@@ -3,12 +3,13 @@
 namespace NetPinProc.Domain.MachineConfig
 {
     /// <summary>Represents an LED's configuration in memory</summary>
-    public class LedConfigFileEntry  : ConfigFileEntryBase, IPolarity
+    public class LedConfigFileEntry  : ConfigFileEntryBase, IPolarity, IProcNumber
     {
         ///<inheritdoc/>
         public string Number { get; set; }
 
-        /// <summary>A number for reference. The string number is the one decoded by PROC<para/>
+        /// <summary>A number for reference if using long string address.<para/>
+        /// The string number is the one decoded by PROC<para/>
         /// This is just for reference or to use in other applications</summary>
         public uint NumberPROC { get; set; }
 
@@ -20,5 +21,7 @@ namespace NetPinProc.Domain.MachineConfig
 
         ///<inheritdoc/>
         public bool Polarity { get; set; }
+
+        public bool? SingleColor { get; set; }
     }
 }
