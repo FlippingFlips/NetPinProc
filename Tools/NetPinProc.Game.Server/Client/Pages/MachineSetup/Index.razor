@@ -1,8 +1,10 @@
 ﻿@page "/machine/setup"
 @using BlazorDownloadFile;
 @using NetPinProc.Game.Manager.Client.Pages.MachineSetup.MachineItems
+@using System.Text
 @inject NavigationManager Nav
 @inject ISnackbar Snack
+@inject IDialogService DialogService
 
 <PageTitle>Machine Setup | @Names.SITE_NAME</PageTitle>
 
@@ -11,16 +13,29 @@
 
         <MudItem xs="12" Class="mb-0">
             <MudToolBar Dense Class="mb-0 mud-theme-primary">
+                <MudText>EXPORT & TEST: </MudText>
                 <MudTooltip Text="@lang["MachineTools:ExportMachineJson"]">
                     <MudIconButton Color="Color.Secondary"
-                            Class="mud-theme-error"
+                                   Class="mud-theme-success mt-1 mr-1"
                             OnClick="@ExportJsonAsync"
                             Icon="@Icons.Material.Filled.ImportExport"
                             Size="Size.Small" />
                 </MudTooltip>                
+                <MudTooltip Text="@lang["MachineTools:ImportMachineJson"]">
+                    <MudFileUpload T="IBrowserFile" Accept=".json,.yaml,.yml"
+                                   FilesChanged="ImportJsonAsync"
+                                   MaximumFileCount="1">
+                        <ActivatorContent>
+                            <MudIconButton Color="Color.Info"
+                                           Class="mud-theme-info mt-1 mr-1"
+                                           Icon="@Icons.Material.Filled.ImportExport"
+                                           Size="Size.Small" />                            
+                        </ActivatorContent>
+                    </MudFileUpload>
+                </MudTooltip>
                 <MudTooltip Text="@lang["MachineTools:CheckCompatible"]">
                     <MudIconButton Color="Color.Secondary"
-                                   Class="mud-theme-error"
+                                   Class="mud-theme-warning mt-1 mr-1"
                                    OnClick="@TestMachineConfig"
                                    Icon="@Icons.Material.Filled.AcUnit"
                                    Size="Size.Small" />
@@ -88,6 +103,45 @@
         }
         catch (Exception ex) { Snack.Add(ex.Message, Severity.Warning); }
     }
+
+    async Task ImportJsonAsync(IBrowserFile file)
+    {
+        try
+        {
+            bool? result = await DialogService.ShowMessageBox(
+                "Warning: Overwrite Machine Config",
+                @"You can back up the database, close the server and copy the database files before running this.
+It is wrapped in a transaction so if it does fail at any point importing changes will be rolled back",
+                yesText: "Overwrite!", cancelText: "Cancel",
+                options: new DialogOptions { MaxWidth = MaxWidth.Small });    
+
+            if (result.HasValue && result.Value)
+            {
+                using var fs = file.OpenReadStream(512000 * 10);
+                using var ms = new MemoryStream();
+                await fs.CopyToAsync(ms);
+                ms.Position = 0;
+                var json = Encoding.UTF8.GetString(ms.ToArray());
+
+                HttpResponseMessage? response;
+                if (file.Name.Contains("json"))
+                    response = await Http.PostAsJsonAsync("api/machine/ImportMachineJson", json);
+                else
+                    response = await Http.PostAsJsonAsync("api/machine/ImportMachineYaml", json);
+                
+                if (response.IsSuccessStatusCode)
+                {
+                    Snack.Add("Machine updated", Severity.Success);
+                }
+                else
+                {
+                    Snack.Add(await response.Content.ReadAsStringAsync(), Severity.Error);
+                }
+            }            
+        }
+        catch (Exception ex) { Snack.Add(ex.Message, Severity.Warning); }
+    }
+
 
     async Task TestMachineConfig()
     {

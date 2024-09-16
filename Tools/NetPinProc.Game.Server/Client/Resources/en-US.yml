@@ -18,6 +18,7 @@ MachineItem:
 MachineTools:
  ExportMachineJson: Export the machine from the database into a `machine.json` file for use in other applications.
  CheckCompatible: This will run a `SetupPROCMachine` on a Fake device. If anything is incorrect in your config this should tell you.
+ ImportMachineJson: Import proc machine json or skeleton game yaml p-roc config
 Pages:
  Summary: Use this page to add, edit and remove {item} from the database.
  Adjustments: Adjustments with options and default values. These can be read from the game / modes. 
