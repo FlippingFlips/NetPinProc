@@ -287,7 +287,12 @@ namespace NetPinProc.Domain.PinProc
         /// <summary>
         /// P3-ROC machine board
         /// </summary>
-        PDB = 7
+        PDB = 7,
+        wpc = WPC,
+        pdb = PDB,
+        wpc95 = WPC95,
+        sternwhitestar = SternWhitestar,
+        sternSAM = SternSAM,
     };
 
     /// <summary>
