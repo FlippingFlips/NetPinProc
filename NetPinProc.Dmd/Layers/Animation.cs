@@ -5,8 +5,13 @@ using System.IO;
 
 namespace NetPinProc.Dmd
 {
-    /// <summary>
-    /// An ordered collection of Frame objects
+    /// <summary>An ordered collection of Frame objects<para/>
+    /// 4 bytes - header data (unused)<para/>
+    /// 4 bytes - frame_count<para/>
+    /// 4 bytes - width of animation frames in pixels<para/>
+    /// 4 bytes - height of animation frames in pixels<para/>
+    /// ? bytes - Frames: frame_count* width * height bytes
+    /// http://pyprocgame.pindev.org/tools.html#tool-dmdconvert
     /// </summary>
     public class Animation
     {
