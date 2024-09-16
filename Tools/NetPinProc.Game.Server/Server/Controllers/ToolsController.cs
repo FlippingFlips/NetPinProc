@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NetPinProc.Domain;
 using NetPinProc.Domain.Constants;
 using NetPinProc.Domain.MachineConfig;
 using NetPinProc.Game.Manager.Shared.Dto;

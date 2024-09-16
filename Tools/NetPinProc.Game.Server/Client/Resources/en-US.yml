@@ -15,10 +15,13 @@ MachineItem:
  SingleColor: By default LEDs are 3 color, 28 RGB per board, 84 single color
  Tags: Machine items can be tagged with single names or comma separated.
  Type: State of the switch Normally open or Normally closed
+MachineTools:
+ ExportMachineJson: Export the machine from the database into a `machine.json` file for use in other applications.
+ CheckCompatible: This will run a `SetupPROCMachine` on a Fake device. If anything is incorrect in your config this should tell you.
+ ImportMachineJson: Import proc machine json or skeleton game yaml p-roc config
 Pages:
  Summary: Use this page to add, edit and remove {item} from the database.
- Adjustments: Adjustments with options and default values. These can be read from the game / modes.
- ExportMachineJson: Export the machine from the database into a `machine.json` file for use in other applications.
+ Adjustments: Adjustments with options and default values. These can be read from the game / modes. 
  Export: Export
 Playfield:
  BluePrint: Playfield Blueprint

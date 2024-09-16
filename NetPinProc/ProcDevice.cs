@@ -81,9 +81,8 @@ namespace NetPinProc
         /// </summary>
         public ILoggerPROC Logger { get; set; }
 
-        /// <summary>
-        /// TODO: Send aux commands Not implemented yet
-        /// </summary>
+        /// <summary>TODO: Send aux commands Not implemented yet <para/>
+        /// http://pyprocgame.pindev.org/ref-pinproc.html#auxiliary-command-functions</summary>
         /// <param name="address"></param>
         /// <param name="aux_commands"></param>
         public void AuxSendCommands(ushort address, ushort aux_commands)
