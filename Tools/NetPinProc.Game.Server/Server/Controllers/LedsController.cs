@@ -24,19 +24,29 @@ namespace NetPinProc.Game.Manager.Server.Controllers
         [HttpPut]
         public override async Task<ActionResult<LedConfigFileEntry>> OnPutAsync([FromServices] NetProcDbContext netProcDbContext, [FromBody] LedConfigFileEntry entity)
         {
-            var e = await netProcDbContext.Leds.FirstOrDefaultAsync(x => x.Name == entity.Name);
-            if (e.Number != entity.Number)
-            {
-                netProcDbContext.Remove(e);
-                netProcDbContext.Add(entity);
-                await netProcDbContext.SaveChangesAsync();
-            }
-            else
+            try
             {
                 netProcDbContext.Leds.Update(entity);
                 await netProcDbContext.SaveChangesAsync();
+                return Ok(entity);
             }
-            return Ok(e);
+            catch (DbUpdateConcurrencyException)
+            {
+                var e = await netProcDbContext.Leds.FirstOrDefaultAsync(x => x.Name == entity.Name);
+                if (e.Number != entity.Number)
+                {
+                    netProcDbContext.Remove(e);
+                    netProcDbContext.Add(entity);
+                    await netProcDbContext.SaveChangesAsync();
+                    return Ok(e);
+                }                
+            }
+            catch
+            {
+                throw;
+            }
+
+            return BadRequest();
         }
     }
 }

@@ -3,7 +3,7 @@
 namespace NetPinProc.Domain.MachineConfig
 {
     /// <summary>Represents an LED's configuration in memory</summary>
-    public class LedConfigFileEntry  : ConfigFileEntryBase, IPolarity, IProcNumber
+    public class LedConfigFileEntry  : ConfigFileEntryBase, IPolarity, IProcNumber, ILightInsert
     {
         ///<inheritdoc/>
         public string Number { get; set; }
@@ -23,5 +23,7 @@ namespace NetPinProc.Domain.MachineConfig
         public bool Polarity { get; set; }
 
         public bool? SingleColor { get; set; }
+        public double? ZRot { get; set; }
+        public string ObjName { get; set; }
     }
 }
