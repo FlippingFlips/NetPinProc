@@ -1,7 +1,9 @@
 ﻿using NetPinProc.Domain.Constants;
+using NetPinProc.Domain.Interface;
 using NetPinProc.Domain.MachineConfig;
 using NetPinProc.Game.Manager.Shared.Dto;
 using Svg;
+using Svg.Transforms;
 using System.Drawing;
 
 namespace NetPinProc.Game.Manager.Shared.Tools.Playfield
@@ -46,15 +48,27 @@ namespace NetPinProc.Game.Manager.Shared.Tools.Playfield
                         var mItem = mItems[name];
                         switch (item)
                         {
-                            case SvgRectangle r:                           
+                            case SvgRectangle r:
+                                //apply rotation to lights - leds, lamps
+                                if (mItem is ILightInsert li && (r.Transforms?.Any() ?? false))
+                                {
+                                    if (r.Transforms[0] is SvgRotate rot)
+                                        li.ZRot = rot.Angle;
+                                }
                                 //get the top left point when drawing, center point is saved
-                                mItem.XPos = r.X - (r.Width / 2);
-                                mItem.YPos = r.Y - (r.Height / 2);
+                                mItem.XPos = r.X + (r.Width / 2);
+                                mItem.YPos = r.Y + (r.Height / 2);                                                       
                                 Console.WriteLine($"rect:{name}-{groupLayerName} found");
                                 break;
                             case SvgCircle c:
                                 mItem.XPos = c.CenterX;
                                 mItem.YPos = c.CenterY;
+                                //apply rotation to lights - leds, lamps
+                                if (mItem is ILightInsert lic && (c.Transforms?.Any() ?? false))
+                                {
+                                    if (c.Transforms[0] is SvgRotate rot)
+                                        lic.ZRot = rot.Angle;
+                                }
                                 Console.WriteLine($"circle:{name}-{groupLayerName} found");
                                 break;
                         }
@@ -127,8 +141,8 @@ namespace NetPinProc.Game.Manager.Shared.Tools.Playfield
                         case Names.LAMPS:
                             foreach (var item in machineItems[groupLayerName])
                             {
-                                SvgCircle circle = CreateCircle(inkNs, item, MachineItemColors.COLOR_LEDS);
-                                group.Children.Add(circle);
+                                SvgRectangle rect = CreateRect(inkNs, item, MachineItemColors.COLOR_LEDS);
+                                group.Children.Add(rect);
                             }
                             break;
                         case Names.DRIVERS:
@@ -212,7 +226,7 @@ namespace NetPinProc.Game.Manager.Shared.Tools.Playfield
             {
                 CenterX = 0,
                 CenterY = 0,
-                Radius = 10,
+                Radius = 10,                
                 Fill = new SvgColourServer() { Colour = ColorTranslator.FromHtml($"#{colorHtml}") },
             };
 
@@ -221,6 +235,9 @@ namespace NetPinProc.Game.Manager.Shared.Tools.Playfield
 
             if (item.YPos.HasValue)
                 circle.CenterY = new SvgUnit(float.Parse(item.YPos.Value.ToString()));
+
+            if(item is ILightInsert li && li.ZRot.HasValue)
+                circle.Transforms = [new SvgRotate((float)li.ZRot)];
 
             circle.CustomAttributes.Add(inkNs + ":label", item.Name);
             return circle;
@@ -231,27 +248,47 @@ namespace NetPinProc.Game.Manager.Shared.Tools.Playfield
         /// <param name="item"></param>
         /// <param name="colorHtml"></param>
         /// <returns></returns>
-        private static SvgRectangle CreateRect(string inkNs, ConfigFileEntryBase item, string colorHtml)
+        private static SvgRectangle CreateRect(string inkNs, ConfigFileEntryBase item, string colorHtml, bool convertToInkscape = true)
         {
             var rect = new SvgRectangle()
             {
                 Width = 20,
-                Height = 20,
+                Height = 20,                
                 X = new SvgUnit(0),
                 Y = new SvgUnit(0),
                 Fill = new SvgColourServer() { Colour = ColorTranslator.FromHtml($"#{colorHtml}") },
-            };
+            };               
 
             if (item.XPos.HasValue && item.XPos.Value > 1)
             {
-                var posX = item.XPos.Value + (rect.Width / 2);
-                rect.X = new SvgUnit(float.Parse(posX.ToString()));                
+                double posX = 0;
+                if (!convertToInkscape) //deffo working import center points
+                    posX = item.XPos.Value + (rect.Width / 2);
+                else
+                {
+                    posX = item.XPos.Value - (rect.Width / 2);      
+                }
+
+                rect.X = new SvgUnit(float.Parse(posX.ToString()));
             }                
 
             if (item.YPos.HasValue)
             {
-                var posY = item.YPos.Value + (rect.Width / 2);
+                double posY;
+                if (!convertToInkscape)
+                    posY = item.YPos.Value + (rect.Height / 2);
+                else
+                {
+                    posY = item.YPos.Value - (rect.Height / 2);
+                }
+
                 rect.Y = new SvgUnit(float.Parse(posY.ToString()));
+            }
+
+            if (item is ILightInsert li && li.ZRot.HasValue)
+            {
+                if (!convertToInkscape) { rect.Transforms = [new SvgRotate(45, rect.X + rect.Width / 2, rect.Y + rect.Height / 2)]; }
+                else rect.Transforms = [new SvgRotate(45, rect.X + rect.Width / 2, rect.Y + rect.Height / 2)];
             }
 
             rect.CustomAttributes.Add(inkNs + ":label", item.Name);
