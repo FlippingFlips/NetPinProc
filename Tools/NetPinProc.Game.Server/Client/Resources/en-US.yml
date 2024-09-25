@@ -33,10 +33,15 @@ Playfield:
  TemplateUpdate: Update Template
  TemplateUpdateTip: Replace the database template svg with your own. The template should include the groups needed
  GenerateSvgTitle: Generate playfield SVG from machine items
- GenerateSvgTemplate: <br> Generate an Inkscape SVG document from a template stored in the database media table.
-  This template matches a playfield size in mm and contains pre made layers / groups of machine items like SWITCHES, LEDS <br><br>    
-  Generating a file will use any position that is already set on the item or it will be set at 0,0. The center point is saved of Circles and rects, rects in Inkscape start at top left of the element.<br><br>
-  The generated export can be downloaded and then loaded into Inkscape where you would move your items around the playfield and set positions and save it and reimport it to update the machine items.
+ GenerateSvgTemplate: <br> This generates an Inkscape SVG document from a SVG template that is stored in the database's Media table.
+  If the machine items have no position set in the database then the objects will be 0,0 (top left)<br><br>
+  This template matches a playfield size in mm and contains pre made layers / groups of machine items like SWITCHES, LEDS.
+  You can update the database SVG template to your dimensions with the UPDATE TEMPLATE button from an SVG similar to the generated one.
+  Tip | Export a default generated SVG from the machine and open it in Inkscape.
+  Remove all the items but keep the groups. Change the dimensions to match the playfield then UPDATE TEMPLATE from this file <br><br>    
+  The center point is saved of Circles and rects, rects in Inkscape start at top left of the element.
+  For rotation it's easier with rects to be visible. The reason the ZRot is available on LEDS and LAMPS is for 3D space use and quick CNC with Blender<br><br>
+  The generated export can be downloaded and then loaded into Inkscape where you would move your items around the playfield and set positions and save it, reimport it to update the machine item positions.
  ImportSvgTitle: Import Playfield SVG - Update Machine Item Positions
  ImportSvg: This will update machine item positions from an SVG.<br>
   This would usually be after the Generated step and after you have altered the positions with another tool like Inkscape. <br><br>

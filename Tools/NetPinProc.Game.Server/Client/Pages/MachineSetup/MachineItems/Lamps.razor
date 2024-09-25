@@ -140,6 +140,31 @@
                     </MudTooltip>
                 </HeaderTemplate>
                 </PropertyColumn>
+
+            <PropertyColumn Property="x => x.ZRot" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
+                <HeaderTemplate>
+                    <MudTooltip>
+                        <TooltipContent><MachineItemPositionHelp /></TooltipContent>
+                        <ChildContent>ZRot</ChildContent>
+                    </MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudNumericField @bind-Value=context.Item.ZRot Variant="Variant.Outlined"
+                                     Label="ZRot" Min="0.00" Max="360.00" T="double?" Required="false" />
+                </EditTemplate>
+            </PropertyColumn>
+            <PropertyColumn Property="x => x.ObjName" Filterable=true ShowFilterIcon="false" Resizable="true" Sortable="true">
+                <HeaderTemplate>
+                    <MudTooltip>
+                        <TooltipContent><MachineItemPositionHelp /></TooltipContent>
+                        <ChildContent>ObjName</ChildContent>
+                    </MudTooltip>
+                </HeaderTemplate>
+                <EditTemplate>
+                    <MudTextField @bind-Value=context.Item.ObjName Variant="Variant.Outlined"
+                                  Label="ObjName" Required="false" />
+                </EditTemplate>
+            </PropertyColumn>
             </Columns>
             </MudDataGrid>
 </MudStack>
